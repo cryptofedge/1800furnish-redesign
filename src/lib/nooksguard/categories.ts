@@ -8,6 +8,7 @@ import { ngtsCtCategory } from "./ngts-ct";
 import { ngpxCategory } from "./ngpx";
 import { threatDetectionCategory } from "./threat-detection";
 import { nghwtCategory } from "./nghwt";
+import { nghhCategory } from "./nghh";
 
 function stub(
   slug: string,
@@ -32,13 +33,7 @@ export const SECURITY_CATEGORIES: SecurityCategory[] = [
   ngz3825tCategory,
   ngpxCategory,
   nghwtCategory,
-  stub(
-    "nghh",
-    "Handheld Metal Detectors",
-    "Handheld Detectors",
-    "Sixteen handheld wand configurations across four tiers, from ultra-sensitive flagship to cost-efficient mass deployment.",
-    16
-  ),
+  nghhCategory,
   ngmwCategory,
   ngfsCategory,
   // Under Vehicle Surveillance (nguv, catalog pages 72–79) intentionally
