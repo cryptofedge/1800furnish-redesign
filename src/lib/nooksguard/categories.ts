@@ -8,6 +8,7 @@ import { ngtsCtCategory } from "./ngts-ct";
 import { ngpxCategory } from "./ngpx";
 import { threatDetectionCategory } from "./threat-detection";
 import { nghwtCategory } from "./nghwt";
+import { nguvCategory } from "./nguv";
 
 function stub(
   slug: string,
@@ -41,13 +42,7 @@ export const SECURITY_CATEGORIES: SecurityCategory[] = [
   ),
   ngmwCategory,
   ngfsCategory,
-  stub(
-    "nguv",
-    "Under Vehicle Surveillance Systems",
-    "Vehicle Surveillance",
-    "Flush and surface-mount scanning lanes, 3D dual-view systems, and a full family of handheld inspection mirrors and video poles.",
-    13
-  ),
+  nguvCategory,
   threatDetectionCategory,
   stub(
     "tscm",
