@@ -1,6 +1,18 @@
 # Hero video assets
 
-Drop the AI-generated cinematic loop here. `HeroCinematic` expects:
+Drop the AI-generated cinematic loop here. Until a video exists, the hero
+shows a still photo (`/products/living-room.jpg`). Once the files are in
+place, turn the video on in `src/app/(site)/page.tsx`:
+
+```tsx
+<HeroCinematic
+  videoSrcWebm="/videos/hero-loop.webm"
+  videoSrcMp4="/videos/hero-loop.mp4"
+  posterSrc="/videos/hero-poster.jpg"
+/>
+```
+
+Expected files:
 
 | File | Purpose |
 | --- | --- |

@@ -26,15 +26,19 @@ interface HeroCinematicProps {
   posterSrc?: string;
 }
 
+// No hero video ships yet (see public/videos/README.md), so the video layer is
+// opt-in: pass videoSrcWebm/videoSrcMp4 once files exist. Until then the hero
+// uses a still photo, avoiding three 404s on every page load.
 export function HeroCinematic({
-  videoSrcWebm = "/videos/hero-loop.webm",
-  videoSrcMp4 = "/videos/hero-loop.mp4",
-  posterSrc = "/videos/hero-poster.jpg",
+  videoSrcWebm,
+  videoSrcMp4,
+  posterSrc = "/products/living-room.jpg",
 }: HeroCinematicProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoFailed, setVideoFailed] = useState(false);
+  const hasVideo = Boolean(videoSrcWebm || videoSrcMp4);
 
   // Parallax depth: the video drifts slower than scroll, headline content holds.
   const { scrollYProgress } = useScroll({
@@ -78,11 +82,11 @@ export function HeroCinematic({
   return (
     <section
       ref={sectionRef}
-      className="relative flex h-[100vh] min-h-[640px] w-full items-center overflow-hidden bg-charcoal-950"
+      className="relative isolate flex h-[100vh] min-h-[640px] w-full items-center overflow-hidden bg-charcoal-950"
     >
       {/* Background video layer */}
       <motion.div style={{ y: videoY }} className="absolute inset-0 -z-10 h-[120%]">
-        {!videoFailed ? (
+        {hasVideo && !videoFailed ? (
           <video
             ref={videoRef}
             className="h-full w-full object-cover"
@@ -93,8 +97,8 @@ export function HeroCinematic({
             poster={posterSrc}
             onError={() => setVideoFailed(true)}
           >
-            <source src={videoSrcWebm} type="video/webm" />
-            <source src={videoSrcMp4} type="video/mp4" />
+            {videoSrcWebm && <source src={videoSrcWebm} type="video/webm" />}
+            {videoSrcMp4 && <source src={videoSrcMp4} type="video/mp4" />}
           </video>
         ) : (
           <div

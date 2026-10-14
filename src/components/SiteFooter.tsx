@@ -8,9 +8,16 @@ const SHOP_LINKS = [
   { label: "Commercial", href: "/categories/commercial" },
   { label: "Security", href: "/categories/security" },
   { label: "Janitorial", href: "/categories/janitorial" },
+  { label: "All categories", href: "/categories" },
 ];
 
-const COMPANY_LINKS = ["About", "M/WBE Certification", "Careers", "Contact"];
+// Only links that resolve to something real. Add About/Careers here once
+// those pages exist.
+const COMPANY_LINKS = [
+  { label: "Request a Quote", href: "/#quote" },
+  { label: "Nooksguard Security", href: "/security" },
+  { label: "Contact Sales", href: "mailto:sales@merkabanooks.com" },
+];
 
 export function SiteFooter() {
   return (
@@ -56,10 +63,10 @@ export function SiteFooter() {
           <p className="mb-3 text-sm font-semibold text-slate-200">Company</p>
           <ul className="flex flex-col gap-2">
             {COMPANY_LINKS.map((link) => (
-              <li key={link}>
-                <a href="#" className="text-sm text-slate-400 transition-colors hover:text-amber-300">
-                  {link}
-                </a>
+              <li key={link.href}>
+                <Link href={link.href} className="text-sm text-slate-400 transition-colors hover:text-amber-300">
+                  {link.label}
+                </Link>
               </li>
             ))}
           </ul>
