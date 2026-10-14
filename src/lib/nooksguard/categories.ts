@@ -7,6 +7,7 @@ import { ngfsCategory } from "./ngfs";
 import { ngtsCtCategory } from "./ngts-ct";
 import { ngpxCategory } from "./ngpx";
 import { threatDetectionCategory } from "./threat-detection";
+import { nghwtCategory } from "./nghwt";
 
 function stub(
   slug: string,
@@ -30,13 +31,7 @@ export const SECURITY_CATEGORIES: SecurityCategory[] = [
   ngtsCtCategory,
   ngz3825tCategory,
   ngpxCategory,
-  stub(
-    "nghwt",
-    "Walk-Through Metal Detectors",
-    "Walk-Through WTMD",
-    "Entry-tier through airport-class walk-through metal detection gates, plus multi-mode, IoT-networked and single-pole variants.",
-    12
-  ),
+  nghwtCategory,
   stub(
     "nghh",
     "Handheld Metal Detectors",

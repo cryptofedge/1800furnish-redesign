@@ -3,7 +3,7 @@
 Full catalog has **~116 products across 14 categories**. Status below —
 pick up any "pending" category by following the pattern in `ngvj.ts`.
 
-**Live now:** `/security` (hub) + `/security/ngvj` (14 products, 4 tiers) + `/security/audio-protection` (3 units, 1 tier) + `/security/ngz-3825t` (1 unit, 1 tier) + `/security/ngmw` (2 units, 1 tier) + `/security/ngfs` (4 units, 2 tiers) + `/security/ngts-ct` (4 units, 2 tiers, **no images yet**) + `/security/ngpx` (9 units, 3 tiers, **no images yet**) + `/security/threat-detection` (11 units, 4 tiers, **no images yet**)
+**Live now:** `/security` (hub) + `/security/ngvj` (14 products, 4 tiers) + `/security/audio-protection` (3 units, 1 tier) + `/security/ngz-3825t` (1 unit, 1 tier) + `/security/ngmw` (2 units, 1 tier) + `/security/ngfs` (4 units, 2 tiers) + `/security/ngts-ct` (4 units, 2 tiers, **no images yet**) + `/security/ngpx` (9 units, 3 tiers, **no images yet**) + `/security/threat-detection` (11 units, 4 tiers, **no images yet**) + `/security/nghwt` (12 units, 4 tiers, **no images yet**)
 
 | # | Category (slug) | Products | Status | Catalog source pages |
 |---|---|---|---|---|
@@ -12,7 +12,7 @@ pick up any "pending" category by following the pattern in `ngvj.ts`.
 | 3 | Fast CT Inspection (`ngts-ct`) | 4 | ✅ **done** (specs only — images pending: re-extract pages 21/23/25/27) | 21–28 |
 | 4 | Multi-Energy X-Ray Inspection (`ngz-3825t`) | 1 | ✅ **done** | 29–32 |
 | 5 | Portable X-Ray Inspection (`ngpx`) | 9 | ✅ **done** (specs only — images pending: re-extract pages 34–42) | 33–44 |
-| 6 | Walk-Through Metal Detectors (`nghwt`) | 12 | ⏳ pending | 45–58 |
+| 6 | Walk-Through Metal Detectors (`nghwt`) | 12 | ✅ **done** (specs only — images pending: pages 46–50, 55–58; competitor-comparison page 52 intentionally omitted) | 45–58 |
 | 7 | Handheld Metal Detectors (`nghh`) | 16 | ⏳ pending | 59–65 |
 | 8 | Millimeter Wave Body Scanners (`ngmw`) | 2 | ✅ **done** | 66–69 |
 | 9 | Foot & Shoe Security Screening (`ngfs`) | 4 | ✅ **done** | 70–71 |
@@ -24,13 +24,13 @@ pick up any "pending" category by following the pattern in `ngvj.ts`.
 
 Page 99 is the closing compliance/contact page (no products).
 
-**Recommended next pick:** Walk-Through Metal Detectors (`nghwt`, 12
-products, pages 45–58).
-The larger categories (`nguv` 13, `nghh` 16, `tscm` 20) and the
+**Recommended next pick:** Under Vehicle Surveillance (`nguv`, 13 products,
+pages 72–79), then Handheld Metal Detectors (`nghh`, 16, pages 59–65).
+`tscm` (20) and the
 watermark-blocked `ngz` (5, see below) are better split across sessions.
 (`ngjm` was removed for legal reasons, see the table.)
 
-**Image backlog:** `ngts-ct`, `ngpx`, and `threat-detection` shipped specs-only because the source
+**Image backlog:** `ngts-ct`, `ngpx`, `threat-detection`, and `nghwt` shipped specs-only because the source
 PDF wasn't on the machine. When it's available, extract and review those
 images first.
 
