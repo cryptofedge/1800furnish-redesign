@@ -43,10 +43,10 @@ export default function SecurityIndexPage() {
                 <p className="mt-3 text-xs font-medium text-blue-300">
                   {live ? (
                     <span className="inline-flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                      {category.productCount} models <ArrowRight className="h-3 w-3" />
+                      {category.productCount} model{category.productCount === 1 ? "" : "s"} <ArrowRight className="h-3 w-3" />
                     </span>
                   ) : (
-                    <span className="text-slate-500">{category.productCount} models · coming soon</span>
+                    <span className="text-slate-500">{category.productCount} model{category.productCount === 1 ? "" : "s"} · coming soon</span>
                   )}
                 </p>
               </>

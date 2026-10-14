@@ -5,6 +5,7 @@ import { audioProtectionCategory } from "./audio-protection";
 import { ngmwCategory } from "./ngmw";
 import { ngfsCategory } from "./ngfs";
 import { ngtsCtCategory } from "./ngts-ct";
+import { ngpxCategory } from "./ngpx";
 
 function stub(
   slug: string,
@@ -27,13 +28,7 @@ export const SECURITY_CATEGORIES: SecurityCategory[] = [
   ngvjCategory,
   ngtsCtCategory,
   ngz3825tCategory,
-  stub(
-    "ngpx",
-    "Portable X-Ray Inspection",
-    "Portable X-Ray",
-    "Nine field-deployable X-ray platforms spanning compact screening, wide-format capture, and high-penetration EOD work.",
-    9
-  ),
+  ngpxCategory,
   stub(
     "nghwt",
     "Walk-Through Metal Detectors",
@@ -71,13 +66,9 @@ export const SECURITY_CATEGORIES: SecurityCategory[] = [
     "Hidden camera detection, smart terminal and WiFi inspection, and handheld/portable signal detectors for the full TSCM workflow.",
     20
   ),
-  stub(
-    "ngjm",
-    "Signal Jamming Solutions",
-    "Signal Jamming",
-    "SDR-based indoor and portable full-band signal jammers for confidential meetings and EOD operations.",
-    2
-  ),
+  // Signal Jamming (ngjm, catalog pages 93–96) intentionally omitted: RF jammers
+  // can't be marketed or sold in the US except to authorized federal agencies
+  // (FCC, 47 U.S.C. §§302a, 333). Don't re-add without a legal sign-off.
   audioProtectionCategory,
 ];
 
