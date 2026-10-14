@@ -4,6 +4,7 @@ import { ngz3825tCategory } from "./ngz-3825t";
 import { audioProtectionCategory } from "./audio-protection";
 import { ngmwCategory } from "./ngmw";
 import { ngfsCategory } from "./ngfs";
+import { ngtsCtCategory } from "./ngts-ct";
 
 function stub(
   slug: string,
@@ -24,13 +25,7 @@ export const SECURITY_CATEGORIES: SecurityCategory[] = [
     5
   ),
   ngvjCategory,
-  stub(
-    "ngts-ct",
-    "Fast CT Inspection",
-    "CT Inspection",
-    "Dual-energy CT luggage and object screening with 3D color imaging and automatic explosives/narcotics detection.",
-    4
-  ),
+  ngtsCtCategory,
   ngz3825tCategory,
   stub(
     "ngpx",

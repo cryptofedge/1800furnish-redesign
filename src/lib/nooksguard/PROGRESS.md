@@ -3,13 +3,13 @@
 Full catalog has **~116 products across 14 categories**. Status below —
 pick up any "pending" category by following the pattern in `ngvj.ts`.
 
-**Live now:** `/security` (hub) + `/security/ngvj` (14 products, 4 tiers) + `/security/audio-protection` (3 units, 1 tier) + `/security/ngz-3825t` (1 unit, 1 tier) + `/security/ngmw` (2 units, 1 tier) + `/security/ngfs` (4 units, 2 tiers)
+**Live now:** `/security` (hub) + `/security/ngvj` (14 products, 4 tiers) + `/security/audio-protection` (3 units, 1 tier) + `/security/ngz-3825t` (1 unit, 1 tier) + `/security/ngmw` (2 units, 1 tier) + `/security/ngfs` (4 units, 2 tiers) + `/security/ngts-ct` (4 units, 2 tiers, **no images yet**)
 
 | # | Category (slug) | Products | Status | Catalog source pages |
 |---|---|---|---|---|
 | 1 | Compact X-Ray Inspection (`ngz`) | 5 | ⏳ pending — **images need fixing first, see below** | 4–13 |
 | 2 | NGVJ Security Screening Series (`ngvj`) | 14 | ✅ **done** | 14–20 |
-| 3 | Fast CT Inspection (`ngts-ct`) | 4 | ⏳ pending | 21–28 |
+| 3 | Fast CT Inspection (`ngts-ct`) | 4 | ✅ **done** (specs only — images pending: re-extract pages 21/23/25/27) | 21–28 |
 | 4 | Multi-Energy X-Ray Inspection (`ngz-3825t`) | 1 | ✅ **done** | 29–32 |
 | 5 | Portable X-Ray Inspection (`ngpx`) | 9 | ⏳ pending | 33–44 |
 | 6 | Walk-Through Metal Detectors (`nghwt`) | 12 | ⏳ pending | 45–58 |
@@ -19,16 +19,14 @@ pick up any "pending" category by following the pattern in `ngvj.ts`.
 | 10 | Under Vehicle Surveillance Systems (`nguv`) | 13 | ⏳ pending | 72–79 |
 | 11 | Security & Threat Detection (`threat-detection`) | 11 | ⏳ pending | 80–84 |
 | 12 | TSCM & Counter-Surveillance (`tscm`) | 20 | ⏳ pending | 85–92 |
-| 13 | Signal Jamming Solutions (`ngjm`) | 2 | ⏳ pending | 93–96 |
+| 13 | Signal Jamming Solutions (`ngjm`) | 2 | ⛔ **on hold** — RF jammers are illegal to market/sell in the US (FCC, 47 U.S.C. §§302a, 333) except to authorized federal agencies; needs an owner/legal decision before publishing | 93–96 |
 | 14 | Anti-Recording / Audio Protection (`audio-protection`) | 3 | ✅ **done** | 97–98 |
 
 Page 99 is the closing compliance/contact page (no products).
 
-**Recommended next pick (by size, smallest remaining first):** Signal Jamming
-Solutions (`ngjm`, 2 products, pages 93–96) or Fast CT Inspection (`ngts-ct`,
-4 products, pages 21–28 — same 2-page-per-product format as the already-built
-`ngz-3825t`). After those, Portable X-Ray Inspection (`ngpx`, 9 products,
-pages 33–44) is the next reasonable single-session size. The larger
+**Recommended next pick:** Portable X-Ray Inspection (`ngpx`, 9 products,
+pages 33–44) is the next reasonable single-session size. (`ngjm` is on hold
+for legal review, see the table.) The larger
 categories (`nghwt` 12, `nguv` 13, `nghh` 16, `tscm` 20) and the
 watermark-blocked `ngz` (5, see below) are better split across sessions.
 
