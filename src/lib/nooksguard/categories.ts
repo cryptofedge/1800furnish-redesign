@@ -8,7 +8,6 @@ import { ngtsCtCategory } from "./ngts-ct";
 import { ngpxCategory } from "./ngpx";
 import { threatDetectionCategory } from "./threat-detection";
 import { nghwtCategory } from "./nghwt";
-import { nguvCategory } from "./nguv";
 
 function stub(
   slug: string,
@@ -42,7 +41,8 @@ export const SECURITY_CATEGORIES: SecurityCategory[] = [
   ),
   ngmwCategory,
   ngfsCategory,
-  nguvCategory,
+  // Under Vehicle Surveillance (nguv, catalog pages 72–79) intentionally
+  // omitted: owner decided 2026-10-14 it doesn't fit the site.
   threatDetectionCategory,
   stub(
     "tscm",
