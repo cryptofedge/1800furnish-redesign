@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Box, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FINISHES } from "@/lib/finishes";
 import type { Hotspot } from "./Scene3D";
 
 const Scene3D = dynamic(() => import("./Scene3D").then((m) => m.Scene3D), {
@@ -15,18 +16,6 @@ const Scene3D = dynamic(() => import("./Scene3D").then((m) => m.Scene3D), {
     </div>
   ),
 });
-
-interface FinishOption {
-  id: string;
-  label: string;
-  hex: string;
-}
-
-const FINISHES: FinishOption[] = [
-  { id: "matte-black", label: "Matte Black Steel", hex: "#23262b" },
-  { id: "warm-walnut", label: "Warm Walnut", hex: "#6b4226" },
-  { id: "slate-grey", label: "Slate Grey Upholstery", hex: "#6b7280" },
-];
 
 const HOTSPOTS: Hotspot[] = [
   {

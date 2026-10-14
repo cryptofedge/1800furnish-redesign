@@ -19,6 +19,7 @@ create table if not exists products (
   shape text not null,          -- key into PRODUCT_SHAPES, see src/components/product-shapes.tsx
   accent_hex text not null default '#8a5a34',
   shape_variant jsonb,          -- optional { scale?, headboard?, round? }
+  model_url text,               -- optional public .glb for the 360° viewer (null = procedural shape)
   updated_at timestamptz not null default now(),
   unique (category_slug, slug)
 );

@@ -58,7 +58,9 @@ src/
     ScrollExperience.tsx     # pinned "blueprint to furnished" scroll sequence
     QuoteCalculator.tsx      # bulk RFQ / facility package calculator + modal
     CategoryNav.tsx          # sticky category tab bar (on /categories/* routes)
-    ProductGrid.tsx          # per-product 3D viewer grid + low-power photo fallback
+    ProductGrid.tsx          # per-product 3D preview grid + low-power photo fallback; opens ProductViewer
+    ProductViewer.tsx        # fullscreen 360° viewer modal (finishes, dimensions, keyboard, quote CTA)
+    viewer/                  # ViewerStage (studio canvas), useTurntable (orbit/inertia/zoom), GltfModel, DimensionLines
     ProductScene3D.tsx       # lightweight per-product R3F canvas (drag-to-orbit)
     product-shapes.tsx       # procedural 3D archetypes (chair, table, bed, ...)
     SiteHeader.tsx / SiteFooter.tsx
@@ -91,6 +93,41 @@ procedural/placeholder state so the site is fully functional without assets:
   Draco compression, and finish-switcher material naming are in
   [`public/models/README.md`](public/models/README.md). Until then, the
   viewer renders a procedural stand-in chair.
+
+## 360° product viewer
+
+Every product card on `/categories/*` opens a fullscreen viewer
+([`src/components/ProductViewer.tsx`](src/components/ProductViewer.tsx)):
+tap the preview, the **360°** badge, or the product name.
+
+- **Spin / tilt:** drag (mouse or touch). Full 360° yaw; tilt is clamped so
+  the piece never flips. Damped follow with a little inertia after release,
+  and a slow auto-rotate after 3s idle that stops the moment you touch it.
+- **Zoom:** scroll wheel, pinch, the +/− buttons, or `+`/`-` keys — clamped
+  so the piece can't clip or vanish.
+- **Keyboard:** arrow keys rotate, `+`/`-` zoom, `R` resets, `Esc` closes.
+  The dialog is `role="dialog"`, traps initial focus, restores focus on close.
+- **Panel:** name + price, finish swatches (shared list in
+  [`src/lib/finishes.ts`](src/lib/finishes.ts)), *Show dimensions* (W/D/H
+  guide lines from the model's real bounding box), *Reset view*, and
+  *Request a quote for this item* — which lands on the home-page calculator
+  with that product attached to the RFQ (`/?product=<slug>#quote`).
+- **Models:** a product with `modelUrl` (static catalog) / `model_url`
+  (Supabase, see below) loads that `.glb` with Draco support and a progress
+  badge; everything else renders its procedural shape from
+  `product-shapes.tsx`, so every product works today. Wiring instructions in
+  [`public/models/README.md`](public/models/README.md).
+- **Performance:** the viewer is `next/dynamic` + `ssr:false`; while it's
+  open the grid previews swap to photos so only one WebGL canvas exists. The
+  low-power / `prefers-reduced-motion` fallback shows the product photo with
+  a "View in 3D anyway" opt-in.
+
+Design notes and references: [`VIEWER-NOTES.md`](VIEWER-NOTES.md).
+
+**Supabase:** run
+[`supabase/migrations/add-model-url.sql`](supabase/migrations/add-model-url.sql)
+once (adds a nullable `model_url` column). Fresh installs get it from
+`schema.sql`. No env vars needed.
 
 ## RFQ / quote submission
 

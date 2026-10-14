@@ -53,6 +53,8 @@ interface ProductRow {
   shape: string;
   accent_hex: string;
   shape_variant: ShapeVariant | null;
+  /** Added by supabase/migrations/add-model-url.sql; undefined on older schemas. */
+  model_url?: string | null;
 }
 
 function mapProduct(row: ProductRow): Product {
@@ -66,6 +68,7 @@ function mapProduct(row: ProductRow): Product {
     shape: row.shape as ShapeKind,
     accentHex: row.accent_hex,
     shapeVariant: row.shape_variant ?? undefined,
+    modelUrl: row.model_url || undefined,
   };
 }
 

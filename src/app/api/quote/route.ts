@@ -12,6 +12,8 @@ interface QuoteRequestBody {
   roomLabel?: string;
   units?: number;
   estimateTotal?: number;
+  /** Specific catalog item the buyer asked about (from the 360° viewer). */
+  product?: { slug?: string; name?: string; price?: number };
 }
 
 const resendApiKey = process.env.RESEND_API_KEY;
@@ -38,6 +40,12 @@ function buildNotificationHtml(body: QuoteRequestBody, reference: string): strin
     ["Room type", body.roomLabel ?? ""],
     ["Units", String(body.units ?? "")],
     ["Estimated total", formatCurrency(body.estimateTotal ?? 0)],
+    [
+      "Requested item",
+      body.product?.name
+        ? `${body.product.name}${typeof body.product.price === "number" ? ` (${formatCurrency(body.product.price)} / unit)` : ""}`
+        : "—",
+    ],
     ["Notes", body.notes || "—"],
   ];
 

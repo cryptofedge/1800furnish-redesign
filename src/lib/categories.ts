@@ -26,6 +26,12 @@ export interface Product {
   shape: ShapeKind;
   accentHex: string;
   shapeVariant?: ShapeVariant;
+  /**
+   * Optional public .glb URL for the 360° viewer (e.g. "/models/task-chair.glb"
+   * from public/models/, or a Supabase Storage URL via the model_url column).
+   * When absent the viewer renders the procedural `shape` instead.
+   */
+  modelUrl?: string;
 }
 
 export interface Category {

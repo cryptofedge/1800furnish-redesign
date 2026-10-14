@@ -3,8 +3,16 @@ import { ProductConfigurator } from "@/components/ProductConfigurator";
 import { QuoteCalculator } from "@/components/QuoteCalculator";
 import { ScrollExperience } from "@/components/ScrollExperience";
 import { SectorShowcase } from "@/components/SectorShowcase";
+import { getCategories } from "@/lib/catalog";
 
-export default function Home() {
+export default async function Home() {
+  // Flat product list so the quote calculator can attach a requested item
+  // when a buyer arrives from the 360° viewer (/?product=<slug>#quote).
+  const categories = await getCategories();
+  const catalog = categories.flatMap((c) =>
+    c.products.map((p) => ({ slug: p.slug, name: p.name, price: p.price }))
+  );
+
   return (
     <main id="top" className="flex flex-col">
       <HeroCinematic />
@@ -18,7 +26,7 @@ export default function Home() {
         <ScrollExperience />
       </div>
       <div id="quote">
-        <QuoteCalculator />
+        <QuoteCalculator catalog={catalog} />
       </div>
     </main>
   );

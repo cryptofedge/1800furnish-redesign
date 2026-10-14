@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, FileText, Loader2, CheckCircle2 } from "lucide-react";
+import { X, FileText, Loader2, CheckCircle2, Box } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   ADDON_KITS,
@@ -15,12 +15,34 @@ import {
   type RoomTypeId,
 } from "@/lib/quote-data";
 
-export function QuoteCalculator() {
+/** Minimal product info the calculator needs to attach a requested item to an RFQ. */
+export interface QuoteProductRef {
+  slug: string;
+  name: string;
+  price: number;
+}
+
+interface QuoteCalculatorProps {
+  /** Flat catalog so `/?product=<slug>#quote` (from the 360° viewer) can preselect an item. */
+  catalog?: QuoteProductRef[];
+}
+
+export function QuoteCalculator({ catalog = [] }: QuoteCalculatorProps) {
   const [roomType, setRoomType] = useState<RoomTypeId>(ROOM_TYPES[0].id);
   const [units, setUnits] = useState(ROOM_TYPES[0].defaultUnits);
   const [grade, setGrade] = useState<GradeId>(BED_GRADES[0].id);
   const [addons, setAddons] = useState<AddonId[]>(["linens"]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [requestedProduct, setRequestedProduct] = useState<QuoteProductRef | null>(null);
+
+  // Read `?product=` once on the client (window isn't available during prerender).
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get("product");
+    if (!slug) return;
+    const match = catalog.find((p) => p.slug === slug);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (match) setRequestedProduct(match);
+  }, [catalog]);
 
   const activeRoomType = ROOM_TYPES.find((r) => r.id === roomType)!;
 
@@ -53,6 +75,24 @@ export function QuoteCalculator() {
           unit count, and get a real-time estimate you can turn into a formal RFQ.
         </p>
       </div>
+
+      {requestedProduct && (
+        <div className="glass-pill mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl px-5 py-3">
+          <p className="flex items-center gap-2 text-sm text-slate-200">
+            <Box className="h-4 w-4 text-amber-400" />
+            <span>
+              Requested item: <strong>{requestedProduct.name}</strong>
+              <span className="text-slate-400"> · {formatCurrency(requestedProduct.price)} / unit</span>
+            </span>
+          </p>
+          <button
+            onClick={() => setRequestedProduct(null)}
+            className="text-xs text-slate-400 underline-offset-2 hover:text-slate-200 hover:underline"
+          >
+            Remove
+          </button>
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
         <div className="glass-panel flex flex-col gap-8 rounded-2xl p-6 sm:p-8">
@@ -220,6 +260,7 @@ export function QuoteCalculator() {
             roomLabel={activeRoomType.label}
             units={units}
             estimateTotal={estimate.estimatedTotal}
+            requestedProduct={requestedProduct}
             onClose={() => setModalOpen(false)}
           />
         )}
@@ -232,11 +273,13 @@ function QuoteModal({
   roomLabel,
   units,
   estimateTotal,
+  requestedProduct,
   onClose,
 }: {
   roomLabel: string;
   units: number;
   estimateTotal: number;
+  requestedProduct: QuoteProductRef | null;
   onClose: () => void;
 }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
@@ -260,6 +303,7 @@ function QuoteModal({
           roomLabel,
           units,
           estimateTotal,
+          product: requestedProduct ?? undefined,
         }),
       });
       const data = await res.json().catch(() => null);
@@ -312,6 +356,11 @@ function QuoteModal({
               <p className="mt-1 text-sm text-slate-400">
                 {roomLabel} · {units} units · Est. {formatCurrency(estimateTotal)}
               </p>
+              {requestedProduct && (
+                <p className="mt-1 text-xs text-amber-300">
+                  + Requested item: {requestedProduct.name}
+                </p>
+              )}
             </div>
 
             <input
@@ -343,6 +392,7 @@ function QuoteModal({
             <textarea
               name="notes"
               placeholder="Delivery timeline, site details, or special requirements"
+              defaultValue={requestedProduct ? `Interested in: ${requestedProduct.name}. ` : ""}
               rows={3}
               className="rounded-lg border border-slate-200/15 bg-charcoal-900/60 px-4 py-2.5 text-sm text-slate-200 placeholder:text-slate-500 focus:border-amber-400/50 focus:outline-none"
             />

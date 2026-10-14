@@ -1,15 +1,14 @@
 "use client";
 
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
   Environment,
   ContactShadows,
   Html,
   OrbitControls,
-  useGLTF,
 } from "@react-three/drei";
-import * as THREE from "three";
+import { GltfModel } from "./viewer/GltfModel";
 
 export interface Hotspot {
   id: string;
@@ -62,24 +61,6 @@ function FallbackChair({ finishHex }: { finishHex: string }) {
       ))}
     </group>
   );
-}
-
-function GltfModel({ url, finishHex }: { url: string; finishHex: string }) {
-  const { scene } = useGLTF(url);
-  const cloned = useMemo(() => scene.clone(true), [scene]);
-
-  useMemo(() => {
-    cloned.traverse((child) => {
-      if (!(child instanceof THREE.Mesh) || !child.material) return;
-      const name = child.name.toLowerCase();
-      if (name.includes("upholstery") || name.includes("fabric")) {
-        const mat = child.material as THREE.MeshStandardMaterial;
-        mat.color = new THREE.Color(finishHex);
-      }
-    });
-  }, [cloned, finishHex]);
-
-  return <primitive object={cloned} position={[0, -0.5, 0]} />;
 }
 
 function HotspotMarker({
@@ -143,7 +124,7 @@ export function Scene3D({ modelUrl, finishHex, hotspots }: Scene3DProps) {
 
       <Suspense fallback={null}>
         {modelUrl ? (
-          <GltfModel url={modelUrl} finishHex={finishHex} />
+          <GltfModel url={modelUrl} finishHex={finishHex} position={[0, -0.5, 0]} />
         ) : (
           <FallbackChair finishHex={finishHex} />
         )}
