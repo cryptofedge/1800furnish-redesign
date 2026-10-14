@@ -6,6 +6,7 @@ import { ngmwCategory } from "./ngmw";
 import { ngfsCategory } from "./ngfs";
 import { ngtsCtCategory } from "./ngts-ct";
 import { ngpxCategory } from "./ngpx";
+import { threatDetectionCategory } from "./threat-detection";
 
 function stub(
   slug: string,
@@ -52,13 +53,7 @@ export const SECURITY_CATEGORIES: SecurityCategory[] = [
     "Flush and surface-mount scanning lanes, 3D dual-view systems, and a full family of handheld inspection mirrors and video poles.",
     13
   ),
-  stub(
-    "threat-detection",
-    "Security & Threat Detection",
-    "Threat Detection",
-    "Trace explosive/narcotics detectors, dangerous liquid inspection, radiation monitoring, and chemical/gas detection instruments.",
-    11
-  ),
+  threatDetectionCategory,
   stub(
     "tscm",
     "TSCM & Counter-Surveillance",

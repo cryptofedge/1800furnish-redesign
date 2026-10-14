@@ -3,7 +3,7 @@
 Full catalog has **~116 products across 14 categories**. Status below —
 pick up any "pending" category by following the pattern in `ngvj.ts`.
 
-**Live now:** `/security` (hub) + `/security/ngvj` (14 products, 4 tiers) + `/security/audio-protection` (3 units, 1 tier) + `/security/ngz-3825t` (1 unit, 1 tier) + `/security/ngmw` (2 units, 1 tier) + `/security/ngfs` (4 units, 2 tiers) + `/security/ngts-ct` (4 units, 2 tiers, **no images yet**) + `/security/ngpx` (9 units, 3 tiers, **no images yet**)
+**Live now:** `/security` (hub) + `/security/ngvj` (14 products, 4 tiers) + `/security/audio-protection` (3 units, 1 tier) + `/security/ngz-3825t` (1 unit, 1 tier) + `/security/ngmw` (2 units, 1 tier) + `/security/ngfs` (4 units, 2 tiers) + `/security/ngts-ct` (4 units, 2 tiers, **no images yet**) + `/security/ngpx` (9 units, 3 tiers, **no images yet**) + `/security/threat-detection` (11 units, 4 tiers, **no images yet**)
 
 | # | Category (slug) | Products | Status | Catalog source pages |
 |---|---|---|---|---|
@@ -17,20 +17,20 @@ pick up any "pending" category by following the pattern in `ngvj.ts`.
 | 8 | Millimeter Wave Body Scanners (`ngmw`) | 2 | ✅ **done** | 66–69 |
 | 9 | Foot & Shoe Security Screening (`ngfs`) | 4 | ✅ **done** | 70–71 |
 | 10 | Under Vehicle Surveillance Systems (`nguv`) | 13 | ⏳ pending | 72–79 |
-| 11 | Security & Threat Detection (`threat-detection`) | 11 | ⏳ pending | 80–84 |
+| 11 | Security & Threat Detection (`threat-detection`) | 11 | ✅ **done** (specs only — images pending: pages 81–84) | 80–84 |
 | 12 | TSCM & Counter-Surveillance (`tscm`) | 20 | ⏳ pending | 85–92 |
 | 13 | Signal Jamming Solutions (`ngjm`) | 2 | ⛔ **removed from site** — RF jammers are illegal to market/sell in the US (FCC, 47 U.S.C. §§302a, 333) except to authorized federal agencies. Owner decision 2026-10-14; do not re-add without legal sign-off | 93–96 |
 | 14 | Anti-Recording / Audio Protection (`audio-protection`) | 3 | ✅ **done** | 97–98 |
 
 Page 99 is the closing compliance/contact page (no products).
 
-**Recommended next pick:** Security & Threat Detection (`threat-detection`,
-11 products, pages 80–84), then Walk-Through Metal Detectors (`nghwt`, 12).
+**Recommended next pick:** Walk-Through Metal Detectors (`nghwt`, 12
+products, pages 45–58).
 The larger categories (`nguv` 13, `nghh` 16, `tscm` 20) and the
 watermark-blocked `ngz` (5, see below) are better split across sessions.
 (`ngjm` was removed for legal reasons, see the table.)
 
-**Image backlog:** `ngts-ct` and `ngpx` shipped specs-only because the source
+**Image backlog:** `ngts-ct`, `ngpx`, and `threat-detection` shipped specs-only because the source
 PDF wasn't on the machine. When it's available, extract and review those
 images first.
 
