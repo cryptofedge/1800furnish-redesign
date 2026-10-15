@@ -8,13 +8,13 @@
 
 @theme {
   /* Surfaces */
-  --color-paper: #e9eae6; /* page ground: neutral grey paper, not cream */
+  --color-paper: #f5e6ef; /* page ground: soft fuchsia blush (owner's pick, 2026-10-15) */
   --color-well: #ffffff; /* product photo wells, cards, inputs */
   --color-ink: #151515; /* primary text, heavy rules, dark bands */
   --color-ink-2: #4b4d4b; /* secondary text (7:1 on paper) */
   --color-ink-3: #686a67; /* meta text, captions (4.6:1 on paper) */
-  --color-rule: #c9cac5; /* 1px hairlines between catalog cells */
-  --color-mist: #dde4e1; /* calm sage-grey for bands and overlays — never black */
+  --color-rule: #dcc5d3; /* 1px hairlines, tinted to the blush */
+  --color-mist: #ecd2e2; /* deeper calm blush for bands and overlays — never black */
 
   /* One accent, for actions only: safety orange */
   --color-accent: #ff5a1f; /* fills; always with ink text on top */
@@ -49,10 +49,10 @@ html {
 body {
   background-color: var(--color-paper);
   background-image:
-    linear-gradient(to right, rgb(21 21 21 / 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(21 21 21 / 0.05) 1px, transparent 1px),
-    linear-gradient(to right, rgb(21 21 21 / 0.022) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(21 21 21 / 0.022) 1px, transparent 1px);
+    linear-gradient(to right, rgb(122 30 92 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(122 30 92 / 0.07) 1px, transparent 1px),
+    linear-gradient(to right, rgb(122 30 92 / 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(122 30 92 / 0.03) 1px, transparent 1px);
   background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
   background-position: -1px -1px;
   color: var(--color-ink);

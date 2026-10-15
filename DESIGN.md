@@ -25,12 +25,12 @@ hand-roll colors, radii or shadows.
 
 | Token | Use |
 |---|---|
-| `paper` | Page ground (`bg-paper`). |
+| `paper` | Page ground (`bg-paper`): a soft fuchsia blush. |
 | `well` | White: product photo wells, cards, form fields, side panels. |
 | `ink` | Primary text, 2px section rules, dark bands (footer). |
 | `ink-2` | Secondary text, descriptions. |
 | `ink-3` | Meta text, captions, placeholders. Never for body copy. |
-| `rule` | 1px hairlines between cells and around panels. |
+| `rule` | 1px hairlines between cells and around panels (blush-tinted). |
 | `accent` | Safety orange. **Fills only, actions only** (primary buttons, the active state marker). Text on it is always `text-ink`. |
 | `accent-ink` | Orange for text/links on paper or white (contrast-safe). Use sparingly. |
 | `ok` / `warn` / `danger` | Status only (live / coming soon / errors). |
