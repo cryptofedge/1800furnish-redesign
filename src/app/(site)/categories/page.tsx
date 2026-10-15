@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { getCategories } from "@/lib/catalog";
 import { SITE_NAME } from "@/lib/site";
+import { CatalogSearch } from "@/components/CatalogSearch";
 
 export const metadata: Metadata = {
   title: `Shop by Category | ${SITE_NAME}`,
@@ -13,6 +14,9 @@ export const metadata: Metadata = {
 export default async function CategoriesIndexPage() {
   const CATEGORIES = await getCategories();
   const productTotal = CATEGORIES.reduce((sum, c) => sum + c.products.length, 0);
+  const searchable = CATEGORIES.flatMap((c) =>
+    c.products.map((p) => ({ ...p, categorySlug: c.slug, categoryLabel: c.label }))
+  );
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-8 sm:py-16">
@@ -29,7 +33,8 @@ export default async function CategoriesIndexPage() {
         </div>
       </header>
 
-      <div className="catalog-grid mt-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <CatalogSearch products={searchable} categories={CATEGORIES.map(({ slug, label }) => ({ slug, label }))}>
+      <div className="catalog-grid mt-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {CATEGORIES.map((category, i) => (
           <Link
             key={category.slug}
@@ -65,6 +70,7 @@ export default async function CategoriesIndexPage() {
           </Link>
         ))}
       </div>
+      </CatalogSearch>
     </div>
   );
 }

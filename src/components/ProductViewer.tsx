@@ -11,6 +11,7 @@ import { formatCurrency } from "@/lib/quote-data";
 import type { Product } from "@/lib/categories";
 import { TURNTABLE_KEY_STEP, type TurntableApi } from "./viewer/useTurntable";
 import { PhotoStage, type PhotoZoomApi } from "./viewer/PhotoStage";
+import { AddToQuoteButton } from "./quote/AddToQuoteButton";
 
 const ViewerStage = dynamic(() => import("./viewer/ViewerStage").then((m) => m.ViewerStage), {
   ssr: false,
@@ -360,6 +361,11 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
 
           {/* Pinned to the bottom of the phone sheet so the CTA never scrolls out of view. */}
           <div className="sticky bottom-0 -mx-4 -mb-4 mt-auto border-t border-rule bg-well p-4 sm:-mx-5 sm:-mb-5 sm:p-5 md:static md:mx-0 md:mb-0 md:border-0 md:p-0">
+            <AddToQuoteButton
+              variant="button"
+              product={{ slug: product.slug, name: product.name, price: product.price, image: product.image }}
+              className="mb-2"
+            />
             <Link
               href={`/?product=${encodeURIComponent(product.slug)}#quote`}
               className="btn btn-primary w-full"

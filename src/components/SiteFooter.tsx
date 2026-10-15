@@ -16,7 +16,10 @@ const SHOP_LINKS = [
 const COMPANY_LINKS = [
   { label: "Request a Quote", href: "/#quote" },
   { label: "Nooksguard Security", href: "/security" },
-  { label: "Contact Sales", href: "mailto:sales@merkabanooks.com" },
+  // "Contact Sales" returns once a working sales inbox exists (merkabanooks.com
+  // has no mail service yet, so sales@merkabanooks.com would bounce).
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Use", href: "/terms" },
 ];
 
 // Calm mist band (the owner asked for no black backgrounds). Ink text and the

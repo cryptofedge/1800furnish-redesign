@@ -14,7 +14,7 @@ export default async function Home() {
   // when a buyer arrives from the 360° viewer (/?product=<slug>#quote).
   const categories = await getCategories();
   const catalog = categories.flatMap((c) =>
-    c.products.map((p) => ({ slug: p.slug, name: p.name, price: p.price }))
+    c.products.map((p) => ({ slug: p.slug, name: p.name, price: p.price, image: p.image }))
   );
 
   // Hero read-out figures, computed from the live data so they never go stale.

@@ -7,6 +7,7 @@ import { Rotate3d, ZoomIn } from "lucide-react";
 import { formatCurrency } from "@/lib/quote-data";
 import type { Product } from "@/lib/categories";
 import { ProductViewer } from "./ProductViewer";
+import { AddToQuoteButton } from "./quote/AddToQuoteButton";
 
 // Catalog cards: the product photo on white is the primary view (it's what a
 // buyer scans), and the product viewer opens on demand — on the real photo,
@@ -72,7 +73,11 @@ export function ProductGrid({ products }: { products: Product[] }) {
             </button>
 
             <div className="flex flex-1 flex-col border-t border-rule p-4">
-              <h3 className="font-semibold leading-snug text-ink">{product.name}</h3>
+              <h3 className="font-semibold leading-snug text-ink">
+                <Link href={`/products/${product.slug}`} className="transition-colors hover:text-accent-ink">
+                  {product.name}
+                </Link>
+              </h3>
               <p className="mt-1 flex-1 text-sm text-ink-2">{product.description}</p>
 
               <div className="mt-4 flex items-end justify-between gap-3">
@@ -80,12 +85,9 @@ export function ProductGrid({ products }: { products: Product[] }) {
                   <span className="type-data text-xl font-medium text-ink">{formatCurrency(product.price)}</span>
                   <span className="type-data ml-1 text-xs text-ink-3">/ unit</span>
                 </p>
-                <Link
-                  href={`/?product=${encodeURIComponent(product.slug)}#quote`}
-                  className="link text-sm"
-                >
-                  Get a quote
-                </Link>
+                <AddToQuoteButton
+                  product={{ slug: product.slug, name: product.name, price: product.price, image: product.image }}
+                />
               </div>
             </div>
           </li>

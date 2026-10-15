@@ -11,8 +11,16 @@ import {
   type ReactNode,
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { X, FileText, Loader2, CheckCircle2, Box } from "lucide-react";
+import { X, FileText, Loader2, CheckCircle2, ClipboardList } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  clearQuote,
+  ensureInQuote,
+  openQuoteList,
+  quoteListTotals,
+  useQuoteList,
+  type QuoteListItem,
+} from "@/lib/quote-list";
 import {
   ADDON_KITS,
   BED_GRADES,
@@ -29,10 +37,14 @@ export interface QuoteProductRef {
   slug: string;
   name: string;
   price: number;
+  image: string;
 }
 
+/** "package" = the facility estimate (+ any listed items); "list" = the quote list only. */
+type QuoteMode = "package" | "list";
+
 interface QuoteCalculatorProps {
-  /** Flat catalog so `/?product=<slug>#quote` (from the 360° viewer) can preselect an item. */
+  /** Flat catalog so `/?product=<slug>#quote` links can add that item to the quote list. */
   catalog?: QuoteProductRef[];
 }
 
@@ -64,17 +76,26 @@ export function QuoteCalculator({ catalog = [] }: QuoteCalculatorProps) {
   const [units, setUnits] = useState(ROOM_TYPES[0].defaultUnits);
   const [grade, setGrade] = useState<GradeId>(BED_GRADES[0].id);
   const [addons, setAddons] = useState<AddonId[]>(["linens"]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [requestedProduct, setRequestedProduct] = useState<QuoteProductRef | null>(null);
+  const [modal, setModal] = useState<QuoteMode | null>(null);
+  const quoteList = useQuoteList();
+  const listTotals = quoteListTotals(quoteList);
   const unitsId = useId();
 
-  // Read `?product=` once on the client (window isn't available during prerender).
+  // Read the URL once on the client (window isn't available during prerender):
+  // `?product=<slug>` adds that item to the quote list; `?list=1` (the quote
+  // list drawer's button) opens the request form for the list straight away.
   useEffect(() => {
-    const slug = new URLSearchParams(window.location.search).get("product");
-    if (!slug) return;
-    const match = catalog.find((p) => p.slug === slug);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (match) setRequestedProduct(match);
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get("product");
+    const match = slug ? catalog.find((p) => p.slug === slug) : undefined;
+    if (match) ensureInQuote(match);
+    if (params.get("list") === "1") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setModal("list");
+    }
+    if (slug || params.has("list")) {
+      window.history.replaceState(null, "", window.location.pathname + window.location.hash);
+    }
   }, [catalog]);
 
   const activeRoomType = ROOM_TYPES.find((r) => r.id === roomType)!;
@@ -106,26 +127,34 @@ export function QuoteCalculator({ catalog = [] }: QuoteCalculatorProps) {
         </p>
       </header>
 
-      {requestedProduct && (
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-y border-rule border-l-[3px] border-l-ink bg-well py-2 pl-4 pr-2">
+      {quoteList.length > 0 && (
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-y border-rule border-l-[3px] border-l-ink bg-well py-3 pl-4 pr-3">
           <p className="flex min-w-0 items-start gap-2 text-sm text-ink">
-            <Box className="mt-0.5 h-4 w-4 shrink-0 text-ink-3" aria-hidden="true" />
+            <ClipboardList className="mt-0.5 h-4 w-4 shrink-0 text-ink-3" aria-hidden="true" />
             <span>
-              <span className="type-label mr-2">Requested item</span>
-              <strong className="font-semibold">{requestedProduct.name}</strong>
+              <span className="type-label mr-2">Your quote list</span>
+              <strong className="font-semibold">
+                {quoteList
+                  .slice(0, 3)
+                  .map((i) => `${i.name} × ${i.qty}`)
+                  .join(", ")}
+                {quoteList.length > 3 ? `, +${quoteList.length - 3} more` : ""}
+              </strong>
               <span className="text-ink-2">
                 {" · "}
-                <span className="type-data">{formatCurrency(requestedProduct.price)}</span> / unit
+                <span className="type-data">{listTotals.units}</span> units · est.{" "}
+                <span className="type-data">{formatCurrency(listTotals.subtotal)}</span>
               </span>
             </span>
           </p>
-          <button
-            type="button"
-            onClick={() => setRequestedProduct(null)}
-            className="btn-tool min-h-11"
-          >
-            Remove
-          </button>
+          <div className="flex flex-wrap gap-2">
+            <button type="button" onClick={openQuoteList} className="btn-tool min-h-11">
+              Edit list
+            </button>
+            <button type="button" onClick={() => setModal("list")} className="btn btn-primary">
+              Request quote for these items
+            </button>
+          </div>
         </div>
       )}
 
@@ -307,7 +336,7 @@ export function QuoteCalculator({ catalog = [] }: QuoteCalculatorProps) {
           <div className="flex flex-col gap-3 p-5 sm:p-6">
             <button
               type="button"
-              onClick={() => setModalOpen(true)}
+              onClick={() => setModal("package")}
               className="btn btn-primary w-full"
             >
               Request this quote
@@ -320,13 +349,14 @@ export function QuoteCalculator({ catalog = [] }: QuoteCalculatorProps) {
       </div>
 
       <AnimatePresence>
-        {modalOpen && (
+        {modal && (
           <QuoteModal
+            mode={modal}
             roomLabel={activeRoomType.label}
             units={units}
             estimateTotal={estimate.estimatedTotal}
-            requestedProduct={requestedProduct}
-            onClose={() => setModalOpen(false)}
+            items={quoteList}
+            onClose={() => setModal(null)}
           />
         )}
       </AnimatePresence>
@@ -335,18 +365,21 @@ export function QuoteCalculator({ catalog = [] }: QuoteCalculatorProps) {
 }
 
 function QuoteModal({
+  mode,
   roomLabel,
   units,
   estimateTotal,
-  requestedProduct,
+  items,
   onClose,
 }: {
+  mode: QuoteMode;
   roomLabel: string;
   units: number;
   estimateTotal: number;
-  requestedProduct: QuoteProductRef | null;
+  items: QuoteListItem[];
   onClose: () => void;
 }) {
+  const listTotals = quoteListTotals(items);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const fieldId = useId();
@@ -418,16 +451,16 @@ function QuoteModal({
           email: formData.get("email"),
           phone: formData.get("phone"),
           notes: formData.get("notes"),
-          roomLabel,
-          units,
-          estimateTotal,
-          product: requestedProduct ?? undefined,
+          ...(mode === "package" ? { roomLabel, units, estimateTotal } : {}),
+          items: items.map(({ slug, name, price, qty }) => ({ slug, name, price, qty })),
         }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) {
         throw new Error(data?.error || "Request failed");
       }
+      // The list has been sent; start fresh so it isn't requested twice.
+      if (items.length > 0) clearQuote();
       setStatus("success");
     } catch (err) {
       setErrorMessage(err instanceof Error ? err.message : "Something went wrong.");
@@ -490,13 +523,25 @@ function QuoteModal({
               <h3 id={`${fieldId}-title`} className="type-display text-3xl text-ink">
                 Instant quote request
               </h3>
-              <p className="type-data mt-2 text-sm text-ink-2">
-                {roomLabel} · {units} units · Est. {formatCurrency(estimateTotal)}
-              </p>
-              {requestedProduct && (
-                <p className="mt-2 border-l-[3px] border-ink pl-2 text-xs text-ink">
-                  + Requested item: <span className="font-semibold">{requestedProduct.name}</span>
+              {mode === "package" ? (
+                <p className="type-data mt-2 text-sm text-ink-2">
+                  {roomLabel} · {units} units · Est. {formatCurrency(estimateTotal)}
                 </p>
+              ) : (
+                <p className="type-data mt-2 text-sm text-ink-2">
+                  {listTotals.lines} item{listTotals.lines === 1 ? "" : "s"} · {listTotals.units} units · Est.{" "}
+                  {formatCurrency(listTotals.subtotal)}
+                </p>
+              )}
+              {items.length > 0 && (
+                <ul className="mt-2 flex flex-col gap-0.5 border-l-[3px] border-ink pl-2 text-xs text-ink">
+                  {mode === "package" && <li className="text-ink-2">Plus your quote list:</li>}
+                  {items.map((i) => (
+                    <li key={i.slug}>
+                      <span className="font-semibold">{i.name}</span> × <span className="type-data">{i.qty}</span>
+                    </li>
+                  ))}
+                </ul>
               )}
             </div>
 
@@ -560,7 +605,6 @@ function QuoteModal({
                 id={`${fieldId}-notes`}
                 name="notes"
                 placeholder="Delivery timeline, site details, or special requirements"
-                defaultValue={requestedProduct ? `Interested in: ${requestedProduct.name}. ` : ""}
                 rows={3}
                 className="field"
               />

@@ -9,6 +9,7 @@ import { formatCurrency } from "@/lib/quote-data";
 import type { Product } from "@/lib/categories";
 import { PhotoStage, type PhotoZoomApi } from "./viewer/PhotoStage";
 import { ProductViewer } from "./ProductViewer";
+import { AddToQuoteButton } from "./quote/AddToQuoteButton";
 
 export interface InspectorItem {
   product: Product;
@@ -102,11 +103,18 @@ export function ProductConfigurator({ items }: { items: InspectorItem[] }) {
             <Link href={`/?product=${encodeURIComponent(product.slug)}#quote`} className="btn btn-primary w-full">
               Request a quote for this item
             </Link>
+            <AddToQuoteButton
+              variant="button"
+              product={{ slug: product.slug, name: product.name, price: product.price, image: product.image }}
+            />
             <button type="button" onClick={openViewer} className="btn btn-secondary w-full">
               <Maximize2 className="h-4 w-4" aria-hidden="true" />
               View full screen
             </button>
-            <Link href={`/categories/${category.slug}`} className="link mt-1 inline-flex items-center gap-1 self-start text-sm">
+            <Link href={`/products/${product.slug}`} className="link mt-1 inline-flex items-center gap-1 self-start text-sm">
+              Product details <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            <Link href={`/categories/${category.slug}`} className="link inline-flex items-center gap-1 self-start text-sm">
               Browse {category.label} <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>

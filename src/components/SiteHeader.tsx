@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/lib/categories";
 import { NooksguardButton } from "./NooksguardButton";
+import { QuoteListDrawer } from "./quote/QuoteListDrawer";
 
 const NAV_LINKS = [
   { label: "Shop", href: "/categories" },
@@ -66,6 +67,7 @@ export function SiteHeader({ categories }: SiteHeaderProps) {
           {/* Nooksguard logo button: emblem + name on wide screens, emblem only below. */}
           <NooksguardButton label="Nooksguard" className="hidden lg:inline-flex" />
           <NooksguardButton iconOnly className="lg:hidden" />
+          <QuoteListDrawer />
           <Link href="/#quote" className="btn btn-primary hidden sm:inline-flex">
             Request a quote
           </Link>

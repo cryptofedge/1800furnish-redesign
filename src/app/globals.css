@@ -442,6 +442,18 @@ body {
   }
 }
 
+@keyframes quote-pulse {
+  0% {
+    scale: 1;
+  }
+  40% {
+    scale: 1.12;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
 @keyframes marquee {
   to {
     transform: translateX(-50%);

@@ -12,8 +12,29 @@ interface QuoteRequestBody {
   roomLabel?: string;
   units?: number;
   estimateTotal?: number;
-  /** Specific catalog item the buyer asked about (from the 360° viewer). */
+  /** Specific catalog item the buyer asked about (older single-item links). */
   product?: { slug?: string; name?: string; price?: number };
+  /** The buyer's quote list: catalog items with quantities. */
+  items?: { slug?: string; name?: string; price?: number; qty?: number }[];
+}
+
+/** Keep only well-formed list lines (the body comes from the browser). */
+function cleanItems(items: QuoteRequestBody["items"]) {
+  if (!Array.isArray(items)) return [];
+  return items
+    .filter((i) => i && typeof i.name === "string" && Number.isFinite(i.qty) && (i.qty ?? 0) > 0)
+    .slice(0, 200)
+    .map((i) => ({
+      slug: String(i.slug ?? ""),
+      name: String(i.name),
+      price: typeof i.price === "number" && Number.isFinite(i.price) ? i.price : 0,
+      qty: Math.min(99999, Math.round(i.qty as number)),
+    }));
+}
+
+function itemsSummary(items: ReturnType<typeof cleanItems>): string {
+  if (items.length === 0) return "—";
+  return items.map((i) => `${i.name} × ${i.qty} (${formatCurrency(i.price)} / unit)`).join("; ");
 }
 
 const resendApiKey = process.env.RESEND_API_KEY;
@@ -37,9 +58,10 @@ function buildNotificationHtml(body: QuoteRequestBody, reference: string): strin
     ["Contact", body.contactName ?? ""],
     ["Email", body.email ?? ""],
     ["Phone", body.phone || "—"],
-    ["Room type", body.roomLabel ?? ""],
-    ["Units", String(body.units ?? "")],
-    ["Estimated total", formatCurrency(body.estimateTotal ?? 0)],
+    ["Room type", body.roomLabel ?? "—"],
+    ["Units", body.units ? String(body.units) : "—"],
+    ["Estimated total", body.estimateTotal ? formatCurrency(body.estimateTotal) : "—"],
+    ["Quote list", itemsSummary(cleanItems(body.items))],
     [
       "Requested item",
       body.product?.name
@@ -71,10 +93,11 @@ function buildConfirmationHtml(body: QuoteRequestBody, reference: string): strin
     <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px">
       <h2 style="margin:0 0 12px">Thanks, ${escapeHtml(body.contactName ?? "")}.</h2>
       <p style="color:#374151;font-size:14px;line-height:1.5">
-        We received your quote request for <strong>${escapeHtml(body.roomLabel ?? "")}</strong>
-        (${escapeHtml(String(body.units ?? ""))} units, est. ${formatCurrency(
-    body.estimateTotal ?? 0
-  )}). Reference <strong>${escapeHtml(reference)}</strong>.
+        We received your quote request${
+          body.roomLabel
+            ? ` for <strong>${escapeHtml(body.roomLabel)}</strong> (${escapeHtml(String(body.units ?? ""))} units, est. ${formatCurrency(body.estimateTotal ?? 0)})`
+            : ""
+        }${cleanItems(body.items).length ? `, including ${escapeHtml(itemsSummary(cleanItems(body.items)))}` : ""}. Reference <strong>${escapeHtml(reference)}</strong>.
       </p>
       <p style="color:#374151;font-size:14px;line-height:1.5">
         Our procurement team will follow up within one business day.

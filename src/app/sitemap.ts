@@ -14,6 +14,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.8,
     })),
+    ...categories.flatMap((category) =>
+      category.products.map((product) => ({
+        url: `${SITE_URL}/products/${product.slug}`,
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      }))
+    ),
+    { url: `${SITE_URL}/privacy`, changeFrequency: "yearly" as const, priority: 0.2 },
+    { url: `${SITE_URL}/terms`, changeFrequency: "yearly" as const, priority: 0.2 },
     { url: `${SITE_URL}/security`, changeFrequency: "monthly", priority: 0.8 },
     // Only list security categories with real product pages, not "coming soon" stubs.
     ...SECURITY_CATEGORIES.filter((category) => category.status === "live").map((category) => ({
