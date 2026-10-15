@@ -9,6 +9,7 @@ import { ngpxCategory } from "./ngpx";
 import { threatDetectionCategory } from "./threat-detection";
 import { nghwtCategory } from "./nghwt";
 import { nghhCategory } from "./nghh";
+import { tscmCategory } from "./tscm";
 
 function stub(
   slug: string,
@@ -39,13 +40,7 @@ export const SECURITY_CATEGORIES: SecurityCategory[] = [
   // Under Vehicle Surveillance (nguv, catalog pages 72–79) intentionally
   // omitted: owner decided 2026-10-14 it doesn't fit the site.
   threatDetectionCategory,
-  stub(
-    "tscm",
-    "TSCM & Counter-Surveillance",
-    "Counter-Surveillance",
-    "Hidden camera detection, smart terminal and WiFi inspection, and handheld/portable signal detectors for the full TSCM workflow.",
-    20
-  ),
+  tscmCategory,
   // Signal Jamming (ngjm, catalog pages 93–96) intentionally omitted: RF jammers
   // can't be marketed or sold in the US except to authorized federal agencies
   // (FCC, 47 U.S.C. §§302a, 333). Don't re-add without a legal sign-off.
