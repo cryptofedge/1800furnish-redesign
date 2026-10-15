@@ -34,6 +34,8 @@ interface Scene3DProps {
   /** Controlled open hotspot id. When omitted, Scene3D manages it internally. */
   activeHotspot?: string | null;
   onActiveHotspotChange?: (id: string | null) => void;
+  /** Render loop on/off; the parent turns it off while the section is scrolled out of view. */
+  active?: boolean;
 }
 
 function FallbackChair({ finishHex }: { finishHex: string }) {
@@ -136,6 +138,7 @@ export function Scene3D({
   hotspots,
   activeHotspot: controlledHotspot,
   onActiveHotspotChange,
+  active = true,
 }: Scene3DProps) {
   const [internalHotspot, setInternalHotspot] = useState<string | null>(null);
   const isControlled = controlledHotspot !== undefined;
@@ -154,6 +157,7 @@ export function Scene3D({
     <Canvas
       shadows
       dpr={[1, 1.75]}
+      frameloop={active ? "always" : "never"}
       camera={{ position: [2.4, 1.6, 3.2], fov: 35 }}
       onPointerMissed={() => setActiveHotspot(null)}
     >

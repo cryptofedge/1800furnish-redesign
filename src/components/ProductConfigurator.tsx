@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Box, Loader2 } from "lucide-react";
 import { FINISHES } from "@/lib/finishes";
@@ -50,6 +50,18 @@ export function ProductConfigurator() {
   const [activeFinish, setActiveFinish] = useState(FINISHES[0]);
   const [enabled, setEnabled] = useState(true);
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
+  // Pause the 3D render loop while this section is off-screen (the home page
+  // also runs the hero room, so idle canvases shouldn't keep drawing).
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [onScreen, setOnScreen] = useState(false);
+
+  useEffect(() => {
+    const el = previewRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting), { threshold: 0.05 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useEffect(() => {
     const isLowPower =
@@ -76,6 +88,7 @@ export function ProductConfigurator() {
 
       <div className="mt-10 grid gap-4 lg:grid-cols-[1fr_320px] lg:gap-6">
         <div
+          ref={previewRef}
           role="region"
           aria-label="3D chair preview"
           className="panel relative h-[400px] overflow-hidden sm:h-[560px]"
@@ -86,6 +99,7 @@ export function ProductConfigurator() {
               hotspots={HOTSPOTS}
               activeHotspot={activeHotspot}
               onActiveHotspotChange={setActiveHotspot}
+              active={onScreen}
             />
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-4 p-6 text-center">

@@ -5,6 +5,8 @@ import { ScrollExperience } from "@/components/ScrollExperience";
 import { SectorShowcase } from "@/components/SectorShowcase";
 import { getCategories } from "@/lib/catalog";
 import { SECURITY_CATEGORIES } from "@/lib/nooksguard/categories";
+import { ROOM_LAYOUT } from "@/components/room/room-layout";
+import type { RoomItem } from "@/components/room/RoomScene";
 
 export default async function Home() {
   // Flat product list so the quote calculator can attach a requested item
@@ -24,9 +26,17 @@ export default async function Home() {
     ),
   };
 
+  // Real catalog products for the hero's live 3D room. A product missing from
+  // the catalog (e.g. deleted in the admin) is simply left out of the room.
+  const productsBySlug = new Map(categories.flatMap((c) => c.products).map((p) => [p.slug, p]));
+  const roomItems: RoomItem[] = ROOM_LAYOUT.flatMap((placement) => {
+    const product = productsBySlug.get(placement.slug);
+    return product ? [{ product, placement }] : [];
+  });
+
   return (
     <main id="top" className="flex flex-col">
-      <HeroCinematic stats={stats} />
+      <HeroCinematic stats={stats} roomItems={roomItems} />
       <div id="configurator">
         <ProductConfigurator />
       </div>

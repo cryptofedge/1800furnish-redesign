@@ -93,6 +93,32 @@ procedural/placeholder state so the site is fully functional without assets:
   [`public/models/README.md`](public/models/README.md). Until then, the
   viewer renders a procedural stand-in chair.
 
+## Home-page 3D room
+
+The hero is a live 3D room ([`src/components/room/RoomScene.tsx`](src/components/room/RoomScene.tsx)):
+a cutaway single-occupancy unit furnished with real catalog products, drawn
+with outline edges on a drafting-grid floor.
+
+- **Which products, and where:** [`src/components/room/room-layout.ts`](src/components/room/room-layout.ts)
+  lists each product slug with its floor position, rotation, scale and callout
+  nudge. Order = callout numbers (01–06). The home page pulls those products
+  from the live catalog, so prices and names stay current; a product that no
+  longer exists is simply left out.
+- **Interaction:** drag (or swipe sideways) to turn the room within a limited
+  range; it sways gently when idle. There is deliberately no scroll/pinch zoom,
+  so the page never traps scrolling. Hover or focus a numbered callout to see
+  name and price; click a callout, a piece, or a row in the parts list below
+  to open it in the 360° viewer.
+- **Models:** pieces use the same procedural shapes as the viewer until a
+  product gets a `.glb` (`modelUrl` / `model_url`), which the room then loads
+  automatically.
+- **Performance:** loaded on demand; the room photo shows until it is ready and
+  remains the fallback for reduced-motion / data-saver devices (with a "View
+  the 3D room" opt-in). Rendering pauses while the hero is off-screen and while
+  the 360° viewer is open. The home-page chair viewer also pauses off-screen.
+- In development, React's double-mount check logs a few "synchronously unmount
+  a root" warnings from the floating callouts; production builds don't.
+
 ## 360° product viewer
 
 Every product card on `/categories/*` opens a fullscreen viewer
