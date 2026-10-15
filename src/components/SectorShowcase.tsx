@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, type ComponentType } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Building2, HeartHandshake, ShieldCheck, Sparkles, Landmark, Hotel, Home, Users } from "lucide-react";
+import { useRef, useState, type KeyboardEvent } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Building2, HeartHandshake, ShieldCheck, Sparkles, Landmark, Hotel, Home, Users, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SectorCard {
-  icon: ComponentType<{ className?: string }>;
+  icon: LucideIcon;
   title: string;
   description: string;
 }
@@ -77,57 +77,91 @@ const SECTORS: Sector[] = [
 
 export function SectorShowcase() {
   const [activeId, setActiveId] = useState<Sector["id"]>("institutional");
-  const active = SECTORS.find((s) => s.id === activeId)!;
+  const reduceMotion = useReducedMotion();
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // Standard tablist keyboard model: arrows move between tabs, Home/End jump.
+  function onTabKeyDown(e: KeyboardEvent<HTMLButtonElement>, index: number) {
+    let next: number | null = null;
+    if (e.key === "ArrowRight") next = (index + 1) % SECTORS.length;
+    else if (e.key === "ArrowLeft") next = (index - 1 + SECTORS.length) % SECTORS.length;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = SECTORS.length - 1;
+    if (next === null) return;
+    e.preventDefault();
+    setActiveId(SECTORS[next].id);
+    tabRefs.current[next]?.focus();
+  }
 
   return (
-    <section className="relative mx-auto w-full max-w-7xl px-6 py-24 sm:px-10">
-      <div className="mb-10 flex flex-col gap-3">
-        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">
-          Who We Serve
-        </span>
-        <h2 className="font-display text-3xl font-medium text-slate-200 sm:text-4xl">
+    <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-8 sm:py-24">
+      <header className="section-rule flex flex-col gap-3 pt-6">
+        <span className="type-label">Who We Serve</span>
+        <h2 className="type-display text-3xl text-ink sm:text-4xl">
           Two sides of the same supply chain.
         </h2>
+      </header>
+
+      <div
+        role="tablist"
+        aria-label="Sectors"
+        className="mt-8 grid grid-cols-2 border-b border-ink sm:flex"
+      >
+        {SECTORS.map((sector, i) => {
+          const selected = activeId === sector.id;
+          return (
+            <button
+              key={sector.id}
+              ref={(el) => {
+                tabRefs.current[i] = el;
+              }}
+              type="button"
+              role="tab"
+              id={`sector-tab-${sector.id}`}
+              aria-selected={selected}
+              aria-controls={`sector-panel-${sector.id}`}
+              tabIndex={selected ? 0 : -1}
+              onClick={() => setActiveId(sector.id)}
+              onKeyDown={(e) => onTabKeyDown(e, i)}
+              className={cn(
+                "-mb-px flex min-h-11 items-center border-b-[3px] px-3 py-3 text-left text-sm font-semibold transition-colors sm:px-4",
+                selected ? "border-accent text-ink" : "border-transparent text-ink-2 hover:text-ink"
+              )}
+            >
+              {sector.label}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="relative mb-10 inline-flex rounded-full border border-slate-200/10 bg-charcoal-900/60 p-1">
-        {SECTORS.map((sector) => (
-          <button
+      {/* One tabpanel per sector so every tab's aria-controls resolves; the
+          inactive panel is hidden and only the shown one fades in. */}
+      {SECTORS.map((sector) => {
+        const selected = activeId === sector.id;
+        return (
+          <div
             key={sector.id}
-            onClick={() => setActiveId(sector.id)}
-            className={cn(
-              "relative z-10 rounded-full px-5 py-2 text-sm font-medium transition-colors",
-              activeId === sector.id ? "text-charcoal-950" : "text-slate-400 hover:text-slate-200"
-            )}
+            role="tabpanel"
+            id={`sector-panel-${sector.id}`}
+            aria-labelledby={`sector-tab-${sector.id}`}
+            hidden={!selected}
+            tabIndex={0}
           >
-            {activeId === sector.id && (
-              <motion.span
-                layoutId="sector-pill"
-                className="absolute inset-0 -z-10 rounded-full bg-amber-400"
-                transition={{ type: "spring", stiffness: 350, damping: 30 }}
-              />
-            )}
-            {sector.label}
-          </button>
-        ))}
-      </div>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={active.id}
-          initial={{ clipPath: "inset(0 0 100% 0)", opacity: 0 }}
-          animate={{ clipPath: "inset(0 0 0% 0)", opacity: 1 }}
-          exit={{ clipPath: "inset(100% 0 0 0)", opacity: 0 }}
-          transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-        >
-          <p className="mb-6 max-w-xl text-slate-400">{active.tagline}</p>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {active.cards.map((card) => (
-              <SectorCardItem key={card.title} card={card} />
-            ))}
+            <motion.div
+              initial={false}
+              animate={{ opacity: selected ? 1 : 0 }}
+              transition={reduceMotion ? { duration: 0 } : { duration: 0.15, ease: "easeOut" }}
+            >
+              <p className="mb-6 mt-6 max-w-[62ch] text-ink-2">{sector.tagline}</p>
+              <ul className="catalog-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+                {sector.cards.map((card) => (
+                  <SectorCardItem key={card.title} card={card} />
+                ))}
+              </ul>
+            </motion.div>
           </div>
-        </motion.div>
-      </AnimatePresence>
+        );
+      })}
     </section>
   );
 }
@@ -135,46 +169,10 @@ export function SectorShowcase() {
 function SectorCardItem({ card }: { card: SectorCard }) {
   const Icon = card.icon;
   return (
-    <motion.div
-      initial="rest"
-      whileHover="hover"
-      animate="rest"
-      className="glass-panel group relative overflow-hidden rounded-2xl p-6"
-    >
-      <motion.div
-        variants={{ rest: { scale: 1 }, hover: { scale: 1.08 } }}
-        transition={{ duration: 0.3 }}
-        className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-amber-400/10 text-amber-300"
-      >
-        <Icon className="h-5 w-5" />
-      </motion.div>
-
-      <h3 className="mb-1 text-base font-semibold text-slate-200">{card.title}</h3>
-
-      <svg width="40" height="6" viewBox="0 0 40 6" className="mb-3">
-        <motion.path
-          d="M1 3 H39"
-          stroke="#e0a35c"
-          strokeWidth="2"
-          strokeLinecap="round"
-          variants={{
-            rest: { pathLength: 0, opacity: 0 },
-            hover: { pathLength: 1, opacity: 1 },
-          }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-        />
-      </svg>
-
-      <p className="text-sm text-slate-400">{card.description}</p>
-
-      <motion.div
-        variants={{
-          rest: { opacity: 0, y: 8 },
-          hover: { opacity: 1, y: 0 },
-        }}
-        transition={{ duration: 0.25 }}
-        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-amber-400/10 to-transparent"
-      />
-    </motion.div>
+    <li className="cell flex flex-col gap-2 p-5">
+      <Icon className="mb-2 h-6 w-6 text-ink" aria-hidden="true" />
+      <h3 className="font-semibold leading-snug text-ink">{card.title}</h3>
+      <p className="text-sm text-ink-2">{card.description}</p>
+    </li>
   );
 }

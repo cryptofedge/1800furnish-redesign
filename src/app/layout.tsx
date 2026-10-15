@@ -1,22 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Fraunces } from "next/font/google";
+import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// One variable family for everything set in type: Archivo's width axis gives
+// the condensed catalog headlines (see .type-display in globals.css) and the
+// normal-width body text. Plex Mono is for data: prices, counts, spec values.
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
+  axes: ["wdth"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
-});
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  axes: ["opsz", "SOFT", "WONK"],
+  weight: ["400", "500"],
 });
 
 const SITE_TITLE = `${SITE_NAME} | Furnishing Facilities That Change Lives`;
@@ -41,9 +40,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full antialiased`}
+      className={`${archivo.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-charcoal-950 text-foreground">
+      <body className="min-h-full flex flex-col bg-paper text-ink">
         {children}
       </body>
     </html>

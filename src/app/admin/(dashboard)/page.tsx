@@ -11,7 +11,7 @@ export const instant = false;
 export default async function AdminDashboardPage() {
   if (!isSupabaseConfigured()) {
     return (
-      <div className="glass-panel rounded-2xl p-6 text-sm text-slate-300">
+      <div className="panel p-6 text-sm text-ink-2">
         Supabase isn&apos;t configured, so there&apos;s nothing to edit yet —
         see the &quot;Admin backend&quot; section in README.md.
       </div>
@@ -25,37 +25,62 @@ export default async function AdminDashboardPage() {
 
   return (
     <div>
-      <h1 className="font-display text-2xl text-slate-200">Products</h1>
-      <p className="mt-1 text-sm text-slate-400">{products.length} products across {categories.length} categories.</p>
+      <header className="section-rule flex flex-wrap items-end justify-between gap-x-6 gap-y-2 pt-4">
+        <h1 className="type-display text-4xl text-ink">Products</h1>
+        <p className="type-data text-sm text-ink-2">
+          {products.length} products across {categories.length} categories.
+        </p>
+      </header>
 
-      <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200/10">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-charcoal-900/60 text-xs uppercase tracking-wide text-slate-500">
+      <div className="panel mt-8 overflow-x-auto">
+        <table className="w-full border-collapse text-left text-sm">
+          <thead className="border-b border-ink">
             <tr>
-              <th className="px-4 py-3 font-medium">Product</th>
-              <th className="px-4 py-3 font-medium">Category</th>
-              <th className="px-4 py-3 font-medium">Price</th>
-              <th className="px-4 py-3 font-medium"></th>
+              <th scope="col" className="type-label px-3 py-3 sm:px-4">Product</th>
+              <th scope="col" className="type-label hidden px-3 py-3 sm:table-cell sm:px-4">Category</th>
+              <th scope="col" className="type-label hidden px-3 py-3 text-right sm:table-cell sm:px-4">Price</th>
+              <th scope="col" className="px-3 py-3 sm:px-4">
+                <span className="sr-only">Actions</span>
+              </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200/10">
+          <tbody>
             {products.map((product) => (
-              <tr key={product.id} className="transition-colors hover:bg-charcoal-900/40">
-                <td className="flex items-center gap-3 px-4 py-3">
-                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-charcoal-900">
-                    <Image src={product.image} alt={product.name} fill sizes="40px" className="object-cover" />
+              <tr
+                key={product.id}
+                className="border-b border-rule transition-colors last:border-b-0 hover:bg-paper"
+              >
+                <td className="px-3 py-3 sm:px-4">
+                  <div className="flex items-center gap-3">
+                    <div className="relative h-10 w-10 shrink-0 border border-rule bg-well sm:h-12 sm:w-12">
+                      <Image
+                        src={product.image}
+                        alt=""
+                        fill
+                        sizes="48px"
+                        className="object-contain p-1"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="block font-semibold text-ink">{product.name}</span>
+                      <span className="block text-xs text-ink-3 sm:hidden">{product.categoryLabel}</span>
+                      <span className="type-data block text-xs text-ink-2 sm:hidden">
+                        {formatCurrency(product.price)}
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-slate-200">{product.name}</span>
                 </td>
-                <td className="px-4 py-3 text-slate-400">{product.categoryLabel}</td>
-                <td className="px-4 py-3 text-amber-300">{formatCurrency(product.price)}</td>
-                <td className="px-4 py-3 text-right">
+                <td className="hidden px-3 py-3 text-ink-2 sm:table-cell sm:px-4">{product.categoryLabel}</td>
+                <td className="type-data hidden whitespace-nowrap px-3 py-3 text-right text-ink sm:table-cell sm:px-4">
+                  {formatCurrency(product.price)}
+                </td>
+                <td className="px-3 py-3 text-right sm:px-4">
                   <Link
                     href={`/admin/products/${product.id}`}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 px-3 py-1.5 text-xs font-medium text-amber-300 transition-colors hover:bg-amber-400/10"
+                    className="btn btn-secondary px-3"
                   >
-                    <Pencil className="h-3 w-3" />
-                    Edit
+                    <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                    Edit<span className="sr-only"> {product.name}</span>
                   </Link>
                 </td>
               </tr>

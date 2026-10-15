@@ -19,13 +19,15 @@ export default async function ProductEditPage({ params }: ProductEditPageProps) 
     <div>
       <Link
         href="/admin"
-        className="mb-6 inline-flex items-center gap-1.5 text-sm text-slate-400 transition-colors hover:text-slate-200"
+        className="mb-4 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-ink-2 transition-colors hover:text-ink"
       >
-        <ArrowLeft className="h-3.5 w-3.5" />
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         All products
       </Link>
-      <h1 className="font-display text-2xl text-slate-200">Edit product</h1>
-      <p className="mt-1 text-sm text-slate-400">{product.categorySlug}</p>
+      <header className="section-rule flex flex-wrap items-end justify-between gap-x-6 gap-y-2 pt-4">
+        <h1 className="type-display text-4xl text-ink">Edit product</h1>
+        <p className="type-data text-sm text-ink-3">{product.categorySlug}</p>
+      </header>
 
       <ProductEditForm product={product} />
     </div>

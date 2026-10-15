@@ -19,26 +19,30 @@ const COMPANY_LINKS = [
   { label: "Contact Sales", href: "mailto:sales@merkabanooks.com" },
 ];
 
+// Calm mist band (the owner asked for no black backgrounds). Ink text and the
+// global accent-ink focus ring both read clearly on mist.
+const FOOTER_LINK =
+  "inline-flex min-h-11 items-center text-sm text-ink-2 transition-colors hover:text-ink";
+const FOOTER_HEADING = "type-label mb-2";
+
 export function SiteFooter() {
   return (
-    <footer className="border-t border-slate-200/10 bg-charcoal-950">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 sm:px-10 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
+    <footer className="border-t-2 border-ink bg-mist text-ink">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-8 sm:py-16 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
         <div>
-          <p className="font-display text-lg font-semibold text-slate-200">
-            Merkaba<span className="text-amber-400">nooks</span>
-          </p>
-          <p className="mt-3 max-w-xs text-sm text-slate-400">
+          <p className="type-display text-4xl text-ink">Merkabanooks</p>
+          <p className="mt-4 max-w-xs text-sm text-ink-2">
             Furniture, facility, and maintenance supply for the institutions that
             hold communities together.
           </p>
         </div>
 
-        <div>
-          <p className="mb-3 text-sm font-semibold text-slate-200">Sectors</p>
-          <ul className="flex flex-col gap-2">
+        <div className="border-t border-ink/15 pt-4 md:border-t-0 md:pt-0">
+          <p className={FOOTER_HEADING}>Sectors</p>
+          <ul className="flex flex-col">
             {SECTOR_LINKS.map((link) => (
               <li key={link}>
-                <Link href="/#sectors" className="text-sm text-slate-400 transition-colors hover:text-amber-300">
+                <Link href="/#sectors" className={FOOTER_LINK}>
                   {link}
                 </Link>
               </li>
@@ -46,12 +50,12 @@ export function SiteFooter() {
           </ul>
         </div>
 
-        <div>
-          <p className="mb-3 text-sm font-semibold text-slate-200">Shop</p>
-          <ul className="flex flex-col gap-2">
+        <div className="border-t border-ink/15 pt-4 md:border-t-0 md:pt-0">
+          <p className={FOOTER_HEADING}>Shop</p>
+          <ul className="flex flex-col">
             {SHOP_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-sm text-slate-400 transition-colors hover:text-amber-300">
+                <Link href={link.href} className={FOOTER_LINK}>
                   {link.label}
                 </Link>
               </li>
@@ -59,12 +63,12 @@ export function SiteFooter() {
           </ul>
         </div>
 
-        <div>
-          <p className="mb-3 text-sm font-semibold text-slate-200">Company</p>
-          <ul className="flex flex-col gap-2">
+        <div className="border-t border-ink/15 pt-4 md:border-t-0 md:pt-0">
+          <p className={FOOTER_HEADING}>Company</p>
+          <ul className="flex flex-col">
             {COMPANY_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-sm text-slate-400 transition-colors hover:text-amber-300">
+                <Link href={link.href} className={FOOTER_LINK}>
                   {link.label}
                 </Link>
               </li>
@@ -73,8 +77,10 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="border-t border-slate-200/10 px-6 py-6 text-center text-xs text-slate-500 sm:px-10">
-        © 2026 {SITE_NAME}. All rights reserved.
+      <div className="border-t border-ink/15">
+        <p className="type-data mx-auto max-w-7xl px-4 py-6 text-xs text-ink-2 sm:px-8">
+          © 2026 {SITE_NAME}. All rights reserved.
+        </p>
       </div>
     </footer>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { Loader2, Lock } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { login, type LoginState } from "../actions";
 import { SITE_NAME } from "@/lib/site";
 
@@ -11,60 +11,59 @@ export default function AdminLoginPage() {
   const [state, formAction, pending] = useActionState(login, initialState);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-charcoal-950 px-6">
-      <div className="glass-panel w-full max-w-sm rounded-2xl p-8">
-        <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/10 text-amber-300">
-            <Lock className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="font-display text-lg text-slate-200">{SITE_NAME} Admin</p>
-            <p className="text-xs text-slate-500">Staff sign-in</p>
-          </div>
+    <div className="flex min-h-screen items-center justify-center bg-paper px-4 py-12">
+      <div className="w-full max-w-sm">
+        <div className="section-rule flex items-baseline justify-between gap-3 pt-4">
+          <p className="type-display text-3xl text-ink">{SITE_NAME}</p>
+          <p className="type-label">Admin</p>
         </div>
 
-        <form action={formAction} className="flex flex-col gap-4">
-          <div>
-            <label htmlFor="email" className="mb-1 block text-xs font-medium text-slate-400">
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autoComplete="username"
-              className="w-full rounded-lg border border-slate-200/15 bg-charcoal-900/60 px-4 py-2.5 text-sm text-slate-200 focus:border-amber-400/50 focus:outline-none"
-            />
-          </div>
+        <div className="panel mt-6 p-6 sm:p-8">
+          <h1 className="text-lg font-semibold text-ink">Staff sign-in</h1>
 
-          <div>
-            <label htmlFor="password" className="mb-1 block text-xs font-medium text-slate-400">
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              autoComplete="current-password"
-              className="w-full rounded-lg border border-slate-200/15 bg-charcoal-900/60 px-4 py-2.5 text-sm text-slate-200 focus:border-amber-400/50 focus:outline-none"
-            />
-          </div>
+          <form action={formAction} className="mt-6 flex flex-col gap-5">
+            <div>
+              <label htmlFor="email" className="type-label mb-1.5 block">
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                autoComplete="username"
+                className="field"
+              />
+            </div>
 
-          {state.error && <p className="text-sm text-red-400">{state.error}</p>}
+            <div>
+              <label htmlFor="password" className="type-label mb-1.5 block">
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                required
+                autoComplete="current-password"
+                className="field"
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={pending}
-            className="btn-gradient-border mt-2 flex items-center justify-center gap-2 rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-charcoal-950 transition-colors hover:bg-amber-400 disabled:opacity-60"
-          >
-            {pending && <Loader2 className="h-4 w-4 animate-spin" />}
-            Sign in
-          </button>
-        </form>
+            {state.error && (
+              <p role="alert" className="border border-danger px-3 py-2 text-sm text-danger">
+                {state.error}
+              </p>
+            )}
 
-        <p className="mt-6 text-center text-xs text-slate-500">
+            <button type="submit" disabled={pending} className="btn btn-primary mt-1 w-full">
+              {pending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+              Sign in
+            </button>
+          </form>
+        </div>
+
+        <p className="mt-4 text-xs text-ink-3">
           Accounts are created by an admin in the Supabase dashboard — there&apos;s
           no public sign-up.
         </p>

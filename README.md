@@ -58,10 +58,9 @@ src/
     ScrollExperience.tsx     # pinned "blueprint to furnished" scroll sequence
     QuoteCalculator.tsx      # bulk RFQ / facility package calculator + modal
     CategoryNav.tsx          # sticky category tab bar (on /categories/* routes)
-    ProductGrid.tsx          # per-product 3D preview grid + low-power photo fallback; opens ProductViewer
+    ProductGrid.tsx          # catalog grid of product photos; opens ProductViewer (360°)
     ProductViewer.tsx        # fullscreen 360° viewer modal (finishes, dimensions, keyboard, quote CTA)
     viewer/                  # ViewerStage (studio canvas), useTurntable (orbit/inertia/zoom), GltfModel, DimensionLines
-    ProductScene3D.tsx       # lightweight per-product R3F canvas (drag-to-orbit)
     product-shapes.tsx       # procedural 3D archetypes (chair, table, bed, ...)
     SiteHeader.tsx / SiteFooter.tsx
   lib/

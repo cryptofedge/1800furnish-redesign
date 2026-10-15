@@ -15,8 +15,8 @@ import { TURNTABLE_KEY_STEP, type TurntableApi } from "./viewer/useTurntable";
 const ViewerStage = dynamic(() => import("./viewer/ViewerStage").then((m) => m.ViewerStage), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full items-center justify-center text-slate-400">
-      <Loader2 className="h-6 w-6 animate-spin" />
+    <div className="flex h-full w-full items-center justify-center text-ink-3">
+      <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
     </div>
   ),
 });
@@ -122,7 +122,7 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
 
   return (
     <motion.div
-      className="fixed inset-0 z-[60] bg-charcoal-950/85 backdrop-blur-sm"
+      className="fixed inset-0 z-[60] bg-paper/[0.96]"
       initial={{ opacity: 0 }}
       animate={{ opacity: closing ? 0 : 1 }}
       transition={{ duration: 0.25 }}
@@ -153,11 +153,11 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
           onAnimationComplete={() => {
             if (!closing) setStageReady(true);
           }}
-          className="relative min-h-0 flex-1 overflow-hidden bg-charcoal-950 md:rounded-2xl md:border md:border-slate-200/10"
+          className="relative min-h-0 flex-1 overflow-hidden bg-well md:border md:border-rule"
         >
           {show3D && !stageReady ? (
-            <div className="flex h-full w-full items-center justify-center text-slate-400">
-              <Loader2 className="h-6 w-6 animate-spin" />
+            <div className="flex h-full w-full items-center justify-center text-ink-3">
+              <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
             </div>
           ) : show3D ? (
             <ViewerStage
@@ -170,17 +170,18 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
               apiRef={apiRef}
             />
           ) : (
-            <div className="relative h-full w-full">
-              <Image src={product.image} alt={product.name} fill sizes="100vw" className="object-cover opacity-80" />
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-charcoal-950/50 p-8 text-center">
-                <Box className="h-10 w-10 text-amber-400" />
-                <p className="max-w-sm text-sm text-slate-300">
-                  3D is paused to save battery and data on this device.
-                </p>
-                <button
-                  onClick={() => setForce3D(true)}
-                  className="rounded-full border border-amber-400/40 px-5 py-2 text-sm font-medium text-amber-300 transition-colors hover:bg-amber-400/10"
-                >
+            <div className="relative h-full w-full bg-well">
+              <Image
+                src={product.image}
+                alt={product.name}
+                fill
+                sizes="100vw"
+                className="object-contain p-8 pb-48 sm:p-12 sm:pb-52"
+              />
+              <div className="panel absolute inset-x-4 bottom-4 mx-auto flex max-w-sm flex-col items-center gap-3 border-ink p-4 text-center">
+                <Box className="h-6 w-6 text-ink-2" aria-hidden="true" />
+                <p className="text-sm text-ink-2">3D is paused to save battery and data on this device.</p>
+                <button type="button" onClick={() => setForce3D(true)} className="btn btn-secondary w-full">
                   View in 3D anyway
                 </button>
               </div>
@@ -188,17 +189,18 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
           )}
 
           <button
+            type="button"
             onClick={requestClose}
             aria-label="Close viewer"
-            className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-charcoal-950/70 text-slate-300 backdrop-blur transition-colors hover:bg-charcoal-900 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400"
+            className="btn-tool absolute right-3 top-3 z-10 h-11 w-11 p-0"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5" aria-hidden="true" />
           </button>
 
           {show3D && (
-            <div className="pointer-events-none absolute bottom-3 left-3 hidden rounded-full bg-charcoal-950/70 px-3 py-1 text-[11px] text-slate-400 sm:block">
+            <p className="pointer-events-none absolute bottom-3 left-3 hidden bg-well/90 px-2 py-1 text-xs text-ink-2 sm:block">
               Drag to spin · Scroll or pinch to zoom · Arrow keys rotate · R resets
-            </div>
+            </p>
           )}
         </motion.div>
 
@@ -207,39 +209,39 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
           initial={{ opacity: 0, y: 24 }}
           animate={closing ? { opacity: 0, y: 24 } : { opacity: 1, y: 0 }}
           transition={{ delay: closing ? 0 : 0.12, duration: closing ? 0.2 : 0.3 }}
-          className="glass-panel flex max-h-[46vh] shrink-0 flex-col gap-4 overflow-y-auto rounded-t-2xl p-5 md:ml-4 md:max-h-none md:w-[320px] md:rounded-2xl lg:w-[340px]"
+          className="panel flex max-h-[46vh] shrink-0 flex-col gap-4 overflow-y-auto md:gap-5 border-x-0 border-b-0 border-t-ink p-4 sm:p-5 md:ml-4 md:max-h-none md:w-[340px] md:border md:border-rule lg:w-[360px]"
         >
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-400">360° viewer</p>
-            <h2 className="mt-1 font-display text-xl leading-tight text-slate-100">{product.name}</h2>
-            <p className="mt-1 text-sm text-slate-400">{product.description}</p>
-            <p className="mt-2 font-display text-2xl text-amber-300">
-              {formatCurrency(product.price)}
-              <span className="ml-1 text-xs font-sans text-slate-500">/ unit</span>
+            <span className="tag border-ink">360° viewer</span>
+            <h2 className="mt-3 text-2xl font-semibold leading-tight text-ink">{product.name}</h2>
+            <p className="mt-2 text-sm text-ink-2">{product.description}</p>
+            <p className="mt-3 leading-none">
+              <span className="type-data text-2xl font-medium text-ink">{formatCurrency(product.price)}</span>
+              <span className="type-data ml-1 text-xs text-ink-3">/ unit</span>
             </p>
           </div>
 
-          <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-300">Finish</p>
+          <div className="border-t border-rule pt-4">
+            <p className="type-label mb-2">Finish</p>
             <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Finish">
               {finishes.map((finish) => {
                 const active = finishHex === finish.hex;
                 return (
                   <button
+                    type="button"
                     key={finish.id}
                     role="radio"
                     aria-checked={active}
                     aria-label={finish.label}
                     title={finish.label}
                     onClick={() => setFinishHex(finish.hex)}
-                    className={cn(
-                      "flex items-center gap-2 rounded-full border px-2.5 py-1.5 text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400",
-                      active
-                        ? "border-amber-400/60 bg-amber-400/10 text-slate-100"
-                        : "border-slate-200/10 text-slate-400 hover:border-slate-200/30"
-                    )}
+                    className={cn("btn-tool min-h-11 justify-start gap-2 text-xs", active ? "text-ink" : "text-ink-2")}
                   >
-                    <span className="h-4 w-4 rounded-full border border-white/20" style={{ backgroundColor: finish.hex }} />
+                    <span
+                      className="h-4 w-4 shrink-0 rounded-full border border-ink/25"
+                      style={{ backgroundColor: finish.hex }}
+                      aria-hidden="true"
+                    />
                     {finish.label}
                   </button>
                 );
@@ -247,63 +249,65 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 border-t border-rule pt-4">
             <button
+              type="button"
               onClick={() => setShowDimensions((v) => !v)}
               aria-pressed={showDimensions}
               disabled={!show3D}
-              className={cn(
-                "flex items-center justify-center gap-2 rounded-xl border px-3 py-2.5 text-xs font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 disabled:opacity-40",
-                showDimensions
-                  ? "border-amber-400/60 bg-amber-400/10 text-slate-100"
-                  : "border-slate-200/10 text-slate-300 hover:border-slate-200/30"
-              )}
+              className="btn-tool min-h-11 text-xs"
             >
-              <Ruler className="h-4 w-4" />
+              <Ruler className="h-4 w-4" aria-hidden="true" />
               {showDimensions ? "Hide dimensions" : "Show dimensions"}
             </button>
             <button
+              type="button"
               onClick={() => apiRef.current?.reset()}
               disabled={!show3D}
-              className="flex items-center justify-center gap-2 rounded-xl border border-slate-200/10 px-3 py-2.5 text-xs font-medium text-slate-300 transition-colors hover:border-slate-200/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 disabled:opacity-40"
+              className="btn-tool min-h-11 text-xs"
             >
-              <RotateCcw className="h-4 w-4" />
+              <RotateCcw className="h-4 w-4" aria-hidden="true" />
               Reset view
             </button>
           </div>
 
           {show3D && (
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <span>Zoom</span>
+            <div className="flex items-center gap-2">
+              <span className="type-label mr-1">Zoom</span>
               <button
+                type="button"
                 onClick={() => apiRef.current?.zoomBy(1 / 0.85)}
                 aria-label="Zoom out"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200/10 text-slate-300 hover:border-slate-200/30"
+                className="btn-tool h-11 w-11 p-0"
               >
-                <Minus className="h-3.5 w-3.5" />
+                <Minus className="h-4 w-4" aria-hidden="true" />
               </button>
               <button
+                type="button"
                 onClick={() => apiRef.current?.zoomBy(0.85)}
                 aria-label="Zoom in"
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-slate-200/10 text-slate-300 hover:border-slate-200/30"
+                className="btn-tool h-11 w-11 p-0"
               >
-                <Plus className="h-3.5 w-3.5" />
+                <Plus className="h-4 w-4" aria-hidden="true" />
               </button>
               {showDimensions && (
-                <span className="ml-auto text-[11px]">
+                <span className="ml-auto text-right text-[11px] leading-tight text-ink-3">
                   {product.modelUrl ? "Dimensions from model" : "Approximate — confirm on spec sheet"}
                 </span>
               )}
             </div>
           )}
 
-          <Link
-            href={`/?product=${encodeURIComponent(product.slug)}#quote`}
-            className="btn-gradient-border mt-auto flex items-center justify-center gap-2 rounded-full bg-amber-500 px-5 py-3 text-sm font-semibold text-charcoal-950 transition-colors hover:bg-amber-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300"
-          >
-            <Maximize2 className="h-4 w-4" />
-            Request a quote for this item
-          </Link>
+          {/* Pinned to the bottom of the phone sheet so the CTA never scrolls out of view. */}
+          <div className="sticky bottom-0 -mx-4 -mb-4 mt-auto border-t border-rule bg-well p-4 sm:-mx-5 sm:-mb-5 sm:p-5 md:static md:mx-0 md:mb-0 md:border-0 md:p-0">
+            <Link
+              href={`/?product=${encodeURIComponent(product.slug)}#quote`}
+              className="btn btn-primary w-full"
+            >
+              <Maximize2 className="h-4 w-4" aria-hidden="true" />
+              Request a quote for this item
+            </Link>
+          </div>
         </motion.aside>
       </div>
     </motion.div>

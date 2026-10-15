@@ -1,14 +1,22 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
+  Billboard,
   Environment,
   ContactShadows,
   Html,
   OrbitControls,
 } from "@react-three/drei";
 import { GltfModel } from "./viewer/GltfModel";
+
+// Canvas cannot read CSS custom properties, so the trade-catalog palette is
+// mirrored here (see globals.css). Light studio: near-white sweep, ink frame,
+// safety-orange hotspot markers ringed in ink.
+const STUDIO_BG = "#f3f3f1";
+const INK = "#151515";
+const ACCENT = "#ff5a1f";
 
 export interface Hotspot {
   id: string;
@@ -23,10 +31,13 @@ interface Scene3DProps {
   modelUrl?: string;
   finishHex: string;
   hotspots: Hotspot[];
+  /** Controlled open hotspot id. When omitted, Scene3D manages it internally. */
+  activeHotspot?: string | null;
+  onActiveHotspotChange?: (id: string | null) => void;
 }
 
 function FallbackChair({ finishHex }: { finishHex: string }) {
-  const frameColor = "#2a2d33";
+  const frameColor = INK;
   const legPositions: [number, number][] = [
     [-0.48, -0.47],
     [0.48, -0.47],
@@ -74,26 +85,42 @@ function HotspotMarker({
 }) {
   return (
     <group position={hotspot.position}>
+      {/* Invisible hit sphere, larger than the visible marker + ring, so the
+          tap target stays usable on small phone viewports. */}
       <mesh
         onClick={(e) => {
           e.stopPropagation();
           onToggle(isActive ? null : hotspot.id);
         }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={() => {
+          document.body.style.cursor = "";
+        }}
       >
-        <sphereGeometry args={[0.045, 16, 16]} />
-        <meshBasicMaterial color={isActive ? "#f0c38a" : "#e0a35c"} />
+        <sphereGeometry args={[0.12, 12, 12]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
       <mesh>
-        <sphereGeometry args={[0.08, 16, 16]} />
-        <meshBasicMaterial color="#e0a35c" transparent opacity={0.18} />
+        <sphereGeometry args={[0.045, 16, 16]} />
+        <meshBasicMaterial color={ACCENT} toneMapped={false} />
       </mesh>
+      {/* Ink ring, always facing the camera; thicker when the marker is open. */}
+      <Billboard>
+        <mesh>
+          <ringGeometry args={[0.058, isActive ? 0.085 : 0.072, 32]} />
+          <meshBasicMaterial color={INK} toneMapped={false} />
+        </mesh>
+      </Billboard>
 
       {isActive && (
         <Html distanceFactor={8} center zIndexRange={[100, 0]} occlude={false}>
-          <div className="glass-panel w-48 -translate-y-12 rounded-xl p-3 text-left text-xs shadow-xl">
-            <p className="text-sm font-semibold text-slate-200">{hotspot.label}</p>
-            <p className="mt-1 text-xs text-slate-400">{hotspot.material}</p>
-            <p className="mt-2 text-sm font-semibold text-amber-300">
+          <div className="panel w-48 -translate-y-12 p-3 text-left text-xs">
+            <p className="text-sm font-semibold text-ink">{hotspot.label}</p>
+            <p className="mt-1 text-xs text-ink-2">{hotspot.material}</p>
+            <p className="type-data mt-2 border-t border-rule pt-2 text-sm text-ink">
               {hotspot.price}
             </p>
           </div>
@@ -103,8 +130,25 @@ function HotspotMarker({
   );
 }
 
-export function Scene3D({ modelUrl, finishHex, hotspots }: Scene3DProps) {
-  const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
+export function Scene3D({
+  modelUrl,
+  finishHex,
+  hotspots,
+  activeHotspot: controlledHotspot,
+  onActiveHotspotChange,
+}: Scene3DProps) {
+  const [internalHotspot, setInternalHotspot] = useState<string | null>(null);
+  const isControlled = controlledHotspot !== undefined;
+  const activeHotspot = isControlled ? controlledHotspot : internalHotspot;
+  const setActiveHotspot = (id: string | null) => {
+    if (!isControlled) setInternalHotspot(id);
+    onActiveHotspotChange?.(id);
+  };
+
+  // Reset the cursor if the canvas unmounts while a marker is hovered.
+  useEffect(() => () => {
+    document.body.style.cursor = "";
+  }, []);
 
   return (
     <Canvas
@@ -113,8 +157,8 @@ export function Scene3D({ modelUrl, finishHex, hotspots }: Scene3DProps) {
       camera={{ position: [2.4, 1.6, 3.2], fov: 35 }}
       onPointerMissed={() => setActiveHotspot(null)}
     >
-      <color attach="background" args={["#12151a"]} />
-      <ambientLight intensity={0.55} />
+      <color attach="background" args={[STUDIO_BG]} />
+      <ambientLight intensity={0.7} />
       <directionalLight
         position={[4, 6, 3]}
         intensity={1.4}
@@ -141,10 +185,11 @@ export function Scene3D({ modelUrl, finishHex, hotspots }: Scene3DProps) {
         <Environment preset="apartment" />
         <ContactShadows
           position={[0, -0.5, 0]}
-          opacity={0.55}
+          opacity={0.35}
           scale={6}
           blur={2.4}
           far={2}
+          color={INK}
         />
       </Suspense>
 

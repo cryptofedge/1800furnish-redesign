@@ -3,28 +3,29 @@ import { ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-charcoal-950 px-6 text-center">
-      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-400">404</p>
-      <h1 className="mt-4 font-display text-4xl font-semibold text-slate-200 sm:text-5xl">
-        This room hasn&apos;t been furnished yet.
-      </h1>
-      <p className="mt-4 max-w-md text-slate-400">
-        The page you&apos;re looking for doesn&apos;t exist or has moved. Try the catalog, or head back home.
-      </p>
-      <div className="mt-8 flex flex-wrap justify-center gap-3">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 rounded-full bg-amber-500 px-5 py-2.5 text-sm font-semibold text-charcoal-950 transition-colors hover:bg-amber-400"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back home
-        </Link>
-        <Link
-          href="/categories"
-          className="rounded-full border border-slate-200/15 px-5 py-2.5 text-sm font-semibold text-slate-200 transition-colors hover:border-slate-200/30"
-        >
-          Browse the catalog
-        </Link>
+    <main className="flex min-h-screen flex-1 flex-col bg-paper">
+      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 py-16 sm:px-8 sm:py-24">
+        <div className="section-rule pt-6">
+          <p className="type-display text-[8rem] text-ink sm:text-[12rem] lg:text-[16rem]" aria-hidden="true">
+            404
+          </p>
+          <h1 className="mt-6 max-w-[30ch] text-2xl font-semibold text-ink sm:text-3xl">
+            <span className="sr-only">Error 404: </span>
+            This room hasn&apos;t been furnished yet.
+          </h1>
+          <p className="mt-4 max-w-[62ch] text-ink-2">
+            The page you&apos;re looking for doesn&apos;t exist or has moved. Try the catalog, or head back home.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/" className="btn btn-primary">
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Back home
+            </Link>
+            <Link href="/categories" className="btn btn-secondary">
+              Browse the catalog
+            </Link>
+          </div>
+        </div>
       </div>
     </main>
   );

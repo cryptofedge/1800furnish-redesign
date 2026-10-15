@@ -20,22 +20,28 @@ export function ProductEditForm({ product }: ProductEditFormProps) {
   return (
     <form action={formAction} className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr]">
       <div>
-        <p className="mb-2 text-xs font-medium text-slate-400">Photo</p>
-        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-charcoal-900">
+        <p className="type-label mb-1.5">Photo</p>
+        <div className="relative aspect-square w-full overflow-hidden border border-rule bg-well">
           {preview ? (
             // eslint-disable-next-line @next/next/no-img-element -- local blob: preview, not a next/image-compatible URL
-            <img src={preview} alt={product.name} className="h-full w-full object-cover" />
+            <img src={preview} alt={product.name} className="h-full w-full object-contain p-4" />
           ) : (
-            <Image src={product.image} alt={product.name} fill className="object-cover" />
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              sizes="(min-width: 1024px) 280px, 100vw"
+              className="object-contain p-4"
+            />
           )}
         </div>
-        <label className="mt-3 block cursor-pointer rounded-full border border-amber-400/40 px-4 py-2 text-center text-xs font-medium text-amber-300 transition-colors hover:bg-amber-400/10">
+        <label className="btn btn-secondary mt-3 w-full focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent-ink">
           Replace photo
           <input
             type="file"
             name="image"
             accept="image/*"
-            className="hidden"
+            className="sr-only"
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (file) setPreview(URL.createObjectURL(file));
@@ -44,22 +50,16 @@ export function ProductEditForm({ product }: ProductEditFormProps) {
         </label>
       </div>
 
-      <div className="glass-panel flex flex-col gap-4 rounded-2xl p-6">
+      <div className="panel flex flex-col gap-5 p-5 sm:p-6">
         <div>
-          <label htmlFor="name" className="mb-1 block text-xs font-medium text-slate-400">
+          <label htmlFor="name" className="type-label mb-1.5 block">
             Name
           </label>
-          <input
-            id="name"
-            name="name"
-            defaultValue={product.name}
-            required
-            className="w-full rounded-lg border border-slate-200/15 bg-charcoal-900/60 px-4 py-2.5 text-sm text-slate-200 focus:border-amber-400/50 focus:outline-none"
-          />
+          <input id="name" name="name" defaultValue={product.name} required className="field" />
         </div>
 
         <div>
-          <label htmlFor="description" className="mb-1 block text-xs font-medium text-slate-400">
+          <label htmlFor="description" className="type-label mb-1.5 block">
             Description
           </label>
           <textarea
@@ -68,12 +68,12 @@ export function ProductEditForm({ product }: ProductEditFormProps) {
             defaultValue={product.description}
             required
             rows={3}
-            className="w-full rounded-lg border border-slate-200/15 bg-charcoal-900/60 px-4 py-2.5 text-sm text-slate-200 focus:border-amber-400/50 focus:outline-none"
+            className="field"
           />
         </div>
 
         <div>
-          <label htmlFor="price" className="mb-1 block text-xs font-medium text-slate-400">
+          <label htmlFor="price" className="type-label mb-1.5 block">
             Price (USD)
           </label>
           <input
@@ -84,24 +84,26 @@ export function ProductEditForm({ product }: ProductEditFormProps) {
             step={1}
             defaultValue={product.price}
             required
-            className="w-full max-w-[160px] rounded-lg border border-slate-200/15 bg-charcoal-900/60 px-4 py-2.5 text-sm text-slate-200 focus:border-amber-400/50 focus:outline-none"
+            className="field type-data max-w-[160px]"
           />
         </div>
 
-        {state.error && <p className="text-sm text-red-400">{state.error}</p>}
-        {state.success && (
-          <p className="flex items-center gap-1.5 text-sm text-amber-300">
-            <CheckCircle2 className="h-4 w-4" />
-            Saved — changes are live on the site.
+        {state.error && (
+          <p role="alert" className="border border-danger px-3 py-2 text-sm text-danger">
+            {state.error}
           </p>
         )}
+        <div role="status" aria-live="polite">
+          {state.success && (
+            <p className="flex items-center gap-2 border border-ok px-3 py-2 text-sm text-ok">
+              <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
+              Saved — changes are live on the site.
+            </p>
+          )}
+        </div>
 
-        <button
-          type="submit"
-          disabled={pending}
-          className="btn-gradient-border mt-2 flex w-fit items-center justify-center gap-2 rounded-full bg-amber-500 px-6 py-3 text-sm font-semibold text-charcoal-950 transition-colors hover:bg-amber-400 disabled:opacity-60"
-        >
-          {pending && <Loader2 className="h-4 w-4 animate-spin" />}
+        <button type="submit" disabled={pending} className="btn btn-primary mt-1 w-full sm:w-fit">
+          {pending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
           Save changes
         </button>
       </div>

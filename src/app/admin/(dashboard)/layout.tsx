@@ -4,34 +4,27 @@ import { logout } from "../actions";
 
 export default function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-charcoal-950">
-      <header className="border-b border-slate-200/10">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/admin" className="font-display text-lg font-semibold text-slate-200">
-            Merkaba<span className="text-amber-400">nooks</span>{" "}
-            <span className="text-sm font-normal text-slate-500">Admin</span>
+    <div className="min-h-screen bg-paper">
+      <header className="border-b border-ink bg-paper">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-3 sm:px-8">
+          <Link href="/admin" className="flex min-h-11 items-baseline gap-2 text-ink">
+            <span className="type-display text-2xl leading-none sm:text-[1.75rem]">Merkabanooks</span>
+            <span className="type-label">Admin</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              target="_blank"
-              className="text-sm text-slate-400 transition-colors hover:text-slate-200"
-            >
+          <div className="flex items-center gap-3 sm:gap-5">
+            <Link href="/" target="_blank" className="link inline-flex min-h-11 items-center text-sm">
               View site
             </Link>
             <form action={logout}>
-              <button
-                type="submit"
-                className="flex items-center gap-1.5 text-sm text-slate-400 transition-colors hover:text-slate-200"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                Log out
+              <button type="submit" aria-label="Log out" className="btn-tool min-h-11 min-w-11">
+                <LogOut className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden sm:inline">Log out</span>
               </button>
             </form>
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-6 py-10">{children}</main>
+      <main className="mx-auto max-w-7xl px-4 py-10 sm:px-8">{children}</main>
     </div>
   );
 }

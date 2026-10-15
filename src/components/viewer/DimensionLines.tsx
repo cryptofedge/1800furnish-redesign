@@ -4,7 +4,8 @@ import { Html, Line } from "@react-three/drei";
 import type * as THREE from "three";
 
 const PAD = 0.08;
-const AMBER = "#e0a35c";
+// accent-ink from the palette (canvas can't read CSS variables).
+const LINE = "#b0390a";
 
 function fmt(meters: number) {
   return `${Math.round(meters * 39.37)} in · ${Math.round(meters * 100)} cm`;
@@ -29,17 +30,17 @@ export function DimensionLines({ size }: { size: THREE.Vector3 }) {
     <group>
       {guides.map((g) => (
         <group key={g.label}>
-          <Line points={[g.from, g.to]} color={AMBER} lineWidth={1.5} transparent opacity={0.9} />
+          <Line points={[g.from, g.to]} color={LINE} lineWidth={1.5} transparent opacity={0.9} />
           <mesh position={g.from}>
             <sphereGeometry args={[0.012, 10, 10]} />
-            <meshBasicMaterial color={AMBER} />
+            <meshBasicMaterial color={LINE} />
           </mesh>
           <mesh position={g.to}>
             <sphereGeometry args={[0.012, 10, 10]} />
-            <meshBasicMaterial color={AMBER} />
+            <meshBasicMaterial color={LINE} />
           </mesh>
           <Html position={g.at} center zIndexRange={[20, 0]} style={{ pointerEvents: "none" }}>
-            <span className="whitespace-nowrap rounded-full border border-amber-400/40 bg-charcoal-950/85 px-2 py-0.5 text-[11px] font-medium text-amber-200">
+            <span className="tag whitespace-nowrap border-ink font-medium">
               {g.label}
             </span>
           </Html>

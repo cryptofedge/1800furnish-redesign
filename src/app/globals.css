@@ -1,66 +1,344 @@
 @import "tailwindcss";
 
-:root {
-  --background: #0b0d10;
-  --foreground: #f4f1ec;
+/*
+ * Merkabanooks design system: "trade catalog".
+ * Read DESIGN.md before changing anything here. Single light theme on purpose
+ * (a printed contract-furniture catalog), so there is no dark-mode variant.
+ */
 
-  /* Deep charcoal / slate base */
-  --color-charcoal-950: #0b0d10;
-  --color-charcoal-900: #12151a;
-  --color-charcoal-800: #1a1e25;
-  --color-charcoal-700: #262b34;
-  --color-slate-400: #8a93a3;
-  --color-slate-200: #d4d8df;
+@theme {
+  /* Surfaces */
+  --color-paper: #e9eae6; /* page ground: neutral grey paper, not cream */
+  --color-well: #ffffff; /* product photo wells, cards, inputs */
+  --color-ink: #151515; /* primary text, heavy rules, dark bands */
+  --color-ink-2: #4b4d4b; /* secondary text (7:1 on paper) */
+  --color-ink-3: #686a67; /* meta text, captions (4.6:1 on paper) */
+  --color-rule: #c9cac5; /* 1px hairlines between catalog cells */
+  --color-mist: #dde4e1; /* calm sage-grey for bands and overlays — never black */
 
-  /* Warm interior amber / wood accents */
-  --color-amber-500: #c98a3e;
-  --color-amber-400: #e0a35c;
-  --color-amber-300: #f0c38a;
-  --color-wood-600: #6b4226;
+  /* One accent, for actions only: safety orange */
+  --color-accent: #ff5a1f; /* fills; always with ink text on top */
+  --color-accent-ink: #b0390a; /* orange text/links on paper or white */
+
+  /* Status (Nooksguard availability, form states) */
+  --color-ok: #1f6f43;
+  --color-warn: #8a5a00;
+  --color-danger: #b42318;
+
+  /* Type */
+  --font-sans: var(--font-archivo), "Arial Narrow", Arial, Helvetica, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+  /* Square corners everywhere; radius tokens collapse to 0. */
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-fraunces);
-
-  --color-charcoal-950: var(--color-charcoal-950);
-  --color-charcoal-900: var(--color-charcoal-900);
-  --color-charcoal-800: var(--color-charcoal-800);
-  --color-charcoal-700: var(--color-charcoal-700);
-  --color-slate-400: var(--color-slate-400);
-  --color-slate-200: var(--color-slate-200);
-  --color-amber-500: var(--color-amber-500);
-  --color-amber-400: var(--color-amber-400);
-  --color-amber-300: var(--color-amber-300);
-  --color-wood-600: var(--color-wood-600);
+html {
+  background: var(--color-paper);
 }
 
+/* Paper with a faint drafting grid (24px minor, 120px major): the
+   "engineered catalog" ground. Opaque surfaces (wells, panels, header) sit on
+   top of it; leave a section transparent to let the grid show through. */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(to right, rgb(21 21 21 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(21 21 21 / 0.05) 1px, transparent 1px),
+    linear-gradient(to right, rgb(21 21 21 / 0.022) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(21 21 21 / 0.022) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: -1px -1px;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-stretch: 100%;
 }
 
-/* ---------- Shared utility layers ---------- */
+:focus-visible {
+  outline: 2px solid var(--color-accent-ink);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-ink);
+}
+
+/* ---------- Building blocks (see DESIGN.md for when to use each) ---------- */
+
+@layer components {
+  /* Condensed catalog headline. Pair with a text-* size. */
+  .type-display {
+    font-family: var(--font-sans);
+    font-stretch: 68%;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 0.92;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+
+  /* Small section / field label. */
+  .type-label {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-2);
+  }
+
+  /* Data: prices, counts, spec values, item index numbers. */
+  .type-data {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding-inline: 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    border: 1px solid transparent;
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+    cursor: pointer;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Primary action: orange plate, ink text. Hover lifts to a lighter orange
+     with an ink baseline — calm, never a black fill. */
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-ink);
+    border-color: var(--color-accent);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: #ff7a45;
+    border-color: #ff7a45;
+    box-shadow: inset 0 -2px 0 var(--color-ink);
+  }
+
+  /* Secondary action: ink outline; hover fills with mist. */
+  .btn-secondary {
+    background: transparent;
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--color-mist);
+  }
+
+  /* Small square tool button (icon or short text), e.g. zoom +/-. */
+  .btn-tool {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    min-height: 2.25rem;
+    min-width: 2.25rem;
+    padding-inline: 0.625rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    background: var(--color-well);
+    border: 1px solid var(--color-rule);
+    transition: border-color 120ms ease, background-color 120ms ease;
+  }
+  .btn-tool:hover:not(:disabled) {
+    border-color: var(--color-ink);
+  }
+  .btn-tool[aria-pressed="true"],
+  .btn-tool[aria-checked="true"] {
+    border-color: var(--color-ink);
+    box-shadow: inset 0 -3px 0 var(--color-accent);
+  }
+  .btn-tool:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Inline text link with an accent underline. */
+  .link {
+    color: var(--color-ink);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+  .link:hover {
+    color: var(--color-accent-ink);
+  }
+
+  /* Catalog cell: white, square, hairline. Use inside .catalog-grid. */
+  .cell {
+    background: var(--color-well);
+  }
+
+  /* Grid with shared 1px hairlines between cells. Each cell draws its own
+     hairline (a 1px spread "shadow" used purely as a border), and the 1px gap
+     makes neighbouring lines coincide. Unlike a ruled background, an
+     incomplete last row leaves plain paper behind, not a grey block. */
+  .catalog-grid {
+    display: grid;
+    gap: 1px;
+    padding: 1px;
+  }
+  .catalog-grid > * {
+    box-shadow: 0 0 0 1px var(--color-rule);
+  }
+
+  /* Standalone panel (forms, side rails). */
+  .panel {
+    background: var(--color-well);
+    border: 1px solid var(--color-rule);
+  }
+
+  /* Rectangular tag (never a pill). */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.375rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    color: var(--color-ink);
+    background: var(--color-well);
+    border: 1px solid var(--color-rule);
+  }
+
+  /* Form field. */
+  .field {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    background: var(--color-well);
+    border: 1px solid var(--color-rule);
+  }
+  .field::placeholder {
+    color: var(--color-ink-3);
+  }
+  .field:hover {
+    border-color: var(--color-ink-3);
+  }
+  .field:focus {
+    outline: 2px solid var(--color-accent-ink);
+    outline-offset: -1px;
+    border-color: var(--color-ink);
+  }
+
+  /* Heavy rule that opens a catalog section. */
+  .section-rule {
+    border-top: 2px solid var(--color-ink);
+  }
+
+  /* ---------- Engineered layer: precision details, used sparingly ---------- */
+
+  /* Registration / crosshair marks just outside a frame's four corners.
+     Put on a positioned wrapper that does NOT clip (no overflow-hidden). */
+  .frame-marks {
+    position: relative;
+  }
+  .frame-marks::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    pointer-events: none;
+    --m: var(--color-ink);
+    background:
+      linear-gradient(var(--m), var(--m)) top left / 14px 1px no-repeat,
+      linear-gradient(var(--m), var(--m)) top left / 1px 14px no-repeat,
+      linear-gradient(var(--m), var(--m)) top right / 14px 1px no-repeat,
+      linear-gradient(var(--m), var(--m)) top right / 1px 14px no-repeat,
+      linear-gradient(var(--m), var(--m)) bottom left / 14px 1px no-repeat,
+      linear-gradient(var(--m), var(--m)) bottom left / 1px 14px no-repeat,
+      linear-gradient(var(--m), var(--m)) bottom right / 14px 1px no-repeat,
+      linear-gradient(var(--m), var(--m)) bottom right / 1px 14px no-repeat;
+  }
+
+  /* One orange scan line sweeps down a product photo on hover. */
+  .scanline {
+    position: relative;
+  }
+  .scanline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 2px;
+    background: var(--color-accent);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .scanline:hover::after,
+  .scanline:focus-visible::after {
+    animation: scan 900ms cubic-bezier(0.22, 1, 0.36, 1) 1 both;
+  }
+
+  /* Mono data read-out strip: real figures only, never filler like "SYS.READY". */
+  .readout {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink-2);
+  }
+  .readout b {
+    font-weight: 500;
+    color: var(--color-ink);
+  }
+
+  /* Figure caption in drawing-sheet style: "FIG. 01 — Living room". */
+  .fig-caption {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-3);
+  }
+}
+
+@keyframes scan {
+  0% {
+    top: 0;
+    opacity: 0.95;
+  }
+  85% {
+    opacity: 0.6;
+  }
+  100% {
+    top: calc(100% - 2px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scanline::after {
+    display: none;
+  }
+}
 
 @layer utilities {
-  .glass-panel {
-    background: color-mix(in srgb, var(--color-charcoal-800) 55%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-slate-200) 12%, transparent);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-  }
-
-  .glass-pill {
-    background: color-mix(in srgb, var(--color-charcoal-900) 50%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-amber-300) 25%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-
   .text-balance {
     text-wrap: balance;
   }
@@ -73,52 +351,6 @@ body {
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
-  }
-
-  /* Animated gradient border, used behind CTA buttons */
-  .btn-gradient-border {
-    position: relative;
-    isolation: isolate;
-  }
-
-  .btn-gradient-border::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      120deg,
-      var(--color-amber-300),
-      var(--color-amber-500),
-      var(--color-wood-600),
-      var(--color-amber-400)
-    );
-    background-size: 300% 300%;
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    animation: gradient-shift 6s ease infinite;
-    z-index: -1;
-  }
-
-  .btn-gradient-border:hover::before {
-    opacity: 1;
-  }
-}
-
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
   }
 }
 
