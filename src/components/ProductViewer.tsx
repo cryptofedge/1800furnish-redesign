@@ -31,7 +31,9 @@ interface ProductViewerProps {
 }
 
 export function ProductViewer({ product, lowPower, origin, onClose }: ProductViewerProps) {
-  const [finishHex, setFinishHex] = useState(product.accentHex);
+  // Track the chosen swatch by id: a product's own color can equal one of the
+  // shared finishes (e.g. walnut), and matching by hex would mark both selected.
+  const [finishId, setFinishId] = useState("standard");
   const [showDimensions, setShowDimensions] = useState(false);
   const [force3D, setForce3D] = useState(false);
   // The viewer animates itself out, then asks the parent to unmount it
@@ -50,6 +52,7 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
   const requestClose = useCallback(() => setClosing(true), []);
 
   const finishes = [{ id: "standard", label: "Standard (as shown)", hex: product.accentHex }, ...FINISHES];
+  const finishHex = (finishes.find((f) => f.id === finishId) ?? finishes[0]).hex;
 
   // Scale the stage in/out around the card the user clicked, so it reads as the
   // card expanding to fullscreen (and collapsing back on close).
@@ -225,7 +228,7 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
             <p className="type-label mb-2">Finish</p>
             <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Finish">
               {finishes.map((finish) => {
-                const active = finishHex === finish.hex;
+                const active = finishId === finish.id;
                 return (
                   <button
                     type="button"
@@ -234,7 +237,7 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
                     aria-checked={active}
                     aria-label={finish.label}
                     title={finish.label}
-                    onClick={() => setFinishHex(finish.hex)}
+                    onClick={() => setFinishId(finish.id)}
                     className={cn("btn-tool min-h-11 justify-start gap-2 text-xs", active ? "text-ink" : "text-ink-2")}
                   >
                     <span
