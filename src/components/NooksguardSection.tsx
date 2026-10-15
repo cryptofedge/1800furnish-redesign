@@ -7,9 +7,10 @@ import { NooksguardButton } from "./NooksguardButton";
 const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
- * Home-page section for the Nooksguard security catalog: the emblem, the
- * brand line, live counts (computed from the data, never hardcoded) and a
- * hairline grid of every product family.
+ * Home-page section for the Nooksguard security catalog: the full Nooksguard
+ * logo (emblem + lettering, links to the catalog), the brand line, live counts
+ * (computed from the data, never hardcoded) and a hairline grid of every
+ * product family.
  */
 export function NooksguardSection() {
   const live = SECURITY_CATEGORIES.filter((c) => c.status === "live");
@@ -22,27 +23,23 @@ export function NooksguardSection() {
       aria-labelledby="nooksguard-title"
       className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-8 sm:py-24"
     >
-      <div className="section-rule grid gap-10 pt-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-16">
-        <div className="frame-marks mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-none">
-          <Image
-            src="/nooksguard/emblem.webp"
-            alt="Nooksguard emblem"
-            width={512}
-            height={512}
-            sizes="(min-width: 1024px) 40vw, 384px"
-            className="block aspect-square w-full border-2 border-ink"
-          />
-        </div>
+      <div className="section-rule grid gap-10 pt-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-12">
+        {/* The logo is the section title; its alt text gives the heading its name. */}
+        <h2 id="nooksguard-title" className="m-0">
+          <Link href="/security" className="lift frame-marks block">
+            <Image
+              src="/nooksguard/logo-lockup.webp"
+              alt="Nooksguard Security Solutions"
+              width={1600}
+              height={764}
+              sizes="(min-width: 1280px) 681px, (min-width: 1024px) 56vw, 100vw"
+              className="block h-auto w-full"
+            />
+          </Link>
+        </h2>
 
         <div className="flex min-w-0 flex-col gap-6">
-          <div>
-            <h2 id="nooksguard-title" className="type-display text-6xl text-ink sm:text-7xl lg:text-8xl">
-              Nooksguard
-            </h2>
-            <p className="type-label mt-3 text-sm tracking-[0.3em]">Security Solutions</p>
-          </div>
-
-          <p className="type-display text-2xl text-ink sm:text-3xl">
+          <p className="type-display text-3xl text-ink sm:text-4xl xl:text-5xl">
             Verified protection. Confirmed, not assumed.
           </p>
           <p className="max-w-[62ch] text-ink-2">

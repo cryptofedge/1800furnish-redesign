@@ -94,11 +94,13 @@ view, not everywhere.
 
 ### Nooksguard on the home page
 
-Nooksguard has its own home-page section right after the hero: the emblem
-(on its own navy tile, the only dark area allowed), the name set in display
-type with "Security Solutions" under it, live model and family counts from
-the data, the logo button, and a hairline grid of every product family
-(live first, coming-soon last).
+Nooksguard has its own home-page section right after the hero: the full
+Nooksguard logo with its lettering (`public/nooksguard/logo-lockup.webp`,
+on its own navy background, the only dark area allowed) as the section
+title and a link to the catalog, the brand line, live model and family
+counts from the data, the logo button, and a hairline grid of every product
+family (live first, coming-soon last). Small buttons use the emblem only,
+because the lettering is unreadable at button size.
 
 ## Layout
 
