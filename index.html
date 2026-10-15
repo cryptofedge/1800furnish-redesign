@@ -65,6 +65,16 @@
   h1.display { font-size: clamp(44px, 10.5vw, 148px); line-height: 0.86; }
   .hero-meta { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 24px 48px; align-items: end; }
   .lede { margin: 0; max-width: 52ch; font-size: 19px; color: var(--ink-2); }
+  .hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; min-width: 0; }
+  .btn-live {
+    display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding-inline: 22px;
+    font: 700 17px var(--body); color: var(--ink); text-decoration: none;
+    background: var(--accent); border: 2px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+  .btn-live:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+  .btn-live:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
+  .live-url { font-size: 13px; color: var(--ink-2); user-select: all; }
   .stats { margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 3px solid var(--ink); }
   .stats div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 4px; padding: 10px 12px 0; border-left: 1px solid var(--rule); }
   .stats div:first-child { border-left: 0; padding-left: 0; }
@@ -205,7 +215,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .track { animation: none; }
-    .tile, .tile:hover, .tile:has(:focus-visible) { transition: none; transform: none; }
+    .tile, .tile:hover, .tile:has(:focus-visible), .btn-live, .btn-live:hover { transition: none; transform: none; }
   }
 </style>
 </head>
@@ -221,7 +231,11 @@
     <h1 class="display">The <span class="outline">new</span><br>Merkabanooks</h1>
 
     <div class="hero-meta">
-      <p class="lede">A bolder look on a clean white page, a live 3D room, a 360° viewer on every product, real product photos and the complete Nooksguard security catalog. Built and tested on the development site.</p>
+      <div class="hero-copy">
+        <p class="lede">A bolder look on a clean white page, a live 3D room, a 360° viewer on every product, real product photos and the complete Nooksguard security catalog. The new site is live now.</p>
+        <a class="btn-live" href="https://merkabanooks.vercel.app" target="_blank" rel="noopener">Visit the live site <span aria-hidden="true">→</span></a>
+        <span class="mono live-url">merkabanooks.vercel.app</span>
+      </div>
       <dl class="stats">
         <div><dt>Products</dt><dd>48</dd></div>
         <div><dt>Real photos</dt><dd>33</dd></div>
@@ -440,7 +454,7 @@
     </ul>
   </section>
 
-  <footer>Prepared for Merkabanooks. Screenshots are from the development build and may differ slightly from the live site. The Merkabanooks logo will be added later.</footer>
+  <footer>Prepared for Merkabanooks. Live site: merkabanooks.vercel.app. Screenshots may differ slightly from the live site as it changes. The Merkabanooks logo will be added later.</footer>
 </main>
 
 <dialog class="lb" id="lb" aria-labelledby="lb-title">
