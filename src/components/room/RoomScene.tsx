@@ -1,8 +1,8 @@
 "use client";
 
-import { Suspense, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
-import { Environment, Grid, Html, Lightformer } from "@react-three/drei";
+import { Environment, Html, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
 import Image from "next/image";
 import { ProductShape } from "@/components/product-shapes";
@@ -28,12 +28,17 @@ interface RoomSceneProps {
   onReady?: () => void;
 }
 
-// Palette (canvas can't read CSS variables): see globals.css.
-const INK = "#151515";
+// Palette (canvas can't read CSS variables). A styled, lived-in unit: light
+// oak floor, warm white walls with a soft sage accent wall, oatmeal rug.
+const OUTLINE = "#2b2f36";
 const ACCENT = "#ff5a1f";
-const FLOOR = "#f7f7f5";
-const WALL = "#eeefec"; // light blush-grey, to sit on the fuchsia-blush page
-const RUG = "#dfe3e0";
+const FLOOR = "#d9c3a2"; // light oak
+const PLANK_LINE = "#b49770";
+const WALL = "#f2efea"; // warm white
+const ACCENT_WALL = "#dce2d9"; // soft sage (back wall)
+const TRIM = "#fbf9f5";
+const RUG = "#cfc5b6"; // oatmeal
+const RUG_BORDER = "#ab9f8f";
 
 // ---------------------------------------------------------------------------
 // Camera: yaw-only orbit around the room corner. Drag sideways to turn; no
@@ -147,14 +152,23 @@ function Grounded({ children, onHeight }: { children: ReactNode; onHeight: (h: n
 
 // Adds crisp outline edges to every mesh inside, drawing-sheet style; turns
 // them orange while the piece is highlighted.
-function Outlined({ children, highlighted }: { children: ReactNode; highlighted: boolean }) {
+/** Soft edge lines (drawing-style detail); full orange when the piece is highlighted. */
+function Outlined({
+  children,
+  highlighted,
+  baseOpacity = 0.22,
+}: {
+  children: ReactNode;
+  highlighted: boolean;
+  baseOpacity?: number;
+}) {
   const group = useRef<THREE.Group>(null);
   const material = useRef<THREE.LineBasicMaterial | null>(null);
 
   useLayoutEffect(() => {
     const g = group.current;
     if (!g) return;
-    const mat = new THREE.LineBasicMaterial({ color: INK, transparent: true, opacity: 0.55 });
+    const mat = new THREE.LineBasicMaterial({ color: OUTLINE, transparent: true, opacity: baseOpacity });
     material.current = mat;
     const added: THREE.LineSegments[] = [];
     g.traverse((obj) => {
@@ -174,14 +188,16 @@ function Outlined({ children, highlighted }: { children: ReactNode; highlighted:
       mat.dispose();
       material.current = null;
     };
+    // Outlines are built once; the opacity is applied (and updated) below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     const mat = material.current;
     if (!mat) return;
-    mat.color.set(highlighted ? ACCENT : INK);
-    mat.opacity = highlighted ? 1 : 0.55;
-  }, [highlighted]);
+    mat.color.set(highlighted ? ACCENT : OUTLINE);
+    mat.opacity = highlighted ? 1 : baseOpacity;
+  }, [highlighted, baseOpacity]);
 
   return <group ref={group}>{children}</group>;
 }
@@ -236,9 +252,9 @@ function Piece({
             <group scale={scale}>
               <Outlined highlighted={highlighted}>
                 {product.modelUrl ? (
-                  <GltfModel url={product.modelUrl} finishHex={product.accentHex} />
+                  <GltfModel url={product.modelUrl} finishHex={placement.color ?? product.accentHex} />
                 ) : (
-                  <ProductShape kind={product.shape} color={product.accentHex} variant={product.shapeVariant} />
+                  <ProductShape kind={product.shape} color={placement.color ?? product.accentHex} variant={product.shapeVariant} />
                 )}
               </Outlined>
             </group>
@@ -270,8 +286,8 @@ function Piece({
             </button>
             {highlighted && (
               <div className="pointer-events-none absolute bottom-full mb-2 w-44 border border-ink bg-well text-left">
-                <div className="relative aspect-[4/3] w-full border-b border-rule">
-                  <Image src={product.image} alt="" fill sizes="176px" className="object-contain p-2" />
+                <div className="relative aspect-[4/3] w-full border-b border-rule bg-studio">
+                  <Image src={product.image} alt="" fill sizes="176px" className="object-contain p-2 mix-blend-multiply" />
                 </div>
                 <div className="px-2.5 py-1.5">
                   <p className="text-xs font-semibold leading-tight text-ink">{product.name}</p>
@@ -288,49 +304,152 @@ function Piece({
 
 // ---------------------------------------------------------------------------
 
+/** Plank seams along the floor, with staggered butt joints. */
+function FloorPlanks() {
+  const { width, depth } = ROOM;
+  const geometry = useMemo(() => {
+    const step = 0.24;
+    const pts: number[] = [];
+    for (let x = -width / 2 + step; x < width / 2 - 0.01; x += step) {
+      pts.push(x, 0.003, -depth / 2, x, 0.003, depth / 2);
+    }
+    let row = 0;
+    for (let x = -width / 2; x < width / 2 - 0.01; x += step, row++) {
+      for (let z = -depth / 2 + 0.5 + (row % 3) * 0.47; z < depth / 2; z += 1.45) {
+        pts.push(x, 0.003, z, x + step, 0.003, z);
+      }
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+    return g;
+  }, [width, depth]);
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  return (
+    <lineSegments geometry={geometry} raycast={() => null}>
+      <lineBasicMaterial color={PLANK_LINE} transparent opacity={0.6} />
+    </lineSegments>
+  );
+}
+
+function Plant({ position }: { position: [number, number, number] }) {
+  const leaves: [number, number, number, number][] = [
+    [0, 0.66, 0, 0.27],
+    [0.15, 0.82, 0.06, 0.21],
+    [-0.13, 0.85, -0.05, 0.22],
+    [0.03, 1.04, 0.01, 0.18],
+  ];
+  return (
+    <group position={position}>
+      <mesh position={[0, 0.21, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.18, 0.14, 0.42, 28]} />
+        <meshStandardMaterial color="#ece8e1" roughness={0.55} />
+      </mesh>
+      {leaves.map(([x, y, z, r], i) => (
+        <mesh key={i} position={[x, y, z]} castShadow>
+          <icosahedronGeometry args={[r, 1]} />
+          <meshStandardMaterial color={i % 2 ? "#6f9763" : "#557d4b"} roughness={0.85} flatShading />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+/** Framed print: warm paper with a soft sun and a sage block. */
+function WallArt({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <mesh castShadow>
+        <boxGeometry args={[0.95, 0.66, 0.035]} />
+        <meshStandardMaterial color="#3a332d" roughness={0.6} />
+      </mesh>
+      <mesh position={[0, 0, 0.019]}>
+        <planeGeometry args={[0.85, 0.56]} />
+        <meshStandardMaterial color="#f5f0e7" roughness={0.9} />
+      </mesh>
+      <mesh position={[-0.15, 0.05, 0.021]}>
+        <circleGeometry args={[0.14, 40]} />
+        <meshStandardMaterial color="#e3956a" roughness={0.9} />
+      </mesh>
+      <mesh position={[0.17, -0.08, 0.021]}>
+        <planeGeometry args={[0.32, 0.2]} />
+        <meshStandardMaterial color="#86a091" roughness={0.9} />
+      </mesh>
+    </group>
+  );
+}
+
+function Window({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <mesh>
+        <boxGeometry args={[1.62, 1.08, 0.04]} />
+        <meshStandardMaterial color={TRIM} roughness={0.5} />
+      </mesh>
+      <mesh position={[0, 0, 0.022]}>
+        <planeGeometry args={[1.48, 0.94]} />
+        <meshStandardMaterial color="#c9dce7" emissive="#e7f1f7" emissiveIntensity={0.45} roughness={0.15} />
+      </mesh>
+      <mesh position={[0, 0, 0.03]}>
+        <boxGeometry args={[0.035, 0.94, 0.02]} />
+        <meshStandardMaterial color={TRIM} roughness={0.5} />
+      </mesh>
+      <mesh position={[0, 0.06, 0.03]}>
+        <boxGeometry args={[1.48, 0.035, 0.02]} />
+        <meshStandardMaterial color={TRIM} roughness={0.5} />
+      </mesh>
+      {/* Sill */}
+      <mesh position={[0, -0.57, 0.06]} castShadow>
+        <boxGeometry args={[1.76, 0.05, 0.14]} />
+        <meshStandardMaterial color={TRIM} roughness={0.5} />
+      </mesh>
+    </group>
+  );
+}
+
 function Structure() {
   const { width, depth, height } = ROOM;
   const wallT = 0.12;
   return (
     <group>
-      {/* Floor slab with a 0.5 m drafting grid */}
-      <Outlined highlighted={false}>
+      <Outlined highlighted={false} baseOpacity={0.12}>
+        {/* Floor slab */}
         <mesh position={[0, -0.04, 0]} receiveShadow>
           <boxGeometry args={[width, 0.08, depth]} />
-          <meshStandardMaterial color={FLOOR} roughness={0.9} />
+          <meshStandardMaterial color={FLOOR} roughness={0.75} />
         </mesh>
-        {/* Back wall */}
+        {/* Back wall (sage accent) */}
         <mesh position={[0, height / 2, -depth / 2 - wallT / 2]} receiveShadow>
           <boxGeometry args={[width, height, wallT]} />
-          <meshStandardMaterial color={WALL} roughness={0.95} />
+          <meshStandardMaterial color={ACCENT_WALL} roughness={0.95} />
         </mesh>
         {/* Left wall */}
         <mesh position={[-width / 2 - wallT / 2, height / 2, 0]} receiveShadow>
           <boxGeometry args={[wallT, height, depth + wallT * 2]} />
           <meshStandardMaterial color={WALL} roughness={0.95} />
         </mesh>
-        {/* Window in the back wall, above the dresser */}
-        <mesh position={[-0.65, 1.75, -depth / 2 + 0.005]}>
-          <boxGeometry args={[1.5, 0.95, 0.01]} />
-          <meshStandardMaterial color="#f4f7f8" roughness={0.3} />
-        </mesh>
-        {/* Rug */}
-        <mesh position={[0.55, 0.006, 0.2]} receiveShadow>
-          <boxGeometry args={[2.3, 0.012, 1.7]} />
-          <meshStandardMaterial color={RUG} roughness={1} />
-        </mesh>
       </Outlined>
-      <Grid
-        position={[0, 0.002, 0]}
-        args={[width, depth]}
-        cellSize={0.5}
-        cellThickness={0.6}
-        cellColor="#d4d5d0"
-        sectionSize={1}
-        sectionThickness={1}
-        sectionColor="#b9bbb5"
-        fadeDistance={40}
-      />
+      <FloorPlanks />
+      {/* Baseboards */}
+      <mesh position={[0, 0.05, -depth / 2 + 0.012]} receiveShadow>
+        <boxGeometry args={[width, 0.1, 0.024]} />
+        <meshStandardMaterial color={TRIM} roughness={0.6} />
+      </mesh>
+      <mesh position={[-width / 2 + 0.012, 0.05, 0]} receiveShadow>
+        <boxGeometry args={[0.024, 0.1, depth]} />
+        <meshStandardMaterial color={TRIM} roughness={0.6} />
+      </mesh>
+      <Window position={[-0.65, 1.74, -depth / 2 + 0.02]} />
+      <WallArt position={[1.15, 1.62, -depth / 2 + 0.03]} />
+      {/* Rug with a darker border */}
+      <mesh position={[0.55, 0.006, 0.2]} receiveShadow>
+        <boxGeometry args={[2.4, 0.012, 1.8]} />
+        <meshStandardMaterial color={RUG_BORDER} roughness={1} />
+      </mesh>
+      <mesh position={[0.55, 0.008, 0.2]} receiveShadow>
+        <boxGeometry args={[2.22, 0.014, 1.62]} />
+        <meshStandardMaterial color={RUG} roughness={1} />
+      </mesh>
+      <Plant position={[2.55, 0, -1.05]} />
     </group>
   );
 }
@@ -338,10 +457,12 @@ function Structure() {
 function Studio() {
   return (
     <>
-      <ambientLight intensity={0.45} />
+      <hemisphereLight args={["#f4f7fb", "#d9c3a2", 0.55]} />
+      <ambientLight intensity={0.22} />
       <directionalLight
         position={[5, 8, 6]}
-        intensity={1.6}
+        intensity={1.75}
+        color="#fff3e2"
         castShadow
         shadow-mapSize={[2048, 2048]}
         shadow-camera-left={-6}
@@ -351,8 +472,8 @@ function Studio() {
         shadow-bias={-0.0004}
       />
       <Environment resolution={256}>
-        <Lightformer form="rect" intensity={2.2} position={[0, 6, 0]} rotation-x={Math.PI / 2} scale={[10, 10, 1]} />
-        <Lightformer form="rect" intensity={1.2} position={[6, 3, 4]} rotation-y={-Math.PI / 3} scale={[6, 3, 1]} />
+        <Lightformer form="rect" intensity={2.0} position={[0, 6, 0]} rotation-x={Math.PI / 2} scale={[10, 10, 1]} />
+        <Lightformer form="rect" intensity={1.1} color="#fff1df" position={[6, 3, 4]} rotation-y={-Math.PI / 3} scale={[6, 3, 1]} />
       </Environment>
     </>
   );

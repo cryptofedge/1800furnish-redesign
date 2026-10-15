@@ -43,7 +43,9 @@ export default async function Home() {
   return (
     <main id="top" className="flex flex-col">
       <HeroCinematic stats={stats} roomItems={roomItems} />
-      <div id="nooksguard">
+      {/* Studio-grey bands on alternating sections give the long page some rhythm;
+          the page itself stays white. */}
+      <div id="nooksguard" className="bg-studio">
         <NooksguardSection />
       </div>
       <div id="configurator">
@@ -55,7 +57,7 @@ export default async function Home() {
       <div id="process">
         <ScrollExperience />
       </div>
-      <div id="quote">
+      <div id="quote" className="bg-studio">
         <QuoteCalculator catalog={catalog} />
       </div>
     </main>

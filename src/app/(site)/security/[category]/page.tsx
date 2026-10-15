@@ -99,13 +99,13 @@ async function SecurityCategoryContent({ params }: CategoryPageProps) {
                         </div>
                       )}
                       {product.image && (
-                        <div className="relative aspect-[4/3] w-full border-b border-rule bg-well">
+                        <div className="relative aspect-[4/3] w-full border-b border-rule bg-studio">
                           <Image
                             src={product.image}
                             alt={product.model}
                             fill
                             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                            className="object-contain p-4"
+                            className="object-contain p-4 mix-blend-multiply"
                           />
                           {product.imageNote && (
                             <span className="tag absolute bottom-2 left-2">{product.imageNote}</span>

@@ -207,7 +207,7 @@ export function HeroCinematic({
           <div className="frame-marks">
             <div
               ref={stageRef}
-              className="relative aspect-[4/3] w-full overflow-hidden border border-ink sm:aspect-[16/9] lg:aspect-[21/9]"
+              className="relative aspect-[4/3] w-full overflow-hidden border border-rule bg-studio sm:aspect-[16/9] lg:aspect-[21/9]"
             >
               {/* Fallback media: shown before the room is ready, on low-power devices, and behind the viewer. */}
               <div
@@ -296,7 +296,7 @@ export function HeroCinematic({
 
         {/* Parts list: the room's legend, and a full-size way in for touch and keyboard users. */}
         {roomItems.length > 0 && (
-          <ol aria-label="Items in this room" className="catalog-grid mt-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <ol aria-label="Items in this room" className="catalog-grid mt-6 grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
             {roomItems.map(({ product }, i) => {
               const highlighted = hoveredSlug === product.slug;
               return (
@@ -313,13 +313,13 @@ export function HeroCinematic({
                     style={highlighted ? { boxShadow: "inset 0 -3px 0 var(--color-accent)" } : undefined}
                   >
                     {/* The real product, so the room's simple shapes always have a photo beside them. */}
-                    <span className="relative block aspect-[4/3] w-full border-b border-rule bg-well">
+                    <span className="relative block aspect-[4/3] w-full border-b border-rule bg-studio">
                       <Image
                         src={product.image}
                         alt=""
                         fill
                         sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        className="object-contain p-3"
+                        className="object-contain p-3 mix-blend-multiply"
                       />
                     </span>
                     <span className="flex items-start gap-3 px-3 py-3">

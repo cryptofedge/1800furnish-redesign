@@ -13,8 +13,9 @@
   --color-ink: #151515; /* primary text, heavy rules, dark bands */
   --color-ink-2: #4b4d4b; /* secondary text */
   --color-ink-3: #545653; /* meta text, captions (7.4:1 on white, 6:1 on mist) */
-  --color-rule: #d4d5d0; /* 1px hairlines between catalog cells */
+  --color-rule: #e1e2de; /* 1px hairlines between catalog cells (soft) */
   --color-mist: #eeefec; /* light neutral grey for bands, hovers and overlays — never black */
+  --color-studio: #f3f3f0; /* photo wells: product photos are multiplied onto it, so white backgrounds read as a soft studio */
 
   /* One accent, for actions only: safety orange */
   --color-accent: #ff5a1f; /* fills; always with ink text on top */

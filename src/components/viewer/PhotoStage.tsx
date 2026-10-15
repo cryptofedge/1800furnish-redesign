@@ -169,7 +169,7 @@ export function PhotoStage({ src, alt, apiRef, className, sizes = "100vw", prior
       onPointerUp={handlePointerEnd}
       onPointerCancel={handlePointerEnd}
       className={cn(
-        "relative h-full w-full select-none overflow-hidden bg-well",
+        "relative h-full w-full select-none overflow-hidden bg-studio",
         zoomed ? (dragging ? "cursor-grabbing" : "cursor-grab") : "cursor-zoom-in"
       )}
       // Pinch and drag are handled here, so the browser mustn't scroll or zoom the
@@ -177,7 +177,7 @@ export function PhotoStage({ src, alt, apiRef, className, sizes = "100vw", prior
       style={{ touchAction: inPage && !zoomed ? "pan-y" : "none" }}
     >
       <div
-        className={cn("absolute inset-0", !dragging && "transition-transform duration-150 ease-out")}
+        className={cn("absolute inset-0 bg-studio", !dragging && "transition-transform duration-150 ease-out")}
         style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.scale})` }}
       >
         <Image
@@ -187,7 +187,7 @@ export function PhotoStage({ src, alt, apiRef, className, sizes = "100vw", prior
           sizes={sizes}
           priority={priority}
           draggable={false}
-          className={cn("object-contain", className ?? "p-6 sm:p-10")}
+          className={cn("object-contain mix-blend-multiply", className ?? "p-6 sm:p-10")}
         />
       </div>
     </div>

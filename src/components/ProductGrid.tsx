@@ -43,14 +43,14 @@ export function ProductGrid({ products }: { products: Product[] }) {
               data-media
               onClick={(e: MouseEvent<HTMLButtonElement>) => open(product, e.currentTarget)}
               aria-label={`View ${product.name} up close`}
-              className="scanline group relative block aspect-square w-full overflow-hidden bg-well"
+              className="scanline group relative block aspect-[4/3] w-full overflow-hidden bg-studio sm:aspect-square"
             >
               <Image
                 src={product.image}
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                className="object-contain p-5 transition-transform duration-300 group-hover:scale-[1.03]"
+                className="object-contain p-5 mix-blend-multiply transition-transform duration-300 group-hover:scale-[1.03]"
               />
               <span className="tag absolute left-3 top-3 gap-1 border-ink">
                 {product.modelUrl ? (

@@ -34,6 +34,7 @@ hand-roll colors, radii or shadows.
 | `ink-3` | Meta text, captions, placeholders. Never for body copy. |
 | `rule` | 1px hairlines between cells and around panels (neutral grey). |
 | `mist` | Light neutral grey: footer band, hover fills, overlay backdrops. Never black. |
+| `studio` | Soft studio grey: product photo wells and alternating full-bleed section bands (Nooksguard, quote). |
 | `accent` | Safety orange. **Fills only**: actions (primary buttons, the active state marker) plus the one ticker band on the home page. Text on it is always `text-ink`. |
 | `accent-ink` | Orange for text/links on paper or white (contrast-safe). Use sparingly. |
 | `ok` / `warn` / `danger` | Status only (live / coming soon / errors). |
@@ -109,9 +110,19 @@ because the lettering is unreadable at button size.
   a header row: title (`.type-display`) left, short lede (`text-ink-2`) right
   or below; optional `.type-data` index number when the order is real
   (catalog category order, process steps).
-- Product photos sit **on white** (`bg-well`, `object-contain`, padding), not
-  cropped edge-to-edge, so products read like catalog cut-outs. Room/lifestyle
-  photos (category banners, hero) may be `object-cover`, square corners.
+- The page stays white; selected home sections sit on full-bleed `bg-studio`
+  bands so the long page has rhythm and white cards stand out.
+- Product photos sit in **studio wells** (`bg-studio` + `object-contain` +
+  padding + `mix-blend-multiply` on the image), so white photo backgrounds melt
+  into the grey and products read like catalog cut-outs. Inside a transformed
+  wrapper (zoom), put `bg-studio` on the wrapper too, or the blend has nothing
+  to multiply with. Room/lifestyle photos (category banners, sector cards) are
+  `object-cover`, square corners.
+- Every "Who we serve" sector card carries a real photo.
+- The hero 3D room is styled, not schematic: light oak plank floor, warm white
+  walls with a sage back wall, baseboards, window, rug, plant and a framed
+  print; each piece is colored to match its real product photo
+  (`room-layout.ts` `color`); edge lines are soft and only turn orange on hover.
 - Mobile first: everything stacks to one column at ~400px; no horizontal page
   scroll; tap targets ≥ 44px.
 

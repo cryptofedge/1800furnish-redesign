@@ -1,4 +1,4 @@
-import { DoubleSide } from "three";
+import { Color, DoubleSide } from "three";
 
 const FRAME = "#2a2d33";
 
@@ -188,22 +188,29 @@ function BunkBed({ color }: ShapeProps) {
 function Dresser({ color, variant }: ShapeProps) {
   const [w, h, d] = variant?.scale ?? [1.0, 1.0, 0.55];
   const drawerCount = 3;
+  const drawerColor = "#" + new Color(color).multiplyScalar(0.84).getHexString();
   return (
     <group>
       <mesh position={[0, h / 2 - 0.5, 0]} castShadow>
         <boxGeometry args={[w, h, d]} />
         <meshStandardMaterial color={color} roughness={0.6} metalness={0.05} />
       </mesh>
-      {Array.from({ length: drawerCount }).map((_, i) => (
-        <mesh
-          key={i}
-          position={[0, h / 2 - 0.5 - h / 2 + ((i + 0.5) * h) / drawerCount, d / 2 + 0.005]}
-          castShadow
-        >
-          <boxGeometry args={[w * 0.85, (h / drawerCount) * 0.7, 0.01]} />
-          <meshStandardMaterial color={FRAME} roughness={0.4} metalness={0.4} />
-        </mesh>
-      ))}
+      {/* Drawer fronts: a slightly deeper shade of the body, with a metal pull each. */}
+      {Array.from({ length: drawerCount }).map((_, i) => {
+        const y = h / 2 - 0.5 - h / 2 + ((i + 0.5) * h) / drawerCount;
+        return (
+          <group key={i} position={[0, y, d / 2]}>
+            <mesh position={[0, 0, 0.006]} castShadow>
+              <boxGeometry args={[w * 0.88, (h / drawerCount) * 0.82, 0.012]} />
+              <meshStandardMaterial color={drawerColor} roughness={0.55} metalness={0.05} />
+            </mesh>
+            <mesh position={[0, 0, 0.02]}>
+              <boxGeometry args={[Math.min(0.24, w * 0.25), 0.028, 0.02]} />
+              <meshStandardMaterial color={FRAME} roughness={0.3} metalness={0.8} />
+            </mesh>
+          </group>
+        );
+      })}
     </group>
   );
 }

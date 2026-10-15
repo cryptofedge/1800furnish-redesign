@@ -127,12 +127,12 @@ export function ProductConfigurator({ items }: { items: InspectorItem[] }) {
                       aria-label={`${item.category.label}: ${item.product.name}`}
                       title={`${item.category.label}: ${item.product.name}`}
                       className={cn(
-                        "relative block aspect-square w-full border bg-well transition-colors",
+                        "relative block aspect-square w-full border bg-studio transition-colors",
                         selected ? "border-ink" : "border-rule hover:border-ink"
                       )}
                       style={selected ? { boxShadow: "inset 0 -3px 0 var(--color-accent)" } : undefined}
                     >
-                      <Image src={item.product.image} alt="" fill sizes="80px" className="object-contain p-1.5" />
+                      <Image src={item.product.image} alt="" fill sizes="80px" className="object-contain p-1.5 mix-blend-multiply" />
                     </button>
                   </li>
                 );
