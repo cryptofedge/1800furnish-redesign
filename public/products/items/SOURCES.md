@@ -2,46 +2,46 @@
 
 Product photos in this folder come from two places:
 
-- **The client's own store, [1800furnish.com](https://1800furnish.com)** — 33 items, matched to the closest real product and checked by two independent reviewers (right product type and specifics; no third-party logos, watermarks or price stickers). Normalized to ≤1200px progressive JPEG.
+- **The client's own retail store** — 33 items, matched to the closest real product and checked by two independent reviewers (right product type and specifics; no third-party logos, watermarks or price stickers). Normalized to ≤1200px progressive JPEG.
 - **Unsplash stock photos** (the original set) — the remaining 15 items, where the store had no true match. Replace these when real product photos exist.
 
-## From 1800furnish.com
+## From the client's store
 
-| File | Store product |
+| File | Store product name |
 |---|---|
-| `twin-bunk-bed.jpg` | [Furniture Twin Bunk Bed AC (Included Mattress)](https://1800furnish.com/product/furniture-twin-bunk-bed-ac/) |
-| `twin-metal-bed-frame.jpg` | [TWIN METAL FRAME](https://1800furnish.com/product/twin-metal-frame/) |
-| `task-chair.jpg` | [Furniture Seating V](https://1800furnish.com/product/vion/) |
-| `cleaning-cart.jpg` | [Janitor Cart with Vinyl Zippered Bag, Black](https://1800furnish.com/product/rubbermaid-janitor-cart-with-vinyl-zippered-bag-black/) |
-| `twin-linen-set.jpg` | [1800Furnish White bed sheets 4PC](https://1800furnish.com/product/1800furnish-white-bed-sheets-4pc/) |
-| `queen-linen-set.jpg` | [White Bed Sheets](https://1800furnish.com/product/white-bed-sheets/) |
-| `track-arm-sofa.jpg` | [Ruth Upholstered Track Arm Faux Leather Sofa Grey - CT](https://1800furnish.com/product/ruth-upholstered-track-arm-faux-leather-sofa-grey-ct/) |
-| `twin-xl-mattress.jpg` | [Nylon Staph Waterproof Check Mattress (7″ Memory Foam)](https://1800furnish.com/product/nylon-staph-check-mattress-7%e2%80%b3-memory-foam/) |
-| `compact-wardrobe.jpg` | [Ezra Iron Wardrobe Tall](https://1800furnish.com/product/ezra-iron-wardrobe-tall/) |
-| `led-television.jpg` | [32-inch LED HD TV](https://1800furnish.com/product/tl-3201h-32-inch-led-hd-tv/) |
-| `cookware-set.jpg` | [Stainless Steel Cookware Set, 12 Pcs](https://1800furnish.com/product/stainless-steel-cookware-set-12-pcs/) |
-| `clearance-dresser.jpg` | [Double Dresser w/6 Drawers 139 - VF](https://1800furnish.com/product/double-dresser-w-6-drawers-139-vf/) |
-| `5-piece-wood-dining-set.jpg` | [5-piece Dining Set Cappuccino](https://1800furnish.com/product/gomez-5-piece-dining-set-cappuccino-c150152/) |
-| `5-drawer-dresser.jpg` | [Metal Tall Dresser with 5 Drawers](https://1800furnish.com/product/metal-tall-dresser-with-5-drawers/) |
-| `6-drawer-dresser.jpg` | [Wooden 6 Drawer Dresser TOV-223](https://1800furnish.com/product/wooden-6-drawer-dresser-tov-223/) |
-| `mini-refrigerator.jpg` | [3.1 Cu. Ft. Compact Double Door Refrigerator, Stainless Look](https://1800furnish.com/product/3-1-cu-ft-compact-double-door-refrigerator-stainless-look/) |
-| `janitorial-supply-kit.jpg` | [Wet Mop Kit with 35 Qt. Yellow Mop Bucket, Wet Floor Sign, Mop Head, and Handle 41-WB](https://1800furnish.com/product/wet-mop-kit-with-35-qt-yellow-mop-bucket-wet-floor-sign-mop-head-and-handle-41-wb/) |
-| `bulk-trash-liners.jpg` | [55 Gallon Black Trash Bags, 36x60, 22mic, 150 Bags per Carton](https://1800furnish.com/product/55-gallon-black-trash-bags-36x60-22mic-150-bags-per-carton/) |
-| `commercial-round-dining-table.jpg` | [36" Walnut Melamine Round Cafe Table 339-WB](https://1800furnish.com/product/36-walnut-melamine-round-cafe-table-339-wb/) |
-| `nightstand-usb.jpg` | [Fluted Nightstand with Charging Station](https://1800furnish.com/product/fluted-nightstand-with-charging-station/) |
-| `move-in-kit.jpg` | [Welcome Kit - 1800Furnish](https://1800furnish.com/product/welcome-kit-1800furnish/) |
-| `bath-towel-bundle.jpg` | [Economy Cotton Bath Towel 8 lb. - 12/Pack](https://1800furnish.com/product/economy-cotton-bath-towel-8-lb-12-pack/) |
-| `overstock-dining-chair.jpg` | [Seating Black Finish Cross Back Chair with Padded Seat II 44 - WS](https://1800furnish.com/product/seating-black-finish-cross-back-chair-with-padded-seat-ii-44-ws/) |
-| `open-box-sectional.jpg` | [Gray Sectional with cup holders](https://1800furnish.com/product/gray-sectional-with-cup-holders/) |
-| `counter-height-bistro-table.jpg` | [30" Standard Height Cafe Table with Particleboard Core, X Base](https://1800furnish.com/product/standard-height-cafe-table-with-particleboard-core-x-base/) |
-| `stackable-banquet-chair.jpg` | [880 lb. Capacity Ultra-Compact Stack Chair with Chrome Frame 49-RFP](https://1800furnish.com/product/880-lb-capacity-ultra-compact-stack-chair-with-chrome-frame-49-rfp/) |
-| `accent-chair.jpg` | [Rilynn Upholstered Track Arms Chair Grey - CT](https://1800furnish.com/product/rilynn-upholstered-track-arms-chair-grey-ct/) |
-| `kids-study-desk-chair.jpg` | [Adjustable Height Square Natural Plastic Classroom Activity Table with (4) 10 1/2" Chairs 164-WB](https://1800furnish.com/product/adjustable-height-square-natural-plastic-classroom-activity-table-with-4-10-1-2-chairs-164-wb/) |
-| `microwave.jpg` | [1.1 CU FT Microwave Oven - Stainless Steel](https://1800furnish.com/product/1-1-cu-ft-microwave-oven-stainless-steel/) |
-| `smoke-co-detector.jpg` | [Hardwired Interconnectable Smoke Alarm with 9V Backup Battery 18-WS](https://1800furnish.com/product/hardwired-interconnectable-smoke-alarm-with-9v-backup-battery-18-ws/) |
-| `3-seat-sectional.jpg` | [Ezra Reversible Sleeper Sectional with Storage, cupholder and wireless charger - AJ](https://1800furnish.com/product/reversible-sleeper-sectional-with-storage-cupholder-and-wireless-charger-aj/) |
-| `queen-platform-bed-frame.jpg` | [Platform Bed](https://1800furnish.com/product/platform-bed/) |
-| `mop-bucket-system.jpg` | [35 Qt. Yellow Mop Bucket & Side Press Wringer Combo 38-WB](https://1800furnish.com/product/35-qt-yellow-mop-bucket-side-press-wringer-combo-38-wb/) |
+| `twin-bunk-bed.jpg` | Furniture Twin Bunk Bed AC (Included Mattress) |
+| `twin-metal-bed-frame.jpg` | TWIN METAL FRAME |
+| `task-chair.jpg` | Furniture Seating V |
+| `cleaning-cart.jpg` | Janitor Cart with Vinyl Zippered Bag, Black |
+| `twin-linen-set.jpg` | White bed sheets 4PC |
+| `queen-linen-set.jpg` | White Bed Sheets |
+| `track-arm-sofa.jpg` | Ruth Upholstered Track Arm Faux Leather Sofa Grey - CT |
+| `twin-xl-mattress.jpg` | Nylon Staph Waterproof Check Mattress (7″ Memory Foam) |
+| `compact-wardrobe.jpg` | Ezra Iron Wardrobe Tall |
+| `led-television.jpg` | 32-inch LED HD TV |
+| `cookware-set.jpg` | Stainless Steel Cookware Set, 12 Pcs |
+| `clearance-dresser.jpg` | Double Dresser w/6 Drawers 139 - VF |
+| `5-piece-wood-dining-set.jpg` | 5-piece Dining Set Cappuccino |
+| `5-drawer-dresser.jpg` | Metal Tall Dresser with 5 Drawers |
+| `6-drawer-dresser.jpg` | Wooden 6 Drawer Dresser TOV-223 |
+| `mini-refrigerator.jpg` | 3.1 Cu. Ft. Compact Double Door Refrigerator, Stainless Look |
+| `janitorial-supply-kit.jpg` | Wet Mop Kit with 35 Qt. Yellow Mop Bucket, Wet Floor Sign, Mop Head, and Handle 41-WB |
+| `bulk-trash-liners.jpg` | 55 Gallon Black Trash Bags, 36x60, 22mic, 150 Bags per Carton |
+| `commercial-round-dining-table.jpg` | 36" Walnut Melamine Round Cafe Table 339-WB |
+| `nightstand-usb.jpg` | Fluted Nightstand with Charging Station |
+| `move-in-kit.jpg` | Welcome Kit |
+| `bath-towel-bundle.jpg` | Economy Cotton Bath Towel 8 lb. - 12/Pack |
+| `overstock-dining-chair.jpg` | Seating Black Finish Cross Back Chair with Padded Seat II 44 - WS |
+| `open-box-sectional.jpg` | Gray Sectional with cup holders |
+| `counter-height-bistro-table.jpg` | 30" Standard Height Cafe Table with Particleboard Core, X Base |
+| `stackable-banquet-chair.jpg` | 880 lb. Capacity Ultra-Compact Stack Chair with Chrome Frame 49-RFP |
+| `accent-chair.jpg` | Rilynn Upholstered Track Arms Chair Grey - CT |
+| `kids-study-desk-chair.jpg` | Adjustable Height Square Natural Plastic Classroom Activity Table with (4) 10 1/2" Chairs 164-WB |
+| `microwave.jpg` | 1.1 CU FT Microwave Oven - Stainless Steel |
+| `smoke-co-detector.jpg` | Hardwired Interconnectable Smoke Alarm with 9V Backup Battery 18-WS |
+| `3-seat-sectional.jpg` | Ezra Reversible Sleeper Sectional with Storage, cupholder and wireless charger - AJ |
+| `queen-platform-bed-frame.jpg` | Platform Bed |
+| `mop-bucket-system.jpg` | 35 Qt. Yellow Mop Bucket & Side Press Wringer Combo 38-WB |
 
 ## Still stock (no true match on the store)
 
