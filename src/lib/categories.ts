@@ -38,6 +38,8 @@ export interface Product {
    * cutout on white, shown whole on the studio-grey well.
    */
   imageFit?: "cover";
+  /** True while the image is a "Photo coming soon" card (no real photo yet). */
+  imagePending?: true;
 }
 
 export interface Category {
@@ -51,25 +53,31 @@ export interface Category {
 // Photos that stay as full-frame scenes (see public/products/items/SOURCES.md);
 // every other product photo is a white-background cutout with matching framing.
 const SCENE_PHOTOS = new Set([
-  "dinnerware-set",
   "height-adjustable-desk",
-  "lamp-clearance-bundle",
-  "lateral-file-cabinet",
-  "mattress-protector",
   "move-in-essentials-kit",
-  "security-door-lockbox",
   "twin-linen-set",
-  "washer-dryer-combo",
-  "window-security-film",
   "queen-linen-set",
   "accent-chair",
   "keyless-entry-lock",
-  "trash-can",
   "starter-room-package",
-  "foldable-storage-bench",
-  "reception-bench",
-  "coffee-table",
   "overstock-dining-chair",
+]);
+
+// The stock photo for these showed a different item (e.g. toasters for the
+// washer/dryer), so they show a "Photo coming soon" card until a real photo
+// arrives. Replace public/products/items/<slug>.jpg and remove the slug here.
+const PENDING_PHOTOS = new Set([
+  "washer-dryer-combo",
+  "lateral-file-cabinet",
+  "coffee-table",
+  "reception-bench",
+  "foldable-storage-bench",
+  "dinnerware-set",
+  "lamp-clearance-bundle",
+  "trash-can",
+  "window-security-film",
+  "mattress-protector",
+  "security-door-lockbox",
 ]);
 
 function product(
@@ -88,6 +96,7 @@ function product(
     description,
     image: `/products/items/${slug}.jpg`,
     ...(SCENE_PHOTOS.has(slug) ? { imageFit: "cover" as const } : {}),
+    ...(PENDING_PHOTOS.has(slug) ? { imagePending: true as const } : {}),
     shape,
     accentHex,
     shapeVariant,

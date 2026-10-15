@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   return {
     title: `${product.name} | ${SITE_NAME}`,
     description: `${product.description} ${category.label} · bulk pricing for institutions.`,
-    openGraph: { images: [{ url: product.image }] },
+    ...(product.imagePending ? {} : { openGraph: { images: [{ url: product.image }] } }),
   };
 }
 
@@ -77,7 +77,7 @@ async function ProductContent({ params }: ProductPageProps) {
     "@type": "Product",
     name: product.name,
     description: product.description,
-    image: `${SITE_URL}${product.image}`,
+    ...(product.imagePending ? {} : { image: `${SITE_URL}${product.image}` }),
     category: category.label,
     offers: {
       "@type": "Offer",

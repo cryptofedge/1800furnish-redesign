@@ -17,6 +17,16 @@ So the catalog looks like one set, every photo uses one of two treatments:
 
 The original photos are in git history (before commit "Matching product photos").
 
+**Photo coming soon (11):** washer-dryer-combo, lateral-file-cabinet,
+coffee-table, reception-bench, foldable-storage-bench, dinnerware-set,
+lamp-clearance-bundle, trash-can, window-security-film, mattress-protector and
+security-door-lockbox had stock photos of a different item (toasters, a desk
+and chair, a sofa, an office chair, kids' beds, pots and vegetables, a
+warehouse, kitchen shelves, a door lock, a pile of fabric, another brand's home
+safe). They
+now show a "Photo coming soon" card (`PENDING_PHOTOS` in
+`src/lib/categories.ts`) until a real photo of the product is supplied.
+
 Product photos in this folder come from two places:
 
 - **The client's own retail store** — 33 items, matched to the closest real product and checked by two independent reviewers (right product type and specifics; no third-party logos, watermarks or price stickers). Normalized to ≤1200px progressive JPEG.
