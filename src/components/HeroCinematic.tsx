@@ -270,7 +270,7 @@ export function HeroCinematic({
 
               {show3D && ready && (
                 <p className="tag pointer-events-none absolute bottom-3 left-3 border-ink">
-                  <span className="hidden sm:inline">Drag to turn · Select a number to inspect in 360°</span>
+                  <span className="hidden sm:inline">Drag to turn · Select a number to see the product</span>
                   <span className="sm:hidden">Swipe sideways to turn</span>
                 </p>
               )}
@@ -308,14 +308,26 @@ export function HeroCinematic({
                     onPointerLeave={() => setHoveredSlug(null)}
                     onFocus={() => setHoveredSlug(product.slug)}
                     onBlur={() => setHoveredSlug(null)}
-                    aria-label={`${pad(i + 1)}: open ${product.name} in the 360° viewer`}
-                    className="flex h-full min-h-14 w-full items-start gap-3 px-3 py-3 text-left"
+                    aria-label={`${pad(i + 1)}: view ${product.name} up close`}
+                    className="flex h-full w-full flex-col text-left"
                     style={highlighted ? { boxShadow: "inset 0 -3px 0 var(--color-accent)" } : undefined}
                   >
-                    <span className="type-data mt-px text-xs text-ink-3">{pad(i + 1)}</span>
-                    <span className="flex min-w-0 flex-col">
-                      <span className="text-sm font-semibold leading-snug text-ink">{product.name}</span>
-                      <span className="type-data text-xs text-ink-2">{formatCurrency(product.price)} / unit</span>
+                    {/* The real product, so the room's simple shapes always have a photo beside them. */}
+                    <span className="relative block aspect-[4/3] w-full border-b border-rule bg-well">
+                      <Image
+                        src={product.image}
+                        alt=""
+                        fill
+                        sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-contain p-3"
+                      />
+                    </span>
+                    <span className="flex items-start gap-3 px-3 py-3">
+                      <span className="type-data mt-px text-xs text-ink-3">{pad(i + 1)}</span>
+                      <span className="flex min-w-0 flex-col">
+                        <span className="text-sm font-semibold leading-snug text-ink">{product.name}</span>
+                        <span className="type-data text-xs text-ink-2">{formatCurrency(product.price)} / unit</span>
+                      </span>
                     </span>
                   </button>
                 </li>

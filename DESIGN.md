@@ -74,7 +74,7 @@ the current selection, or the home-page ticker band.
 | `.link` | Inline text link with orange underline. |
 | `.catalog-grid` + `.cell` | Hairline grid of white cells. |
 | `.panel` | Standalone white panel with hairline (forms, side rails). |
-| `.tag` | Small rectangular mono tag (e.g. `360°`, `Coming soon`). |
+| `.tag` | Small rectangular mono tag (e.g. `Zoom`, `360°` only for a real 3D model, `Coming soon`). |
 | `.field` | Input / select / textarea. |
 | `.section-rule` | 3px ink rule at the top of a section. |
 
@@ -118,7 +118,7 @@ because the lettering is unreadable at button size.
 ## Motion
 
 Short transitions (≤160ms) on hover: color, plus the hard-shadow lift on
-buttons and cards. The 360° viewer's open/close spring, the home-page headline
+buttons and cards. The product viewer's open/close spring, the home-page headline
 reveal and the ticker are the only "moments". Everything respects
 `prefers-reduced-motion` (the ticker stands still, lifts don't move).
 

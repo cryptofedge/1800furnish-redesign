@@ -15,7 +15,7 @@ interface GltfModelProps {
  * contains "upholstery" or "fabric" to the active finish — see
  * public/models/README.md for the naming convention.
  *
- * Shared by the home-page Scene3D and the fullscreen ProductViewer.
+ * Used by the fullscreen ProductViewer and the home-page 3D room.
  */
 export function GltfModel({ url, finishHex, position }: GltfModelProps) {
   // `true` enables the Draco decoder (loaded on demand from Google's CDN).

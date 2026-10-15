@@ -2,15 +2,15 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import Link from "next/link";
 import { motion, useMotionValue } from "framer-motion";
-import { Box, Loader2, Maximize2, Minus, Plus, RotateCcw, Ruler, X } from "lucide-react";
+import { Box, Image as ImageIcon, Loader2, Maximize2, Minus, Plus, RotateCcw, Ruler, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FINISHES } from "@/lib/finishes";
 import { formatCurrency } from "@/lib/quote-data";
 import type { Product } from "@/lib/categories";
 import { TURNTABLE_KEY_STEP, type TurntableApi } from "./viewer/useTurntable";
+import { PhotoStage, type PhotoZoomApi } from "./viewer/PhotoStage";
 
 const ViewerStage = dynamic(() => import("./viewer/ViewerStage").then((m) => m.ViewerStage), {
   ssr: false,
@@ -21,21 +21,33 @@ const ViewerStage = dynamic(() => import("./viewer/ViewerStage").then((m) => m.V
   ),
 });
 
+/** Arrow-key pan step for the photo view, in pixels. */
+const PHOTO_PAN_STEP = 60;
+
+type ViewMode = "photo" | "3d";
+
 interface ProductViewerProps {
   product: Product;
-  /** Device flagged low-power / reduced-motion: show the photo until the user opts in. */
+  /** Device flagged low-power / reduced-motion: never auto-start a 3D model. */
   lowPower: boolean;
   /** Viewport point the viewer should appear to grow out of (centre of the clicked card). */
   origin?: { x: number; y: number };
   onClose: () => void;
 }
 
+/**
+ * Full-screen product view. It opens on the real product photo (zoomable).
+ * A real 3D model, when a product has one (`modelUrl`), is offered as a 360°
+ * view; otherwise the 3D option is a clearly labelled simplified shape, so
+ * buyers never mistake a stand-in for the product.
+ */
 export function ProductViewer({ product, lowPower, origin, onClose }: ProductViewerProps) {
+  const hasModel = Boolean(product.modelUrl);
+  const [mode, setMode] = useState<ViewMode>(hasModel && !lowPower ? "3d" : "photo");
   // Track the chosen swatch by id: a product's own color can equal one of the
   // shared finishes (e.g. walnut), and matching by hex would mark both selected.
   const [finishId, setFinishId] = useState("standard");
   const [showDimensions, setShowDimensions] = useState(false);
-  const [force3D, setForce3D] = useState(false);
   // The viewer animates itself out, then asks the parent to unmount it
   // (onAnimationComplete below) — no AnimatePresence needed.
   const [closing, setClosing] = useState(false);
@@ -44,15 +56,16 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
   // scale-in animation has finished — otherwise it sizes itself to the
   // half-scale box and never re-measures.
   const [stageReady, setStageReady] = useState(false);
-  const apiRef = useRef<TurntableApi | null>(null);
+  const turntableRef = useRef<TurntableApi | null>(null);
+  const photoRef = useRef<PhotoZoomApi | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const show3D = !lowPower || force3D;
 
   const requestClose = useCallback(() => setClosing(true), []);
 
   const finishes = [{ id: "standard", label: "Standard (as shown)", hex: product.accentHex }, ...FINISHES];
   const finishHex = (finishes.find((f) => f.id === finishId) ?? finishes[0]).hex;
+  const shapeLabel = hasModel ? "360° model" : "3D shape";
 
   // Scale the stage in/out around the card the user clicked, so it reads as the
   // card expanding to fullscreen (and collapsing back on close).
@@ -88,10 +101,54 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
     return () => window.removeEventListener("keydown", onKey);
   }, [requestClose]);
 
+  function zoomBy(factor: number) {
+    if (mode === "3d") turntableRef.current?.zoomBy(factor);
+    else photoRef.current?.zoomBy(1 / factor);
+  }
+
+  function resetView() {
+    if (mode === "3d") turntableRef.current?.reset();
+    else photoRef.current?.reset();
+  }
+
   function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
-    const api = apiRef.current;
+    if (mode === "photo") {
+      const photo = photoRef.current;
+      if (!photo) return;
+      switch (e.key) {
+        case "ArrowLeft":
+          photo.panBy(PHOTO_PAN_STEP, 0);
+          break;
+        case "ArrowRight":
+          photo.panBy(-PHOTO_PAN_STEP, 0);
+          break;
+        case "ArrowUp":
+          photo.panBy(0, PHOTO_PAN_STEP);
+          break;
+        case "ArrowDown":
+          photo.panBy(0, -PHOTO_PAN_STEP);
+          break;
+        case "+":
+        case "=":
+          photo.zoomBy(1.25);
+          break;
+        case "-":
+        case "_":
+          photo.zoomBy(1 / 1.25);
+          break;
+        case "r":
+        case "R":
+          photo.reset();
+          break;
+        default:
+          return;
+      }
+      e.preventDefault();
+      return;
+    }
+
+    const api = turntableRef.current;
     if (!api) return;
-    // Don't hijack keys while a button/link has focus and the key is Enter/Space.
     switch (e.key) {
       case "ArrowLeft":
         api.rotateBy(-TURNTABLE_KEY_STEP, 0);
@@ -138,7 +195,7 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-label={`${product.name} — 360° viewer`}
+        aria-label={`${product.name} — product view`}
         tabIndex={-1}
         onKeyDown={handleKeyDown}
         // Clicking the padding around the panels (the visible backdrop) closes.
@@ -158,11 +215,9 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
           }}
           className="relative min-h-0 flex-1 overflow-hidden bg-well md:border md:border-rule"
         >
-          {show3D && !stageReady ? (
-            <div className="flex h-full w-full items-center justify-center text-ink-3">
-              <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
-            </div>
-          ) : show3D ? (
+          {mode === "photo" ? (
+            <PhotoStage src={product.image} alt={product.name} apiRef={photoRef} priority />
+          ) : stageReady ? (
             <ViewerStage
               modelUrl={product.modelUrl}
               shape={product.shape}
@@ -170,24 +225,11 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
               finishHex={finishHex}
               showDimensions={showDimensions}
               autoRotate={!lowPower}
-              apiRef={apiRef}
+              apiRef={turntableRef}
             />
           ) : (
-            <div className="relative h-full w-full bg-well">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                sizes="100vw"
-                className="object-contain p-8 pb-48 sm:p-12 sm:pb-52"
-              />
-              <div className="panel absolute inset-x-4 bottom-4 mx-auto flex max-w-sm flex-col items-center gap-3 border-ink p-4 text-center">
-                <Box className="h-6 w-6 text-ink-2" aria-hidden="true" />
-                <p className="text-sm text-ink-2">3D is paused to save battery and data on this device.</p>
-                <button type="button" onClick={() => setForce3D(true)} className="btn btn-secondary w-full">
-                  View in 3D anyway
-                </button>
-              </div>
+            <div className="flex h-full w-full items-center justify-center text-ink-3">
+              <Loader2 className="h-6 w-6 animate-spin" aria-hidden="true" />
             </div>
           )}
 
@@ -200,11 +242,15 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
             <X className="h-5 w-5" aria-hidden="true" />
           </button>
 
-          {show3D && (
-            <p className="pointer-events-none absolute bottom-3 left-3 hidden bg-well/90 px-2 py-1 text-xs text-ink-2 sm:block">
-              Drag to spin · Scroll or pinch to zoom · Arrow keys rotate · R resets
-            </p>
+          {mode === "3d" && !hasModel && (
+            <p className="tag absolute left-3 top-3 z-10 border-ink">Simplified shape — not the actual product</p>
           )}
+
+          <p className="pointer-events-none absolute bottom-3 left-3 hidden bg-well/90 px-2 py-1 text-xs text-ink-2 sm:block">
+            {mode === "photo"
+              ? "Scroll or pinch to zoom · Drag to move · Double-click to zoom in · R resets"
+              : "Drag to spin · Scroll or pinch to zoom · Arrow keys rotate · R resets"}
+          </p>
         </motion.div>
 
         {/* Controls panel: bottom sheet on phones, side rail on desktop. */}
@@ -215,8 +261,7 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
           className="panel flex max-h-[46vh] shrink-0 flex-col gap-4 overflow-y-auto md:gap-5 border-x-0 border-b-0 border-t-ink p-4 sm:p-5 md:ml-4 md:max-h-none md:w-[340px] md:border md:border-rule lg:w-[360px]"
         >
           <div>
-            <span className="tag border-ink">360° viewer</span>
-            <h2 className="mt-3 text-2xl font-semibold leading-tight text-ink">{product.name}</h2>
+            <h2 className="text-2xl font-semibold leading-tight text-ink">{product.name}</h2>
             <p className="mt-2 text-sm text-ink-2">{product.description}</p>
             <p className="mt-3 leading-none">
               <span className="type-data text-2xl font-medium text-ink">{formatCurrency(product.price)}</span>
@@ -225,80 +270,92 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
           </div>
 
           <div className="border-t border-rule pt-4">
-            <p className="type-label mb-2">Finish</p>
-            <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Finish">
-              {finishes.map((finish) => {
-                const active = finishId === finish.id;
-                return (
-                  <button
-                    type="button"
-                    key={finish.id}
-                    role="radio"
-                    aria-checked={active}
-                    aria-label={finish.label}
-                    title={finish.label}
-                    onClick={() => setFinishId(finish.id)}
-                    className={cn("btn-tool min-h-11 justify-start gap-2 text-xs", active ? "text-ink" : "text-ink-2")}
-                  >
-                    <span
-                      className="h-4 w-4 shrink-0 rounded-full border border-ink/25"
-                      style={{ backgroundColor: finish.hex }}
-                      aria-hidden="true"
-                    />
-                    {finish.label}
-                  </button>
-                );
-              })}
+            <p className="type-label mb-2">View</p>
+            <div className="grid grid-cols-2 gap-2" role="group" aria-label="View">
+              <button
+                type="button"
+                aria-pressed={mode === "photo"}
+                onClick={() => setMode("photo")}
+                className="btn-tool min-h-11 text-xs"
+              >
+                <ImageIcon className="h-4 w-4" aria-hidden="true" />
+                Photo
+              </button>
+              <button
+                type="button"
+                aria-pressed={mode === "3d"}
+                onClick={() => setMode("3d")}
+                className="btn-tool min-h-11 text-xs"
+              >
+                <Box className="h-4 w-4" aria-hidden="true" />
+                {shapeLabel}
+              </button>
             </div>
+            {!hasModel && (
+              <p className="mt-2 text-xs text-ink-3">
+                No 3D scan of this product yet. The 3D shape is a simplified stand-in for size and layout only.
+              </p>
+            )}
           </div>
 
-          <div className="grid grid-cols-2 gap-2 border-t border-rule pt-4">
-            <button
-              type="button"
-              onClick={() => setShowDimensions((v) => !v)}
-              aria-pressed={showDimensions}
-              disabled={!show3D}
-              className="btn-tool min-h-11 text-xs"
-            >
-              <Ruler className="h-4 w-4" aria-hidden="true" />
-              {showDimensions ? "Hide dimensions" : "Show dimensions"}
+          {mode === "3d" && (
+            <div className="border-t border-rule pt-4">
+              <p className="type-label mb-2">Preview finish</p>
+              <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Preview finish">
+                {finishes.map((finish) => {
+                  const active = finishId === finish.id;
+                  return (
+                    <button
+                      type="button"
+                      key={finish.id}
+                      role="radio"
+                      aria-checked={active}
+                      aria-label={finish.label}
+                      title={finish.label}
+                      onClick={() => setFinishId(finish.id)}
+                      className={cn("btn-tool min-h-11 justify-start gap-2 text-xs", active ? "text-ink" : "text-ink-2")}
+                    >
+                      <span
+                        className="h-4 w-4 shrink-0 rounded-full border border-ink/25"
+                        style={{ backgroundColor: finish.hex }}
+                        aria-hidden="true"
+                      />
+                      {finish.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-wrap items-center gap-2 border-t border-rule pt-4">
+            <span className="type-label mr-1">Zoom</span>
+            <button type="button" onClick={() => zoomBy(1 / 0.85)} aria-label="Zoom out" className="btn-tool h-11 w-11 p-0">
+              <Minus className="h-4 w-4" aria-hidden="true" />
             </button>
-            <button
-              type="button"
-              onClick={() => apiRef.current?.reset()}
-              disabled={!show3D}
-              className="btn-tool min-h-11 text-xs"
-            >
+            <button type="button" onClick={() => zoomBy(0.85)} aria-label="Zoom in" className="btn-tool h-11 w-11 p-0">
+              <Plus className="h-4 w-4" aria-hidden="true" />
+            </button>
+            <button type="button" onClick={resetView} className="btn-tool min-h-11 text-xs">
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
-              Reset view
+              Reset
             </button>
+            {mode === "3d" && (
+              <button
+                type="button"
+                onClick={() => setShowDimensions((v) => !v)}
+                aria-pressed={showDimensions}
+                className="btn-tool min-h-11 text-xs"
+              >
+                <Ruler className="h-4 w-4" aria-hidden="true" />
+                {showDimensions ? "Hide dimensions" : "Dimensions"}
+              </button>
+            )}
           </div>
-
-          {show3D && (
-            <div className="flex items-center gap-2">
-              <span className="type-label mr-1">Zoom</span>
-              <button
-                type="button"
-                onClick={() => apiRef.current?.zoomBy(1 / 0.85)}
-                aria-label="Zoom out"
-                className="btn-tool h-11 w-11 p-0"
-              >
-                <Minus className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={() => apiRef.current?.zoomBy(0.85)}
-                aria-label="Zoom in"
-                className="btn-tool h-11 w-11 p-0"
-              >
-                <Plus className="h-4 w-4" aria-hidden="true" />
-              </button>
-              {showDimensions && (
-                <span className="ml-auto text-right text-[11px] leading-tight text-ink-3">
-                  {product.modelUrl ? "Dimensions from model" : "Approximate — confirm on spec sheet"}
-                </span>
-              )}
-            </div>
+          {mode === "3d" && showDimensions && (
+            <p className="-mt-2 text-[11px] leading-tight text-ink-3">
+              {hasModel ? "Dimensions from model" : "Approximate — confirm on spec sheet"}
+            </p>
           )}
 
           {/* Pinned to the bottom of the phone sheet so the CTA never scrolls out of view. */}

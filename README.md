@@ -52,15 +52,14 @@ src/
                              # gates /admin/* routes — see src/lib/supabase/middleware.ts
   components/
     HeroCinematic.tsx       # video background, parallax, split-text headline
-    Scene3D.tsx              # home-page R3F canvas: fallback mesh / GLTF, hotspots, finish color
-    ProductConfigurator.tsx  # wraps Scene3D with finish switcher + low-power fallback
+    ProductConfigurator.tsx  # home-page inspector: one real product per category, zoomable photo, quote CTA
     SectorShowcase.tsx       # dual-sector tabbed showcase
     ScrollExperience.tsx     # pinned "blueprint to furnished" scroll sequence
     QuoteCalculator.tsx      # bulk RFQ / facility package calculator + modal
     CategoryNav.tsx          # sticky category tab bar (on /categories/* routes)
-    ProductGrid.tsx          # catalog grid of product photos; opens ProductViewer (360°)
-    ProductViewer.tsx        # fullscreen 360° viewer modal (finishes, dimensions, keyboard, quote CTA)
-    viewer/                  # ViewerStage (studio canvas), useTurntable (orbit/inertia/zoom), GltfModel, DimensionLines
+    ProductGrid.tsx          # catalog grid of product photos; opens ProductViewer
+    ProductViewer.tsx        # fullscreen product viewer: real photo (zoom/pan) + optional 3D view, quote CTA
+    viewer/                  # PhotoStage (zoomable photo), ViewerStage (studio canvas), useTurntable, GltfModel, DimensionLines
     product-shapes.tsx       # procedural 3D archetypes (chair, table, bed, ...)
     SiteHeader.tsx / SiteFooter.tsx
   lib/
@@ -107,23 +106,35 @@ with outline edges on a drafting-grid floor.
 - **Interaction:** drag (or swipe sideways) to turn the room within a limited
   range; it sways gently when idle. There is deliberately no scroll/pinch zoom,
   so the page never traps scrolling. Hover or focus a numbered callout to see
-  name and price; click a callout, a piece, or a row in the parts list below
-  to open it in the 360° viewer.
+  the product photo, name and price; click a callout, a piece, or a row in
+  the parts list below (each row shows the real product photo) to open it in
+  the product viewer.
 - **Models:** pieces use the same procedural shapes as the viewer until a
   product gets a `.glb` (`modelUrl` / `model_url`), which the room then loads
   automatically.
 - **Performance:** loaded on demand; the room photo shows until it is ready and
   remains the fallback for reduced-motion / data-saver devices (with a "View
   the 3D room" opt-in). Rendering pauses while the hero is off-screen and while
-  the 360° viewer is open. The home-page chair viewer also pauses off-screen.
+  the product viewer is open.
 - In development, React's double-mount check logs a few "synchronously unmount
   a root" warnings from the floating callouts; production builds don't.
 
-## 360° product viewer
+## Product viewer
 
-Every product card on `/categories/*` opens a fullscreen viewer
-([`src/components/ProductViewer.tsx`](src/components/ProductViewer.tsx)):
-tap the preview, the **360°** badge, or the product name.
+Every product card on `/categories/*` (and every pick in the home-page room
+and inspector) opens a fullscreen viewer
+([`src/components/ProductViewer.tsx`](src/components/ProductViewer.tsx)).
+
+- **Opens on the real product photo** ([`PhotoStage`](src/components/viewer/PhotoStage.tsx)):
+  scroll or pinch to zoom (1–4×), drag to move, double-click to zoom in,
+  arrow keys pan, `+`/`-` zoom, `R` resets.
+- **3D view** is a second option. A product with a real `.glb` gets a
+  "360° model" button (and opens on it); every other product gets a "3D shape"
+  button for its procedural stand-in, labelled on screen as a simplified shape,
+  not the actual product. Cards are tagged **360°** only when a real model
+  exists, otherwise **Zoom**.
+
+In the 3D view:
 
 - **Spin / tilt:** drag (mouse or touch). Full 360° yaw; tilt is clamped so
   the piece never flips. Damped follow with a little inertia after release,
@@ -132,9 +143,9 @@ tap the preview, the **360°** badge, or the product name.
   so the piece can't clip or vanish.
 - **Keyboard:** arrow keys rotate, `+`/`-` zoom, `R` resets, `Esc` closes.
   The dialog is `role="dialog"`, traps initial focus, restores focus on close.
-- **Panel:** name + price, finish swatches (shared list in
-  [`src/lib/finishes.ts`](src/lib/finishes.ts)), *Show dimensions* (W/D/H
-  guide lines from the model's real bounding box), *Reset view*, and
+- **Panel:** name + price, Photo / 3D switch, finish preview swatches in 3D
+  (shared list in [`src/lib/finishes.ts`](src/lib/finishes.ts)), *Dimensions*
+  (W/D/H guide lines from the model's bounding box), zoom and *Reset*, and
   *Request a quote for this item* — which lands on the home-page calculator
   with that product attached to the RFQ (`/?product=<slug>#quote`).
 - **Models:** a product with `modelUrl` (static catalog) / `model_url`
@@ -144,8 +155,7 @@ tap the preview, the **360°** badge, or the product name.
   [`public/models/README.md`](public/models/README.md).
 - **Performance:** the viewer is `next/dynamic` + `ssr:false`; while it's
   open the grid previews swap to photos so only one WebGL canvas exists. The
-  low-power / `prefers-reduced-motion` fallback shows the product photo with
-  a "View in 3D anyway" opt-in.
+  low-power / `prefers-reduced-motion` devices never auto-start a 3D model.
 
 Design notes and references: [`VIEWER-NOTES.md`](VIEWER-NOTES.md).
 

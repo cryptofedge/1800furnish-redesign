@@ -4,6 +4,7 @@ import { Suspense, useEffect, useLayoutEffect, useRef, useState, type ReactNode 
 import { Canvas, useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import { Environment, Grid, Html, Lightformer } from "@react-three/drei";
 import * as THREE from "three";
+import Image from "next/image";
 import { ProductShape } from "@/components/product-shapes";
 import { GltfModel } from "@/components/viewer/GltfModel";
 import { formatCurrency } from "@/lib/quote-data";
@@ -261,18 +262,21 @@ function Piece({
               onPointerLeave={() => onHover(null)}
               onFocus={() => onHover(product.slug)}
               onBlur={() => onHover(null)}
-              aria-label={`${String(index + 1).padStart(2, "0")}: open ${product.name} in the 360° viewer`}
+              aria-label={`${String(index + 1).padStart(2, "0")}: view ${product.name} up close`}
               className="type-data flex h-7 min-w-7 items-center justify-center border border-ink bg-well px-1 text-[11px] text-ink transition-colors sm:h-9 sm:min-w-9 sm:px-1.5 sm:text-xs"
               style={highlighted ? { boxShadow: `inset 0 -3px 0 ${ACCENT}` } : undefined}
             >
               {String(index + 1).padStart(2, "0")}
             </button>
             {highlighted && (
-              <div className="pointer-events-none absolute bottom-full mb-2 w-max max-w-[14rem] border border-ink bg-well px-2.5 py-1.5 text-left">
-                <p className="text-xs font-semibold leading-tight text-ink">{product.name}</p>
-                <p className="type-data mt-0.5 text-[11px] text-ink-2">
-                  {formatCurrency(product.price)} / unit · 360°
-                </p>
+              <div className="pointer-events-none absolute bottom-full mb-2 w-44 border border-ink bg-well text-left">
+                <div className="relative aspect-[4/3] w-full border-b border-rule">
+                  <Image src={product.image} alt="" fill sizes="176px" className="object-contain p-2" />
+                </div>
+                <div className="px-2.5 py-1.5">
+                  <p className="text-xs font-semibold leading-tight text-ink">{product.name}</p>
+                  <p className="type-data mt-0.5 text-[11px] text-ink-2">{formatCurrency(product.price)} / unit</p>
+                </div>
               </div>
             )}
           </div>

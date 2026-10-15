@@ -35,6 +35,11 @@ export default async function Home() {
     return product ? [{ product, placement }] : [];
   });
 
+  // Home-page inspector: the first product of every category, shown as its real photo.
+  const inspectorItems = categories.flatMap((c) =>
+    c.products[0] ? [{ product: c.products[0], category: { slug: c.slug, label: c.label } }] : []
+  );
+
   return (
     <main id="top" className="flex flex-col">
       <HeroCinematic stats={stats} roomItems={roomItems} />
@@ -42,7 +47,7 @@ export default async function Home() {
         <NooksguardSection />
       </div>
       <div id="configurator">
-        <ProductConfigurator />
+        <ProductConfigurator items={inspectorItems} />
       </div>
       <div id="sectors">
         <SectorShowcase />

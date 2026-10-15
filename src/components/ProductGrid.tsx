@@ -3,14 +3,15 @@
 import { useEffect, useState, type MouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Rotate3d } from "lucide-react";
+import { Rotate3d, ZoomIn } from "lucide-react";
 import { formatCurrency } from "@/lib/quote-data";
 import type { Product } from "@/lib/categories";
 import { ProductViewer } from "./ProductViewer";
 
 // Catalog cards: the product photo on white is the primary view (it's what a
-// buyer scans), and the 360° viewer opens on demand. No WebGL runs on the grid
-// itself, so a category page stays light on phones.
+// buyer scans), and the product viewer opens on demand — on the real photo,
+// zoomable. Only products with a real 3D model are tagged 360°. No WebGL runs
+// on the grid itself, so a category page stays light on phones.
 export function ProductGrid({ products }: { products: Product[] }) {
   const [lowPower, setLowPower] = useState(false);
   const [active, setActive] = useState<{ product: Product; origin: { x: number; y: number } } | null>(null);
@@ -41,7 +42,7 @@ export function ProductGrid({ products }: { products: Product[] }) {
               type="button"
               data-media
               onClick={(e: MouseEvent<HTMLButtonElement>) => open(product, e.currentTarget)}
-              aria-label={`Open ${product.name} in the 360° viewer`}
+              aria-label={`View ${product.name} up close`}
               className="scanline group relative block aspect-square w-full overflow-hidden bg-well"
             >
               <Image
@@ -52,8 +53,17 @@ export function ProductGrid({ products }: { products: Product[] }) {
                 className="object-contain p-5 transition-transform duration-300 group-hover:scale-[1.03]"
               />
               <span className="tag absolute left-3 top-3 gap-1 border-ink">
-                <Rotate3d className="h-3 w-3" aria-hidden="true" />
-                360°
+                {product.modelUrl ? (
+                  <>
+                    <Rotate3d className="h-3 w-3" aria-hidden="true" />
+                    360°
+                  </>
+                ) : (
+                  <>
+                    <ZoomIn className="h-3 w-3" aria-hidden="true" />
+                    Zoom
+                  </>
+                )}
               </span>
             </button>
 

@@ -1,5 +1,5 @@
-// Finish/colour options shared by the home-page configurator and the 360°
-// product viewer. Add a finish here and both pick it up.
+// Finish/colour previews for the product viewer's 3D view. Add a finish here
+// and the viewer picks it up.
 export interface FinishOption {
   id: string;
   label: string;
