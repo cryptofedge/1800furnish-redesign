@@ -3,11 +3,11 @@
 Full catalog has **~116 products across 14 categories**. Status below —
 pick up any "pending" category by following the pattern in `ngvj.ts`.
 
-**Live now:** `/security` (hub) + `/security/ngvj` (14 products, 4 tiers) + `/security/audio-protection` (3 units, 1 tier) + `/security/ngz-3825t` (1 unit, 1 tier) + `/security/ngmw` (2 units, 1 tier) + `/security/ngfs` (4 units, 2 tiers) + `/security/ngts-ct` (4 units, 2 tiers) + `/security/ngpx` (9 units, 3 tiers) + `/security/threat-detection` (11 units, 4 tiers) + `/security/nghwt` (12 units, 4 tiers) + `/security/nghh` (16 configs, 4 tiers) + `/security/tscm` (18 models, 5 tiers)
+**Live now:** `/security` (hub) + `/security/ngz` (5 units, 1 tier) + `/security/ngvj` (14 products, 4 tiers) + `/security/audio-protection` (3 units, 1 tier) + `/security/ngz-3825t` (1 unit, 1 tier) + `/security/ngmw` (2 units, 1 tier) + `/security/ngfs` (4 units, 2 tiers) + `/security/ngts-ct` (4 units, 2 tiers) + `/security/ngpx` (9 units, 3 tiers) + `/security/threat-detection` (11 units, 4 tiers) + `/security/nghwt` (12 units, 4 tiers) + `/security/nghh` (16 configs, 4 tiers) + `/security/tscm` (18 models, 5 tiers)
 
 | # | Category (slug) | Products | Status | Catalog source pages |
 |---|---|---|---|---|
-| 1 | Compact X-Ray Inspection (`ngz`) | 5 | ⏳ pending — **images need fixing first, see below** | 4–13 |
+| 1 | Compact X-Ray Inspection (`ngz`) | 5 | ✅ **done** (all 5 images; a third-party logo on each machine's side panel was painted out, see below) | 4–13 |
 | 2 | NGVJ Security Screening Series (`ngvj`) | 14 | ✅ **done** | 14–20 |
 | 3 | Fast CT Inspection (`ngts-ct`) | 4 | ✅ **done** (all 4 images, pages 21/23/25/27) | 21–28 |
 | 4 | Multi-Energy X-Ray Inspection (`ngz-3825t`) | 1 | ✅ **done** | 29–32 |
@@ -24,9 +24,8 @@ pick up any "pending" category by following the pattern in `ngvj.ts`.
 
 Page 99 is the closing compliance/contact page (no products).
 
-**All buildable families are done.** The only remaining family is the
-watermark-blocked Compact X-Ray `ngz` (5, see below), which needs corrected
-images first. Removed on purpose: `ngjm` (legal), `nguv` (owner decision), and
+**Every family is built** (Compact X-Ray `ngz` was the last, 2026-10-15).
+Removed on purpose: `ngjm` (legal), `nguv` (owner decision), and
 the NGTS-W2 / W3 models inside `tscm` (legal).
 
 **Images:** imported from the catalog PDF on 2026-10-15 for every live family
@@ -53,9 +52,10 @@ ask Nooksguard for clean, Nooksguard-branded renders.
 6. `npm run build && npm run lint`, then spot-check the page in the browser
    before committing.
 
-## Known issue to resolve before publishing NGZ
+## NGZ images (resolved 2026-10-15)
 
-The NGZ series (category 1) has full spec data ready to go (see source pages
-4–13), but all 5 product photos have a "FURNISH me.inc" watermark baked in
-instead of Nooksguard branding — don't wire those images in as-is. Either
-get corrected renders from the client or crop/retouch first.
+All 5 NGZ renders (pages 4, 6, 8, 10, 12) had a third-party logo baked into
+the machine's side panel instead of Nooksguard branding. It was painted out to
+a plain panel (smooth blend of the surrounding panel color); no Nooksguard logo
+was added. If Nooksguard supplies properly branded renders, swap them in at
+`public/nooksguard/products/ngz-*.webp`.

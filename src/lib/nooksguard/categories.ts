@@ -1,4 +1,5 @@
 import type { SecurityCategory } from "./types";
+import { ngzCategory } from "./ngz";
 import { ngvjCategory } from "./ngvj";
 import { ngz3825tCategory } from "./ngz-3825t";
 import { audioProtectionCategory } from "./audio-protection";
@@ -11,24 +12,8 @@ import { nghwtCategory } from "./nghwt";
 import { nghhCategory } from "./nghh";
 import { tscmCategory } from "./tscm";
 
-function stub(
-  slug: string,
-  label: string,
-  shortLabel: string,
-  description: string,
-  productCount: number
-): SecurityCategory {
-  return { slug, label, shortLabel, description, productCount, status: "coming-soon", tiers: [] };
-}
-
 export const SECURITY_CATEGORIES: SecurityCategory[] = [
-  stub(
-    "ngz",
-    "Compact X-Ray Inspection",
-    "Compact X-Ray",
-    "Bag and parcel X-ray screening for daily checkpoints, from handbag-size tunnels up to large-channel cargo units.",
-    5
-  ),
+  ngzCategory,
   ngvjCategory,
   ngtsCtCategory,
   ngz3825tCategory,

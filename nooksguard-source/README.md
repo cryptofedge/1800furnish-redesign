@@ -43,9 +43,10 @@ unlike `pdftoppm`/`pdfimages`, which aren't installed in this environment).
 Not every embedded image is cleanly Nooksguard-branded:
 
 - **NGZ series (Compact X-Ray)** product renders (pages 4, 6, 8, 10, 12) have
-  a **"FURNISH me.inc" watermark** baked into the machine's side panel
-  instead of the Nooksguard logo — a stock OEM render that wasn't correctly
-  rebranded before this PDF was assembled. Do not publish these as-is.
+  a **third-party logo** baked into the machine's side panel instead of the
+  Nooksguard logo — a stock OEM render that wasn't correctly rebranded before
+  this PDF was assembled. For the site (2026-10-15) the logo was painted out
+  to a plain panel; never publish the raw renders.
 - **NGVJ150180** (page 18, tier 3/4 freight unit) shows the unbranded OEM
   model code **"VKJ-150180"** printed on the unit instead of "NGVJ-150180".
   Minor, but inconsistent with the rest of the NGVJ series.
@@ -72,5 +73,5 @@ Found while importing the remaining families (2026-10-15):
 - **TSCM (pages 86–91):** several device screens show a Chinese-language UI.
   Used as-is; replace if Nooksguard has English-UI renders.
 
-Recommend asking Nooksguard for corrected renders for the NGZ series, or
-cropping/retouching before publishing.
+Recommend asking Nooksguard for properly branded renders for the NGZ series
+to replace the retouched ones.
