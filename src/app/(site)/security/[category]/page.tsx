@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -24,7 +25,32 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   };
 }
 
-export default async function SecurityCategoryPage({ params }: CategoryPageProps) {
+// `params` is read inside a Suspense boundary so client navigations can show
+// the page shell instantly (Next 16 instant navigation); every family is still
+// prerendered by generateStaticParams for direct visits.
+export default function SecurityCategoryPage({ params }: CategoryPageProps) {
+  return (
+    <Suspense fallback={<SecurityCategorySkeleton />}>
+      <SecurityCategoryContent params={params} />
+    </Suspense>
+  );
+}
+
+/** Shown instantly on navigation while the category's content streams in. */
+function SecurityCategorySkeleton() {
+  return (
+    <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:py-16 sm:px-8" aria-busy="true" aria-label="Loading category">
+      <div className="min-h-11" />
+      <div className="section-rule mt-4 pt-6">
+        <div className="h-12 w-2/3 max-w-lg bg-mist sm:h-16 lg:h-20" />
+        <div className="mt-6 h-4 w-full max-w-md bg-mist" />
+      </div>
+      <div className="mt-8 h-48 w-full bg-mist sm:h-64 lg:h-80" />
+    </div>
+  );
+}
+
+async function SecurityCategoryContent({ params }: CategoryPageProps) {
   const { category: slug } = await params;
   const category = getSecurityCategory(slug);
   if (!category) notFound();
