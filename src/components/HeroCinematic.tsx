@@ -141,7 +141,7 @@ export function HeroCinematic({
   const fallbackVisible = !show3D || !ready;
 
   return (
-    // Transparent on purpose: the drafting grid on <body> shows through.
+    // Transparent: sits directly on the plain white page.
     <section className="w-full">
       {/* Top padding clears the fixed 72px site header. */}
       <div className="mx-auto w-full max-w-7xl px-4 pb-16 pt-28 sm:px-8 sm:pb-24 sm:pt-32">

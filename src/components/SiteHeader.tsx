@@ -6,13 +6,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/lib/categories";
+import { NooksguardButton } from "./NooksguardButton";
 
 const NAV_LINKS = [
   { label: "Shop", href: "/categories" },
   { label: "Capabilities", href: "/#configurator" },
   { label: "Sectors", href: "/#sectors" },
   { label: "Process", href: "/#process" },
-  { label: "Security", href: "/security" },
 ];
 
 interface SiteHeaderProps {
@@ -62,7 +62,10 @@ export function SiteHeader({ categories }: SiteHeaderProps) {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          {/* Nooksguard logo button: emblem + name on wide screens, emblem only below. */}
+          <NooksguardButton label="Nooksguard" className="hidden lg:inline-flex" />
+          <NooksguardButton iconOnly className="lg:hidden" />
           <Link href="/#quote" className="btn btn-primary hidden sm:inline-flex">
             Request a quote
           </Link>
@@ -115,10 +118,17 @@ export function SiteHeader({ categories }: SiteHeaderProps) {
                 ))}
               </div>
 
+              <NooksguardButton
+                size="lg"
+                label="Nooksguard Security"
+                onClick={() => setMenuOpen(false)}
+                className="mt-6 w-full justify-start"
+              />
+
               <Link
                 href="/#quote"
                 onClick={() => setMenuOpen(false)}
-                className="btn btn-primary mt-6 w-full"
+                className="btn btn-primary mt-4 w-full"
               >
                 Request a quote
               </Link>

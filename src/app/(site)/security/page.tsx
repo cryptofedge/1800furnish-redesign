@@ -8,7 +8,7 @@ import { SITE_NAME } from "@/lib/site";
 export const metadata: Metadata = {
   title: `Security Solutions | ${SITE_NAME}`,
   description:
-    "Nooksguard Security Solutions — X-ray inspection, CT screening, metal detection, body scanners, vehicle surveillance and counter-surveillance equipment.",
+    "Nooksguard Security Solutions — X-ray and CT inspection, metal detection, body scanners, threat detection and counter-surveillance equipment.",
 };
 
 export default function SecurityIndexPage() {
@@ -33,7 +33,7 @@ export default function SecurityIndexPage() {
         <div className="flex flex-col gap-3">
           <p className="max-w-[62ch] text-ink-2">
             Integrated security inspection and counter-surveillance equipment for people,
-            baggage, vehicles, field response and information protection.
+            baggage, field response and information protection.
           </p>
           <p className="type-data text-sm text-ink">
             {SECURITY_PRODUCT_TOTAL}+ models · {SECURITY_CATEGORIES.length} product families

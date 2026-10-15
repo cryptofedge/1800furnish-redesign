@@ -43,18 +43,9 @@ html {
   background: var(--color-paper);
 }
 
-/* Paper with a faint drafting grid (24px minor, 120px major): the
-   "engineered catalog" ground. Opaque surfaces (wells, panels, header) sit on
-   top of it; leave a section transparent to let the grid show through. */
+/* Plain white page, no background grid (owner's call, 2026-10-15). */
 body {
   background-color: var(--color-paper);
-  background-image:
-    linear-gradient(to right, rgb(21 21 21 / 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(21 21 21 / 0.045) 1px, transparent 1px),
-    linear-gradient(to right, rgb(21 21 21 / 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(21 21 21 / 0.02) 1px, transparent 1px);
-  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
-  background-position: -1px -1px;
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-stretch: 100%;
@@ -150,6 +141,26 @@ body {
   }
   .btn-secondary:active:not(:disabled) {
     transform: translate(0, 0);
+    box-shadow: 0 0 0 var(--color-ink);
+  }
+
+  /* Logo button: white plate, 2px ink border, hard shadow, with a brand
+     emblem tile flush against the left edge (see NooksguardButton). */
+  .btn-badge {
+    gap: 0.75rem;
+    padding-block: 0;
+    padding-left: 0;
+    background: var(--color-well);
+    color: var(--color-ink);
+    border: 2px solid var(--color-ink);
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
+  .btn-badge:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--color-ink);
+  }
+  .btn-badge:active:not(:disabled) {
+    transform: translate(3px, 3px);
     box-shadow: 0 0 0 var(--color-ink);
   }
 
@@ -417,6 +428,7 @@ body {
     animation: none;
   }
   .lift:hover,
+  .btn-badge:hover:not(:disabled),
   .btn-primary:hover:not(:disabled),
   .btn-secondary:hover:not(:disabled) {
     transform: none;

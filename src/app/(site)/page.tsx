@@ -1,4 +1,5 @@
 import { HeroCinematic } from "@/components/HeroCinematic";
+import { NooksguardSection } from "@/components/NooksguardSection";
 import { ProductConfigurator } from "@/components/ProductConfigurator";
 import { QuoteCalculator } from "@/components/QuoteCalculator";
 import { ScrollExperience } from "@/components/ScrollExperience";
@@ -37,6 +38,9 @@ export default async function Home() {
   return (
     <main id="top" className="flex flex-col">
       <HeroCinematic stats={stats} roomItems={roomItems} />
+      <div id="nooksguard">
+        <NooksguardSection />
+      </div>
       <div id="configurator">
         <ProductConfigurator />
       </div>

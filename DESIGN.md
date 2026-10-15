@@ -27,7 +27,7 @@ hand-roll colors, radii or shadows.
 
 | Token | Use |
 |---|---|
-| `paper` | Page ground (`bg-paper`): plain white (owner's pick). |
+| `paper` | Page ground (`bg-paper`): plain white, no background grid (owner's pick). |
 | `well` | White: product photo wells, cards, form fields, side panels. |
 | `ink` | Primary text, 2px section rules, dark bands (footer). |
 | `ink-2` | Secondary text, descriptions. |
@@ -90,6 +90,15 @@ view, not everywhere.
 | `.nav-link` | Header nav link; an orange bar wipes in underneath on hover. |
 | `.marquee` / `<Ticker>` | Full-bleed orange ticker band of true statements in display type, with a pause button (WCAG 2.2.2). Home page only. |
 | Footer wordmark | Oversized `MERKABANOOKS` sized to run the full container width. |
+| `.btn-badge` / `<NooksguardButton>` | Logo button: white plate, ink border, hard shadow, the Nooksguard emblem as a tile flush left. In the header (emblem only below `lg`), the phone menu, and the Nooksguard section. |
+
+### Nooksguard on the home page
+
+Nooksguard has its own home-page section right after the hero: the emblem
+(on its own navy tile, the only dark area allowed), the name set in display
+type with "Security Solutions" under it, live model and family counts from
+the data, the logo button, and a hairline grid of every product family
+(live first, coming-soon last).
 
 ## Layout
 

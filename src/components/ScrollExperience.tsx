@@ -96,16 +96,6 @@ export function ScrollExperience() {
 
         <div className="panel relative mx-auto aspect-[4/3] w-full max-w-2xl overflow-hidden">
           <svg viewBox="0 0 400 300" className="h-full w-full" aria-hidden="true">
-            {/* Drafting grid: always visible */}
-            <g className="stroke-rule" strokeWidth="0.5" fill="none">
-              {Array.from({ length: 21 }).map((_, i) => (
-                <line key={`v${i}`} x1={i * 20} y1={0} x2={i * 20} y2={300} />
-              ))}
-              {Array.from({ length: 16 }).map((_, i) => (
-                <line key={`h${i}`} x1={0} y1={i * 20} x2={400} y2={i * 20} />
-              ))}
-            </g>
-
             {/* Base blueprint layer: thin ink linework, always visible */}
             <g className="stroke-ink" strokeWidth="1" fill="none">
               <rect x="30" y="30" width="340" height="240" />
