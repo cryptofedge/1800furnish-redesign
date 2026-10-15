@@ -31,8 +31,8 @@ interface RoomSceneProps {
 const INK = "#151515";
 const ACCENT = "#ff5a1f";
 const FLOOR = "#f7f7f5";
-const WALL = "#ece2e8"; // light blush-grey, to sit on the fuchsia-blush page
-const RUG = "#e9d3df";
+const WALL = "#eeefec"; // light blush-grey, to sit on the fuchsia-blush page
+const RUG = "#dfe3e0";
 
 // ---------------------------------------------------------------------------
 // Camera: yaw-only orbit around the room corner. Drag sideways to turn; no
@@ -321,10 +321,10 @@ function Structure() {
         args={[width, depth]}
         cellSize={0.5}
         cellThickness={0.6}
-        cellColor="#dcc5d3"
+        cellColor="#d4d5d0"
         sectionSize={1}
         sectionThickness={1}
-        sectionColor="#c9aebf"
+        sectionColor="#b9bbb5"
         fadeDistance={40}
       />
     </group>

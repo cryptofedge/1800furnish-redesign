@@ -36,7 +36,7 @@ export function ProductGrid({ products }: { products: Product[] }) {
     <>
       <ul className="catalog-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {products.map((product) => (
-          <li key={product.slug} data-card className="cell flex flex-col">
+          <li key={product.slug} data-card className="cell lift flex flex-col">
             <button
               type="button"
               data-media

@@ -76,7 +76,7 @@ export default function SecurityIndexPage() {
             <Link
               key={category.slug}
               href={`/security/${category.slug}`}
-              className="cell group flex min-h-[44px] flex-col gap-2 p-5 transition-colors hover:bg-paper"
+              className="cell lift group flex min-h-[44px] flex-col gap-2 p-5"
             >
               {content}
             </Link>

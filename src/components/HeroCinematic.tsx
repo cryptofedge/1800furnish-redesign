@@ -12,6 +12,7 @@ import { formatCurrency } from "@/lib/quote-data";
 import type { Product } from "@/lib/categories";
 import type { RoomItem } from "./room/RoomScene";
 import { ProductViewer } from "./ProductViewer";
+import { Ticker } from "./Ticker";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(SplitText);
@@ -28,6 +29,7 @@ const BADGES = [
   "Transitional Housing Specialists",
   "Commercial Facilities",
   "Rapid Delivery Nationwide",
+  "Bulk pricing on every item",
 ];
 
 interface HeroCinematicProps {
@@ -143,29 +145,26 @@ export function HeroCinematic({
     <section className="w-full">
       {/* Top padding clears the fixed 72px site header. */}
       <div className="mx-auto w-full max-w-7xl px-4 pb-16 pt-28 sm:px-8 sm:pb-24 sm:pt-32">
-        {stats && (
-          <p className="readout mb-3" aria-label="Catalog at a glance">
-            <span>
-              <b>{stats.products}</b> products
-            </span>
-            <span aria-hidden="true">/</span>
-            <span>
-              <b>{stats.categories}</b> categories
-            </span>
-            <span aria-hidden="true">/</span>
-            <span>
-              <b>{stats.securityModels}</b> Nooksguard security models
-            </span>
-            <span aria-hidden="true">/</span>
-            <span>Bulk pricing on every item</span>
-          </p>
-        )}
+        <p className="readout mb-3">
+          <span>Contract furniture</span>
+          <span aria-hidden="true">/</span>
+          <span>Nooksguard security</span>
+          <span aria-hidden="true">/</span>
+          <span>Facility &amp; maintenance supply</span>
+        </p>
 
-        <div className="section-rule grid gap-8 pt-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-end lg:gap-12">
-          <h1 ref={headlineRef} className="type-display text-5xl text-ink sm:text-6xl lg:text-7xl">
-            Furnishing the spaces where communities rebuild.
+        <div className="section-rule pt-6">
+          {/* Line breaks are set by hand from sm up so the big type breaks on phrases. */}
+          <h1
+            ref={headlineRef}
+            className="type-display text-[clamp(3.25rem,8.6vw,8.75rem)] text-ink [text-wrap:wrap]"
+          >
+            Furnishing the spaces<br className="hidden sm:inline" /> where communities
+            <br className="hidden sm:inline" /> <span className="type-outline">rebuild.</span>
           </h1>
+        </div>
 
+        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-end lg:gap-12">
           <div className="flex min-w-0 flex-col gap-6">
             <p className="max-w-[62ch] text-base text-ink-2 sm:text-lg">
               From transitional housing to municipal facilities and modern offices —
@@ -182,6 +181,25 @@ export function HeroCinematic({
               </Link>
             </div>
           </div>
+
+          {/* Live catalog figures, computed by the page (never hardcoded). */}
+          {stats && (
+            <dl className="grid grid-cols-3 border-t-[3px] border-ink">
+              {[
+                { value: stats.products, label: "Products" },
+                { value: stats.categories, label: "Categories" },
+                { value: stats.securityModels, label: "Security models" },
+              ].map(({ value, label }, i) => (
+                <div
+                  key={label}
+                  className={`flex flex-col-reverse justify-end gap-1 pt-3 ${i > 0 ? "border-l border-rule pl-3 sm:pl-5" : "pr-3"}`}
+                >
+                  <dt className="type-label">{label}</dt>
+                  <dd className="type-display text-6xl text-ink sm:text-7xl lg:text-8xl">{pad(value)}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
         </div>
 
         {/* Live 3D room */}
@@ -282,7 +300,7 @@ export function HeroCinematic({
             {roomItems.map(({ product }, i) => {
               const highlighted = hoveredSlug === product.slug;
               return (
-                <li key={product.slug} className="cell">
+                <li key={product.slug} className="cell lift">
                   <button
                     type="button"
                     onClick={openFromButton(product)}
@@ -291,7 +309,7 @@ export function HeroCinematic({
                     onFocus={() => setHoveredSlug(product.slug)}
                     onBlur={() => setHoveredSlug(null)}
                     aria-label={`${pad(i + 1)}: open ${product.name} in the 360° viewer`}
-                    className="flex h-full min-h-14 w-full items-start gap-3 px-3 py-3 text-left transition-colors hover:bg-paper"
+                    className="flex h-full min-h-14 w-full items-start gap-3 px-3 py-3 text-left"
                     style={highlighted ? { boxShadow: "inset 0 -3px 0 var(--color-accent)" } : undefined}
                   >
                     <span className="type-data mt-px text-xs text-ink-3">{pad(i + 1)}</span>
@@ -306,17 +324,12 @@ export function HeroCinematic({
           </ol>
         )}
 
-        <ul aria-label="Credentials" className="mt-10 grid grid-cols-2 border-t border-rule sm:grid-cols-4">
-          {BADGES.map((label) => (
-            <li
-              key={label}
-              className="border-b border-rule py-3 pr-3 text-sm font-semibold leading-snug text-ink even:border-l even:pl-3 sm:border-b-0 sm:border-l sm:pl-3 sm:first:border-l-0 sm:first:pl-0"
-            >
-              {label}
-            </li>
-          ))}
-        </ul>
       </div>
+
+      <Ticker
+        label="Credentials"
+        items={stats ? [...BADGES, `${stats.securityModels} Nooksguard security models`] : BADGES}
+      />
 
       {viewer && (
         <ProductViewer

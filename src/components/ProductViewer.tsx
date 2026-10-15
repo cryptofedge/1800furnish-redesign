@@ -125,7 +125,7 @@ export function ProductViewer({ product, lowPower, origin, onClose }: ProductVie
 
   return (
     <motion.div
-      className="fixed inset-0 z-[60] bg-paper/[0.96]"
+      className="fixed inset-0 z-[60] bg-mist/[0.97]"
       initial={{ opacity: 0 }}
       animate={{ opacity: closing ? 0 : 1 }}
       transition={{ duration: 0.25 }}

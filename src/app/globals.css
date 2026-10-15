@@ -8,17 +8,17 @@
 
 @theme {
   /* Surfaces */
-  --color-paper: #f5e6ef; /* page ground: soft fuchsia blush (owner's pick, 2026-10-15) */
+  --color-paper: #ffffff; /* page ground: plain white (owner's pick, 2026-10-15) */
   --color-well: #ffffff; /* product photo wells, cards, inputs */
   --color-ink: #151515; /* primary text, heavy rules, dark bands */
-  --color-ink-2: #4b4d4b; /* secondary text (7:1 on paper) */
-  --color-ink-3: #686a67; /* meta text, captions (4.6:1 on paper) */
-  --color-rule: #dcc5d3; /* 1px hairlines, tinted to the blush */
-  --color-mist: #ecd2e2; /* deeper calm blush for bands and overlays — never black */
+  --color-ink-2: #4b4d4b; /* secondary text */
+  --color-ink-3: #545653; /* meta text, captions (7.4:1 on white, 6:1 on mist) */
+  --color-rule: #d4d5d0; /* 1px hairlines between catalog cells */
+  --color-mist: #eeefec; /* light neutral grey for bands, hovers and overlays — never black */
 
   /* One accent, for actions only: safety orange */
   --color-accent: #ff5a1f; /* fills; always with ink text on top */
-  --color-accent-ink: #b0390a; /* orange text/links on paper or white */
+  --color-accent-ink: #9f3208; /* orange text/links on white (7.2:1) */
 
   /* Status (Nooksguard availability, form states) */
   --color-ok: #1f6f43;
@@ -49,10 +49,10 @@ html {
 body {
   background-color: var(--color-paper);
   background-image:
-    linear-gradient(to right, rgb(122 30 92 / 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(122 30 92 / 0.07) 1px, transparent 1px),
-    linear-gradient(to right, rgb(122 30 92 / 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(122 30 92 / 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgb(21 21 21 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(21 21 21 / 0.045) 1px, transparent 1px),
+    linear-gradient(to right, rgb(21 21 21 / 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(21 21 21 / 0.02) 1px, transparent 1px);
   background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
   background-position: -1px -1px;
   color: var(--color-ink);
@@ -111,7 +111,8 @@ body {
     font-weight: 700;
     letter-spacing: 0.01em;
     border: 1px solid transparent;
-    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease,
+      transform 120ms ease, box-shadow 120ms ease;
     cursor: pointer;
   }
   .btn:disabled {
@@ -119,27 +120,37 @@ body {
     cursor: not-allowed;
   }
 
-  /* Primary action: orange plate, ink text. Hover lifts to a lighter orange
-     with an ink baseline — calm, never a black fill. */
+  /* Primary action: orange plate, 2px ink border and a hard ink offset
+     shadow, like a printed sticker. Hover lifts it, press pushes it flat.
+     The shadow is solid ink, never a soft blur. */
   .btn-primary {
     background: var(--color-accent);
     color: var(--color-ink);
-    border-color: var(--color-accent);
+    border: 2px solid var(--color-ink);
+    box-shadow: 3px 3px 0 var(--color-ink);
   }
   .btn-primary:hover:not(:disabled) {
-    background: #ff7a45;
-    border-color: #ff7a45;
-    box-shadow: inset 0 -2px 0 var(--color-ink);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--color-ink);
+  }
+  .btn-primary:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--color-ink);
   }
 
-  /* Secondary action: ink outline; hover fills with mist. */
+  /* Secondary action: white plate, 2px ink outline; same lift on hover. */
   .btn-secondary {
-    background: transparent;
+    background: var(--color-well);
     color: var(--color-ink);
-    border-color: var(--color-ink);
+    border: 2px solid var(--color-ink);
   }
   .btn-secondary:hover:not(:disabled) {
-    background: var(--color-mist);
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--color-ink);
+  }
+  .btn-secondary:active:not(:disabled) {
+    transform: translate(0, 0);
+    box-shadow: 0 0 0 var(--color-ink);
   }
 
   /* Small square tool button (icon or short text), e.g. zoom +/-. */
@@ -246,7 +257,67 @@ body {
 
   /* Heavy rule that opens a catalog section. */
   .section-rule {
-    border-top: 2px solid var(--color-ink);
+    border-top: 3px solid var(--color-ink);
+  }
+
+  /* ---------- Swagger layer: bold moves, one or two per view ---------- */
+
+  /* Outlined display type for the one word that should hit hardest.
+     Pair with .type-display. Text stays real text for screen readers. */
+  .type-outline {
+    color: var(--color-paper);
+    -webkit-text-stroke: max(2px, 0.022em) var(--color-ink);
+  }
+
+  /* Cards in a .catalog-grid that pop out of the sheet on hover:
+     ink outline plus a hard offset shadow. */
+  .lift {
+    position: relative;
+    transition: transform 140ms ease, box-shadow 140ms ease;
+  }
+  .lift:hover,
+  .lift:has(:focus-visible),
+  .lift:focus-visible {
+    z-index: 1;
+    transform: translate(-3px, -3px);
+    box-shadow: 0 0 0 2px var(--color-ink), 6px 6px 0 2px var(--color-ink);
+  }
+
+  /* Header nav link with an orange bar that wipes in under it on hover. */
+  .nav-link {
+    position: relative;
+    padding-block: 0.25rem;
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 3px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 160ms ease;
+  }
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* Endless ticker band. The track holds the items twice and slides by half
+     its width, so the loop is seamless. A pause button is required (WCAG 2.2.2). */
+  .marquee {
+    overflow: hidden;
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 42s linear infinite;
+  }
+  .marquee:hover .marquee-track,
+  .marquee[data-paused="true"] .marquee-track {
+    animation-play-state: paused;
   }
 
   /* ---------- Engineered layer: precision details, used sparingly ---------- */
@@ -332,9 +403,23 @@ body {
   }
 }
 
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scanline::after {
     display: none;
+  }
+  .marquee-track {
+    animation: none;
+  }
+  .lift:hover,
+  .btn-primary:hover:not(:disabled),
+  .btn-secondary:hover:not(:disabled) {
+    transform: none;
   }
 }
 

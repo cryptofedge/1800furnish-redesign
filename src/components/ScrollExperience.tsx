@@ -64,7 +64,7 @@ export function ScrollExperience() {
     <section ref={sectionRef} className="relative flex h-screen w-full items-center overflow-hidden bg-paper">
       <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-4 sm:px-8 lg:grid-cols-[320px_1fr] lg:gap-12">
         <div className="section-rule flex flex-col gap-5 pt-5">
-          <h2 className="type-display text-3xl text-ink sm:text-4xl">
+          <h2 className="type-display text-4xl text-ink sm:text-5xl">
             From Blueprint to Furnished Facility
           </h2>
           <ol className="grid grid-cols-2 gap-x-4 gap-y-1 lg:grid-cols-1">

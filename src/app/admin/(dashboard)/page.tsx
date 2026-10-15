@@ -48,7 +48,7 @@ export default async function AdminDashboardPage() {
             {products.map((product) => (
               <tr
                 key={product.id}
-                className="border-b border-rule transition-colors last:border-b-0 hover:bg-paper"
+                className="border-b border-rule transition-colors last:border-b-0 hover:bg-mist"
               >
                 <td className="px-3 py-3 sm:px-4">
                   <div className="flex items-center gap-3">

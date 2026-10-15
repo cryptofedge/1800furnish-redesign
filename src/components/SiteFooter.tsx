@@ -30,8 +30,7 @@ export function SiteFooter() {
     <footer className="border-t-2 border-ink bg-mist text-ink">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-8 sm:py-16 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
         <div>
-          <p className="type-display text-4xl text-ink">Merkabanooks</p>
-          <p className="mt-4 max-w-xs text-sm text-ink-2">
+          <p className="max-w-xs text-lg font-semibold leading-snug text-ink">
             Furniture, facility, and maintenance supply for the institutions that
             hold communities together.
           </p>
@@ -75,6 +74,16 @@ export function SiteFooter() {
             ))}
           </ul>
         </div>
+      </div>
+
+      {/* Oversized sign-off wordmark, sized to run the full container width. */}
+      <div aria-hidden="true" className="overflow-hidden border-t-[3px] border-ink">
+        <p
+          data-wordmark
+          className="type-display mx-auto max-w-7xl whitespace-nowrap px-4 pt-6 text-[length:calc((100vw_-_2.75rem)/6.6)] leading-[0.78] sm:text-[length:min(calc((100vw_-_5.25rem)/6.6),11.5rem)] text-ink sm:px-8"
+        >
+          {SITE_NAME}
+        </p>
       </div>
 
       <div className="border-t border-ink/15">

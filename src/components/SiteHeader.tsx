@@ -55,7 +55,7 @@ export function SiteHeader({ categories }: SiteHeaderProps) {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-semibold text-ink-2 transition-colors hover:text-ink"
+              className="nav-link text-sm font-semibold text-ink-2 transition-colors hover:text-ink"
             >
               {link.label}
             </Link>
@@ -108,7 +108,7 @@ export function SiteHeader({ categories }: SiteHeaderProps) {
                     key={category.slug}
                     href={`/categories/${category.slug}`}
                     onClick={() => setMenuOpen(false)}
-                    className="cell px-3 py-3 text-sm font-semibold text-ink transition-colors hover:bg-paper"
+                    className="cell px-3 py-3 text-sm font-semibold text-ink transition-colors hover:bg-mist"
                   >
                     {category.label}
                   </Link>

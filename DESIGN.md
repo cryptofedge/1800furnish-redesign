@@ -11,7 +11,9 @@ hand-roll colors, radii or shadows.
 ## Never use (the look we are moving away from)
 
 - Dark backgrounds for whole pages, frosted glass, `backdrop-blur`, glows,
-  gradients, gradient borders, drop shadows (`shadow-*`).
+  gradients, gradient borders, soft blurred drop shadows (`shadow-*`). The
+  only shadow allowed is the hard, unblurred ink offset on buttons and
+  lifted cards (see "Swagger layer").
 - Pill shapes for buttons, chips or tags (`rounded-full` is only for things
   that are physically round: color swatches, status dots).
 - Serif display headlines, emoji, decorative icons in tinted rounded squares.
@@ -25,24 +27,27 @@ hand-roll colors, radii or shadows.
 
 | Token | Use |
 |---|---|
-| `paper` | Page ground (`bg-paper`): a soft fuchsia blush. |
+| `paper` | Page ground (`bg-paper`): plain white (owner's pick). |
 | `well` | White: product photo wells, cards, form fields, side panels. |
 | `ink` | Primary text, 2px section rules, dark bands (footer). |
 | `ink-2` | Secondary text, descriptions. |
 | `ink-3` | Meta text, captions, placeholders. Never for body copy. |
-| `rule` | 1px hairlines between cells and around panels (blush-tinted). |
-| `accent` | Safety orange. **Fills only, actions only** (primary buttons, the active state marker). Text on it is always `text-ink`. |
+| `rule` | 1px hairlines between cells and around panels (neutral grey). |
+| `mist` | Light neutral grey: footer band, hover fills, overlay backdrops. Never black. |
+| `accent` | Safety orange. **Fills only**: actions (primary buttons, the active state marker) plus the one ticker band on the home page. Text on it is always `text-ink`. |
 | `accent-ink` | Orange for text/links on paper or white (contrast-safe). Use sparingly. |
 | `ok` / `warn` / `danger` | Status only (live / coming soon / errors). |
 
-One accent. If something is orange, it should be something you can press or
-the current selection.
+One accent. If something is orange, it should be something you can press,
+the current selection, or the home-page ticker band.
 
 ## Type
 
 - **Display** — `.type-display` + a size (`text-5xl`…`text-8xl` for page
   heroes, `text-3xl`/`text-4xl` for section titles, `text-2xl` for card-group
-  titles). Condensed, heavy, uppercase. Headlines only.
+  titles). Condensed, heavy, uppercase. Headlines only. Home-page section
+  titles run `text-4xl sm:text-5xl lg:text-6xl`; the home hero headline is
+  fluid (`clamp`) with one `.type-outline` word.
 - **Body** — default Archivo, `text-base`/`text-sm`, `text-ink` or
   `text-ink-2`. Keep running text ≤ ~65ch (`max-w-[62ch]`).
 - **Label** — `.type-label` for field labels, spec-table headers, small section
@@ -54,7 +59,7 @@ the current selection.
 ## Shape & lines
 
 - Square corners. Radius tokens are 0 site-wide; don't add arbitrary radii.
-- Structure comes from rules, not boxes: `.section-rule` (2px ink) opens a
+- Structure comes from rules, not boxes: `.section-rule` (3px ink) opens a
   section; `border-rule` hairlines separate items.
 - Grids of items use `.catalog-grid` (shared 1px hairlines) with `.cell`
   children. No gaps with floating cards.
@@ -63,15 +68,28 @@ the current selection.
 
 | Class | What |
 |---|---|
-| `.btn .btn-primary` | Main action (orange plate, ink text; hover → ink). One per view region. |
-| `.btn .btn-secondary` | Other actions (ink outline). |
+| `.btn .btn-primary` | Main action: orange plate, 2px ink border, hard ink offset shadow. Hover lifts, press flattens. One per view region. |
+| `.btn .btn-secondary` | Other actions: white plate, 2px ink outline, same lift on hover. |
 | `.btn-tool` | Small square controls (zoom, swatch toggles, filters). Supports `aria-pressed` / `aria-checked` → ink border + orange underline bar. |
 | `.link` | Inline text link with orange underline. |
 | `.catalog-grid` + `.cell` | Hairline grid of white cells. |
 | `.panel` | Standalone white panel with hairline (forms, side rails). |
 | `.tag` | Small rectangular mono tag (e.g. `360°`, `Coming soon`). |
 | `.field` | Input / select / textarea. |
-| `.section-rule` | 2px ink rule at the top of a section. |
+| `.section-rule` | 3px ink rule at the top of a section. |
+
+### Swagger layer
+
+Bold moves the owner asked for ("make it with swagg"). Use one or two per
+view, not everywhere.
+
+| Class | What |
+|---|---|
+| `.type-outline` | Outlined display type for the single word that should hit hardest (hero: "rebuild."). |
+| `.lift` | On a `.cell`: hover pops the card out with an ink outline and hard offset shadow. Product cards, category cards, the hero parts list. |
+| `.nav-link` | Header nav link; an orange bar wipes in underneath on hover. |
+| `.marquee` / `<Ticker>` | Full-bleed orange ticker band of true statements in display type, with a pause button (WCAG 2.2.2). Home page only. |
+| Footer wordmark | Oversized `MERKABANOOKS` sized to run the full container width. |
 
 ## Layout
 
@@ -88,9 +106,10 @@ the current selection.
 
 ## Motion
 
-Quiet. Short color/opacity transitions (≤150ms) on hover. The 360° viewer's
-open/close spring and the home-page headline reveal are the only "moments".
-Everything respects `prefers-reduced-motion`.
+Short transitions (≤160ms) on hover: color, plus the hard-shadow lift on
+buttons and cards. The 360° viewer's open/close spring, the home-page headline
+reveal and the ticker are the only "moments". Everything respects
+`prefers-reduced-motion` (the ticker stands still, lifts don't move).
 
 ## Voice
 

@@ -97,7 +97,7 @@ export function SectorShowcase() {
     <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-8 sm:py-24">
       <header className="section-rule flex flex-col gap-3 pt-6">
         <span className="type-label">Who We Serve</span>
-        <h2 className="type-display text-3xl text-ink sm:text-4xl">
+        <h2 className="type-display text-4xl text-ink sm:text-5xl lg:text-6xl">
           Two sides of the same supply chain.
         </h2>
       </header>

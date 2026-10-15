@@ -5,7 +5,7 @@ import type * as THREE from "three";
 
 const PAD = 0.08;
 // accent-ink from the palette (canvas can't read CSS variables).
-const LINE = "#b0390a";
+const LINE = "#9f3208";
 
 function fmt(meters: number) {
   return `${Math.round(meters * 39.37)} in · ${Math.round(meters * 100)} cm`;

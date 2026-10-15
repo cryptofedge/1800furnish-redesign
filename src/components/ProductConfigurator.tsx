@@ -77,7 +77,7 @@ export function ProductConfigurator() {
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-8 sm:py-24">
       <header className="section-rule grid gap-4 pt-6 md:grid-cols-[1fr_minmax(0,26rem)] md:items-end md:gap-6">
-        <h2 className="type-display text-3xl text-ink sm:text-4xl">
+        <h2 className="type-display text-4xl text-ink sm:text-5xl lg:text-6xl">
           Inspect every unit before it ships.
         </h2>
         <p className="max-w-[62ch] text-ink-2">
