@@ -2,6 +2,11 @@ import type { SecurityCategory } from "./types";
 
 const img = (slug: string) => `/nooksguard/products/${slug}.png`;
 
+// Photo audit (2026-10-15): images follow the catalog's own placement on
+// pages 15–18. The catalog prints the NGVJ6040D render for NGVJ6550D too, so
+// that card reuses it with a note. The page frame lines baked into several
+// renders and the OEM "VKJ-150180" text on the freight unit were retouched out.
+
 export const ngvjCategory: SecurityCategory = {
   slug: "ngvj",
   label: "NGVJ Security Screening Series",
@@ -122,7 +127,8 @@ export const ngvjCategory: SecurityCategory = {
           slug: "ngvj6550d",
           model: "NGVJ6550D",
           name: "Zero-Blind Dual-View",
-          image: img("ngvj6550d"),
+          image: img("ngvj6040d"),
+          imageNote: "Image shows NGVJ6040D",
           specs: [
             { label: "Tunnel", value: "650 x 500 mm" },
             { label: "Sources", value: "2 (Dual-View)" },
@@ -176,7 +182,7 @@ export const ngvjCategory: SecurityCategory = {
           image: img("ngvj-bk6040"),
           specs: [
             { label: "Tunnel", value: "600 x 400 mm" },
-            { label: "Mode", value: "Backscatter+Transmission" },
+            { label: "Mode", value: "Backscatter + Transmission" },
             { label: "Penetration", value: "High" },
           ],
         },
@@ -187,7 +193,7 @@ export const ngvjCategory: SecurityCategory = {
           image: img("ngvj-bk7555"),
           specs: [
             { label: "Tunnel", value: "750 x 550 mm" },
-            { label: "Mode", value: "Backscatter+Transmission" },
+            { label: "Mode", value: "Backscatter + Transmission" },
             { label: "Penetration", value: "High" },
           ],
         },

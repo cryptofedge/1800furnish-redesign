@@ -49,7 +49,18 @@ Not every embedded image is cleanly Nooksguard-branded:
   to a plain panel; never publish the raw renders.
 - **NGVJ150180** (page 18, tier 3/4 freight unit) shows the unbranded OEM
   model code **"VKJ-150180"** printed on the unit instead of "NGVJ-150180".
-  Minor, but inconsistent with the rest of the NGVJ series.
+  For the site (2026-10-15) the text was painted out and the page frame
+  cropped off.
+- **NGVJ zero-blind tier (page 17):** the catalog prints the NGVJ6040D render
+  twice (for NGVJ6040D and NGVJ6550D) and the blue dual-view render belongs to
+  NGVJ7555D. The site had the blue render on NGVJ6550D and the freight unit on
+  NGVJ7555D; fixed 2026-10-15. NGVJ6550D shows the 6040D render with an
+  "Image shows NGVJ6040D" tag until Nooksguard supplies its own render.
+- **Page frame lines:** eight NGVJ renders (5030A, 5030C, 5332, 6040, 6550,
+  6550F, 8065, 150180) have the catalog's navy/orange page frame baked into
+  the image. The site copies have the lines removed.
+- **NGZ-3825T** (page 29): the monitor carries a small third-party bezel brand
+  and an on-screen software logo; both were painted out for the site.
 - Other categories haven't been individually checked yet — review each
   image before wiring it into a category (see `PROGRESS.md`).
 

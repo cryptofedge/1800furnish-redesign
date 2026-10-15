@@ -115,11 +115,13 @@ async function SecurityCategoryContent({ params }: CategoryPageProps) {
                       <div className="flex flex-1 flex-col p-4">
                         <h3 className="type-data text-sm font-medium text-ink">{product.model}</h3>
                         <p className="mt-1 font-semibold leading-snug text-ink">{product.name}</p>
-                        <dl className="mt-4 border-t border-rule">
+                        {/* Label column fits the longest single word ("Penetration") so it never
+                            runs into the value; rows share it through subgrid so values line up. */}
+                        <dl className="mt-4 grid grid-cols-[minmax(min-content,40%)_minmax(0,1fr)] gap-x-3 border-t border-rule">
                           {product.specs.map((spec) => (
                             <div
                               key={spec.label}
-                              className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-3 border-b border-rule py-2"
+                              className="col-span-2 grid grid-cols-subgrid border-b border-rule py-2"
                             >
                               <dt className="type-label">{spec.label}</dt>
                               <dd className="type-data break-words text-xs text-ink">{spec.value}</dd>
