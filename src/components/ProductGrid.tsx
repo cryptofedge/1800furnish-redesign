@@ -37,7 +37,7 @@ export function ProductGrid({ products }: { products: Product[] }) {
     <>
       <ul className="catalog-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {products.map((product) => (
-          <li key={product.slug} data-card className="cell lift flex flex-col">
+          <li key={product.slug} data-card className="cell lift reveal flex flex-col">
             <button
               type="button"
               data-media
@@ -50,7 +50,11 @@ export function ProductGrid({ products }: { products: Product[] }) {
                 alt=""
                 fill
                 sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                className="object-contain p-5 mix-blend-multiply transition-transform duration-300 group-hover:scale-[1.03]"
+                className={
+                  product.imageFit === "cover"
+                    ? "object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    : "object-contain p-5 mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.04]"
+                }
               />
               <span className="tag absolute left-3 top-3 gap-1 border-ink">
                 {product.modelUrl ? (

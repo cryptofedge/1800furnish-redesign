@@ -78,12 +78,12 @@ export default function SecurityIndexPage() {
             <Link
               key={category.slug}
               href={`/security/${category.slug}`}
-              className="cell lift group flex min-h-[44px] flex-col gap-2 p-5"
+              className="cell lift reveal group flex min-h-[44px] flex-col gap-2 p-5"
             >
               {content}
             </Link>
           ) : (
-            <div key={category.slug} className="cell flex flex-col gap-2 p-5">
+            <div key={category.slug} className="cell reveal flex flex-col gap-2 p-5">
               {content}
             </div>
           );

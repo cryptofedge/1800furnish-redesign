@@ -300,7 +300,7 @@ export function HeroCinematic({
             {roomItems.map(({ product }, i) => {
               const highlighted = hoveredSlug === product.slug;
               return (
-                <li key={product.slug} className="cell lift">
+                <li key={product.slug} className="cell lift reveal">
                   <button
                     type="button"
                     onClick={openFromButton(product)}
@@ -309,17 +309,21 @@ export function HeroCinematic({
                     onFocus={() => setHoveredSlug(product.slug)}
                     onBlur={() => setHoveredSlug(null)}
                     aria-label={`${pad(i + 1)}: view ${product.name} up close`}
-                    className="flex h-full w-full flex-col text-left"
+                    className="group flex h-full w-full flex-col text-left"
                     style={highlighted ? { boxShadow: "inset 0 -3px 0 var(--color-accent)" } : undefined}
                   >
                     {/* The real product, so the room's simple shapes always have a photo beside them. */}
-                    <span className="relative block aspect-[4/3] w-full border-b border-rule bg-studio">
+                    <span className="relative block aspect-[4/3] w-full overflow-hidden border-b border-rule bg-studio">
                       <Image
                         src={product.image}
                         alt=""
                         fill
                         sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        className="object-contain p-3 mix-blend-multiply"
+                        className={
+                          product.imageFit === "cover"
+                            ? "object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                            : "object-contain p-3 mix-blend-multiply transition-transform duration-500 group-hover:scale-[1.05]"
+                        }
                       />
                     </span>
                     <span className="flex items-start gap-3 px-3 py-3">

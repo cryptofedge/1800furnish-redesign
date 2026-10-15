@@ -23,7 +23,7 @@ export function NooksguardSection() {
       aria-labelledby="nooksguard-title"
       className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-8 sm:py-24"
     >
-      <div className="section-rule grid gap-10 pt-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-12">
+      <div className="section-rule reveal grid gap-10 pt-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-12">
         {/* The logo is the section title; its alt text gives the heading its name. */}
         <h2 id="nooksguard-title" className="m-0">
           <Link href="/security" className="lift frame-marks block">
@@ -86,7 +86,7 @@ export function NooksguardSection() {
             </>
           );
           return isLive ? (
-            <li key={category.slug} className="cell lift">
+            <li key={category.slug} className="cell lift reveal">
               <Link
                 href={`/security/${category.slug}`}
                 className="group flex h-full min-h-16 items-start gap-3 p-4"
@@ -99,7 +99,7 @@ export function NooksguardSection() {
               </Link>
             </li>
           ) : (
-            <li key={category.slug} className="cell flex min-h-16 items-start gap-3 p-4">
+            <li key={category.slug} className="cell reveal flex min-h-16 items-start gap-3 p-4">
               {body}
               <span className="tag shrink-0 border-warn text-warn">Coming soon</span>
             </li>

@@ -92,7 +92,7 @@ async function SecurityCategoryContent({ params }: CategoryPageProps) {
                 {tier.description && <p className="mt-2 max-w-[62ch] text-sm text-ink-2">{tier.description}</p>}
                 <ul className="catalog-grid mt-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                   {tier.products.map((product) => (
-                    <li key={product.slug} className="cell flex flex-col">
+                    <li key={product.slug} className="cell reveal flex flex-col">
                       {!product.image && tierHasImages && (
                         <div className="flex aspect-[4/3] w-full items-center justify-center border-b border-rule bg-mist">
                           <span className="type-label">Photo pending</span>

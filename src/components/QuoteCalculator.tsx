@@ -96,7 +96,7 @@ export function QuoteCalculator({ catalog = [] }: QuoteCalculatorProps) {
 
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-8 sm:py-24">
-      <header className="section-rule grid gap-6 pt-6 md:grid-cols-[1fr_minmax(0,26rem)] md:items-end">
+      <header className="section-rule reveal grid gap-6 pt-6 md:grid-cols-[1fr_minmax(0,26rem)] md:items-end">
         <h2 className="type-display text-4xl text-ink sm:text-5xl lg:text-6xl">
           Spec a facility, get a number in seconds.
         </h2>

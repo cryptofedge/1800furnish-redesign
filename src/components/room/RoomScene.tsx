@@ -286,8 +286,14 @@ function Piece({
             </button>
             {highlighted && (
               <div className="pointer-events-none absolute bottom-full mb-2 w-44 border border-ink bg-well text-left">
-                <div className="relative aspect-[4/3] w-full border-b border-rule bg-studio">
-                  <Image src={product.image} alt="" fill sizes="176px" className="object-contain p-2 mix-blend-multiply" />
+                <div className="relative aspect-[4/3] w-full overflow-hidden border-b border-rule bg-studio">
+                  <Image
+                    src={product.image}
+                    alt=""
+                    fill
+                    sizes="176px"
+                    className={product.imageFit === "cover" ? "object-cover" : "object-contain p-2 mix-blend-multiply"}
+                  />
                 </div>
                 <div className="px-2.5 py-1.5">
                   <p className="text-xs font-semibold leading-tight text-ink">{product.name}</p>

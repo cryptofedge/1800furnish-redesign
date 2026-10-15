@@ -48,7 +48,7 @@ export function ProductConfigurator({ items }: { items: InspectorItem[] }) {
 
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-8 sm:py-24">
-      <header className="section-rule grid gap-4 pt-6 md:grid-cols-[1fr_minmax(0,26rem)] md:items-end md:gap-6">
+      <header className="section-rule reveal grid gap-4 pt-6 md:grid-cols-[1fr_minmax(0,26rem)] md:items-end md:gap-6">
         <h2 className="type-display text-4xl text-ink sm:text-5xl lg:text-6xl">
           Inspect every unit before it ships.
         </h2>
@@ -58,7 +58,7 @@ export function ProductConfigurator({ items }: { items: InspectorItem[] }) {
         </p>
       </header>
 
-      <div className="mt-10 grid gap-4 lg:grid-cols-[1fr_360px] lg:gap-6">
+      <div className="reveal mt-10 grid gap-4 lg:grid-cols-[1fr_360px] lg:gap-6">
         <div role="region" aria-label={`${product.name} photo`} className="panel relative h-[380px] overflow-hidden sm:h-[540px]">
           <PhotoStage
             src={product.image}
@@ -127,12 +127,15 @@ export function ProductConfigurator({ items }: { items: InspectorItem[] }) {
                       aria-label={`${item.category.label}: ${item.product.name}`}
                       title={`${item.category.label}: ${item.product.name}`}
                       className={cn(
-                        "relative block aspect-square w-full border bg-studio transition-colors",
+                        "relative block aspect-square w-full overflow-hidden border bg-studio transition-colors",
                         selected ? "border-ink" : "border-rule hover:border-ink"
                       )}
                       style={selected ? { boxShadow: "inset 0 -3px 0 var(--color-accent)" } : undefined}
                     >
-                      <Image src={item.product.image} alt="" fill sizes="80px" className="object-contain p-1.5 mix-blend-multiply" />
+                      <Image src={item.product.image} alt="" fill
+                        sizes="80px"
+                        className={item.product.imageFit === "cover" ? "object-cover" : "object-contain p-1.5 mix-blend-multiply"}
+                      />
                     </button>
                   </li>
                 );

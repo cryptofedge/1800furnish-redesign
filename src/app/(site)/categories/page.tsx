@@ -34,7 +34,7 @@ export default async function CategoriesIndexPage() {
           <Link
             key={category.slug}
             href={`/categories/${category.slug}`}
-            className="cell lift group flex flex-col"
+            className="cell lift reveal group flex flex-col"
           >
             <div className="relative aspect-[16/10] w-full overflow-hidden bg-mist">
               <Image

@@ -1,5 +1,22 @@
 # Product photo sources
 
+## Processing (2026-10-15)
+
+So the catalog looks like one set, every photo uses one of two treatments:
+
+- **Cutouts (29):** trimmed and re-framed on a 1200x900 white canvas at the
+  same scale with a soft ground shadow; the site multiplies them onto its
+  studio-grey wells. Seven of them (3-seat-sectional, 5-piece-wood-dining-set,
+  nightstand-usb, open-box-sectional, track-arm-sofa, bath-towel-bundle,
+  cookware-set) had their room background removed first, locally, with
+  `@imgly/background-removal-node` (run from a scratch folder; not a project
+  dependency).
+- **Scenes (19):** photos that can't be cut out cleanly (product in a room,
+  cropped at the frame edge, or a close-up) stay as-is and fill their card
+  edge to edge. The list lives in `SCENE_PHOTOS` in `src/lib/categories.ts`.
+
+The original photos are in git history (before commit "Matching product photos").
+
 Product photos in this folder come from two places:
 
 - **The client's own retail store** — 33 items, matched to the closest real product and checked by two independent reviewers (right product type and specifics; no third-party logos, watermarks or price stickers). Normalized to ≤1200px progressive JPEG.

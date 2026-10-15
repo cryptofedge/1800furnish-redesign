@@ -106,7 +106,7 @@ export function SectorShowcase() {
 
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-8 sm:py-24">
-      <header className="section-rule flex flex-col gap-3 pt-6">
+      <header className="section-rule reveal flex flex-col gap-3 pt-6">
         <span className="type-label">Who We Serve</span>
         <h2 className="type-display text-4xl text-ink sm:text-5xl lg:text-6xl">
           Two sides of the same supply chain.
@@ -180,14 +180,14 @@ export function SectorShowcase() {
 function SectorCardItem({ card }: { card: SectorCard }) {
   const Icon = card.icon;
   return (
-    <li className="cell flex flex-col">
+    <li className="cell reveal group flex flex-col">
       <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-rule bg-studio sm:aspect-[4/3]">
         <Image
           src={card.image}
           alt=""
           fill
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-          className="object-cover"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
         />
       </div>
       <div className="flex flex-col gap-2 p-5">

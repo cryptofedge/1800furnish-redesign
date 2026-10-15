@@ -32,6 +32,12 @@ export interface Product {
    * When absent the viewer renders the procedural `shape` instead.
    */
   modelUrl?: string;
+  /**
+   * "cover" for scene photos (product shown in a room or close-up, no clean
+   * cutout possible): cards fill the frame with them edge to edge. Default is a
+   * cutout on white, shown whole on the studio-grey well.
+   */
+  imageFit?: "cover";
 }
 
 export interface Category {
@@ -41,6 +47,30 @@ export interface Category {
   description: string;
   products: Product[];
 }
+
+// Photos that stay as full-frame scenes (see public/products/items/SOURCES.md);
+// every other product photo is a white-background cutout with matching framing.
+const SCENE_PHOTOS = new Set([
+  "dinnerware-set",
+  "height-adjustable-desk",
+  "lamp-clearance-bundle",
+  "lateral-file-cabinet",
+  "mattress-protector",
+  "move-in-essentials-kit",
+  "security-door-lockbox",
+  "twin-linen-set",
+  "washer-dryer-combo",
+  "window-security-film",
+  "queen-linen-set",
+  "accent-chair",
+  "keyless-entry-lock",
+  "trash-can",
+  "starter-room-package",
+  "foldable-storage-bench",
+  "reception-bench",
+  "coffee-table",
+  "overstock-dining-chair",
+]);
 
 function product(
   slug: string,
@@ -57,6 +87,7 @@ function product(
     price,
     description,
     image: `/products/items/${slug}.jpg`,
+    ...(SCENE_PHOTOS.has(slug) ? { imageFit: "cover" as const } : {}),
     shape,
     accentHex,
     shapeVariant,
