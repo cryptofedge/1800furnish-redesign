@@ -56,44 +56,57 @@ export default async function SecurityCategoryPage({ params }: CategoryPageProps
         </div>
       ) : (
         <div className="mt-12 flex flex-col gap-16">
-          {category.tiers.map((tier) => (
-            <section key={tier.id}>
-              <h2 className="type-display text-2xl text-ink">{tier.label}</h2>
-              {tier.description && <p className="mt-2 max-w-[62ch] text-sm text-ink-2">{tier.description}</p>}
-              <ul className="catalog-grid mt-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                {tier.products.map((product) => (
-                  <li key={product.slug} className="cell flex flex-col">
-                    {product.image && (
-                      <div className="relative aspect-[4/3] w-full border-b border-rule bg-well">
-                        <Image
-                          src={product.image}
-                          alt={product.model}
-                          fill
-                          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                          className="object-contain p-4"
-                        />
+          {category.tiers.map((tier) => {
+            // When some cards in a row have photos, the rest get a matching
+            // placeholder well so names and specs stay aligned across the row.
+            const tierHasImages = tier.products.some((p) => p.image);
+            return (
+              <section key={tier.id}>
+                <h2 className="type-display text-2xl text-ink">{tier.label}</h2>
+                {tier.description && <p className="mt-2 max-w-[62ch] text-sm text-ink-2">{tier.description}</p>}
+                <ul className="catalog-grid mt-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+                  {tier.products.map((product) => (
+                    <li key={product.slug} className="cell flex flex-col">
+                      {!product.image && tierHasImages && (
+                        <div className="flex aspect-[4/3] w-full items-center justify-center border-b border-rule bg-mist">
+                          <span className="type-label">Photo pending</span>
+                        </div>
+                      )}
+                      {product.image && (
+                        <div className="relative aspect-[4/3] w-full border-b border-rule bg-well">
+                          <Image
+                            src={product.image}
+                            alt={product.model}
+                            fill
+                            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                            className="object-contain p-4"
+                          />
+                          {product.imageNote && (
+                            <span className="tag absolute bottom-2 left-2">{product.imageNote}</span>
+                          )}
+                        </div>
+                      )}
+                      <div className="flex flex-1 flex-col p-4">
+                        <h3 className="type-data text-sm font-medium text-ink">{product.model}</h3>
+                        <p className="mt-1 font-semibold leading-snug text-ink">{product.name}</p>
+                        <dl className="mt-4 border-t border-rule">
+                          {product.specs.map((spec) => (
+                            <div
+                              key={spec.label}
+                              className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-3 border-b border-rule py-2"
+                            >
+                              <dt className="type-label">{spec.label}</dt>
+                              <dd className="type-data break-words text-xs text-ink">{spec.value}</dd>
+                            </div>
+                          ))}
+                        </dl>
                       </div>
-                    )}
-                    <div className="flex flex-1 flex-col p-4">
-                      <h3 className="type-data text-sm font-medium text-ink">{product.model}</h3>
-                      <p className="mt-1 font-semibold leading-snug text-ink">{product.name}</p>
-                      <dl className="mt-4 border-t border-rule">
-                        {product.specs.map((spec) => (
-                          <div
-                            key={spec.label}
-                            className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-3 border-b border-rule py-2"
-                          >
-                            <dt className="type-label">{spec.label}</dt>
-                            <dd className="type-data break-words text-xs text-ink">{spec.value}</dd>
-                          </div>
-                        ))}
-                      </dl>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            );
+          })}
         </div>
       )}
     </div>

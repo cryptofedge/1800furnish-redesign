@@ -9,6 +9,8 @@ export interface SecurityProduct {
   name: string;
   tagline?: string;
   image?: string;
+  /** Shown as a tag on the image, e.g. when the catalog calls it an illustration. */
+  imageNote?: string;
   specs: SecuritySpec[];
   bullets?: string[];
 }

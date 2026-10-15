@@ -1,8 +1,9 @@
 import type { SecurityCategory } from "./types";
 
-// No product images yet: the source PDF wasn't available when this category was
-// built. Re-extract pages 21, 23, 25, 27 (see nooksguard-source/README.md), check
-// each render for OEM branding, then add `image: img("ngts-620")` etc.
+const img = (slug: string) => `/nooksguard/products/${slug}.webp`;
+
+// Product images: catalog pages 21, 23, 25 and 27, reviewed for clean
+// Nooksguard branding (2026-10-15).
 
 export const ngtsCtCategory: SecurityCategory = {
   slug: "ngts-ct",
@@ -20,6 +21,7 @@ export const ngtsCtCategory: SecurityCategory = {
       products: [
         {
           slug: "ngts-620",
+          image: img("ngts-620"),
           model: "NGTS-620",
           name: "Fast CT Luggage / Object Inspection System",
           tagline: "Compact, high-throughput CT for carry-on bags and small parcels.",
@@ -36,6 +38,7 @@ export const ngtsCtCategory: SecurityCategory = {
         },
         {
           slug: "ngts-750",
+          image: img("ngts-750"),
           model: "NGTS-750",
           name: "Fast CT Luggage / Object Inspection System",
           tagline: "Purpose-built for airports and high-traffic checkpoints at 0.3 m/s.",
@@ -59,6 +62,7 @@ export const ngtsCtCategory: SecurityCategory = {
       products: [
         {
           slug: "ngts-1000",
+          image: img("ngts-1000"),
           model: "NGTS-1000",
           name: "Large-Channel CT Inspection System",
           tagline: "Oversized luggage and cargo screening with independent DR + dual-energy CT.",
@@ -75,6 +79,7 @@ export const ngtsCtCategory: SecurityCategory = {
         },
         {
           slug: "ngts-1000e",
+          image: img("ngts-1000e"),
           model: "NGTS-1000E",
           name: "Flagship High-Speed CT Inspection System",
           tagline: "Maximum-throughput cargo and luggage screening at 0.5 m/s.",

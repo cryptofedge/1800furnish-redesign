@@ -1,5 +1,7 @@
 import type { SecurityCategory } from "./types";
 
+const img = (slug: string) => `/nooksguard/products/${slug}.webp`;
+
 // Source: catalog pages 85–92 (20 models in the catalog; 18 listed here).
 //
 // Intentionally omitted: NGTS-W2 and NGTS-W3 handheld WiFi inspectors. The
@@ -12,7 +14,9 @@ import type { SecurityCategory } from "./types";
 // Near-identical variants share a card: the P / PU pairs (U adds endoscope +
 // laser lens detection) and the M6 / M14 / M24 monitors (spectrum ceiling only).
 // Unsupported marketing claims in the catalog ("military/police-grade") are left
-// out. No product images yet: re-extract pages 86–91 and review before use.
+// out. Product images: catalog pages 86–91
+// (2026-10-15); paired variants (T10/T10W, H67/H67R, H55/H55R, P6/P14/P24) share
+// the catalog's single render.
 
 const PORTABLE_SHARED = [
   { label: "Detection", value: "WiFi, Bluetooth, 2/3/4/5G cellular, full spectrum" },
@@ -38,6 +42,7 @@ export const tscmCategory: SecurityCategory = {
       products: [
         {
           slug: "ngts-c1",
+          image: img("ngts-c1"),
           model: "NGTS-C1",
           name: "Hotel-Group Camera Detector",
           specs: [
@@ -50,6 +55,7 @@ export const tscmCategory: SecurityCategory = {
         },
         {
           slug: "ngts-c2",
+          image: img("ngts-c2"),
           model: "NGTS-C2",
           name: "Multi-Mode Camera Detector",
           specs: [
@@ -68,6 +74,7 @@ export const tscmCategory: SecurityCategory = {
       products: [
         {
           slug: "ngts-t10",
+          image: img("ngts-t10"),
           model: "NGTS-T10",
           name: "Smart Terminal Detector",
           specs: [
@@ -80,6 +87,7 @@ export const tscmCategory: SecurityCategory = {
         },
         {
           slug: "ngts-t10w",
+          image: img("ngts-t10w"),
           model: "NGTS-T10W",
           name: "Smart Terminal Detector (+WiFi)",
           specs: [
@@ -100,6 +108,7 @@ export const tscmCategory: SecurityCategory = {
       products: [
         {
           slug: "ngts-h67",
+          image: img("ngts-h67"),
           model: "NGTS-H67",
           name: "6.67-inch Signal Detector",
           specs: [
@@ -112,6 +121,7 @@ export const tscmCategory: SecurityCategory = {
         },
         {
           slug: "ngts-h67r",
+          image: img("ngts-h67r"),
           model: "NGTS-H67R",
           name: "6.67-inch Signal Detector + Thermal",
           specs: [
@@ -123,6 +133,7 @@ export const tscmCategory: SecurityCategory = {
         },
         {
           slug: "ngts-h55",
+          image: img("ngts-h55"),
           model: "NGTS-H55",
           name: "5.5-inch Signal Detector",
           specs: [
@@ -134,6 +145,7 @@ export const tscmCategory: SecurityCategory = {
         },
         {
           slug: "ngts-h55r",
+          image: img("ngts-h55r"),
           model: "NGTS-H55R",
           name: "5.5-inch Signal Detector + Thermal",
           specs: [
@@ -153,18 +165,21 @@ export const tscmCategory: SecurityCategory = {
       products: [
         {
           slug: "ngts-p6",
+          image: img("ngts-p6"),
           model: "NGTS-P6 / PU6",
           name: "Portable Detector, 6 GHz",
           specs: [{ label: "Spectrum", value: "1 MHz – 6 GHz" }, ...PORTABLE_SHARED],
         },
         {
           slug: "ngts-p14",
+          image: img("ngts-p14"),
           model: "NGTS-P14 / PU14",
           name: "Portable Detector, 14 GHz",
           specs: [{ label: "Spectrum", value: "1 MHz – 14 GHz" }, ...PORTABLE_SHARED],
         },
         {
           slug: "ngts-p24",
+          image: img("ngts-p24"),
           model: "NGTS-P24 / PU24",
           name: "Portable Detector, 24 GHz",
           specs: [{ label: "Spectrum", value: "1 MHz – 24 GHz" }, ...PORTABLE_SHARED],
@@ -178,6 +193,7 @@ export const tscmCategory: SecurityCategory = {
       products: [
         {
           slug: "ngts-s1",
+          image: img("ngts-s1"),
           model: "NGTS-S1",
           name: "Desktop Speech Protection Terminal",
           specs: [
@@ -190,6 +206,7 @@ export const tscmCategory: SecurityCategory = {
         },
         {
           slug: "ngts-m-series",
+          image: img("ngts-m-series"),
           model: "NGTS-M6 / M14 / M24",
           name: "Desktop Long-Term Signal Monitoring System",
           specs: [

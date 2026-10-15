@@ -1,10 +1,13 @@
 import type { SecurityCategory } from "./types";
 
+const img = (slug: string) => `/nooksguard/products/${slug}.webp`;
+
 // Source: catalog pages 80–84.
 //
-// No product images yet: the source PDF wasn't available when this category was
-// built. Note page 81's explosive-detector artwork is labeled "Illustrative
-// device rendering", so confirm with the client before using it as a product photo.
+// Product images: catalog pages 81–84 (2026-10-15). Page 81's explosive-detector
+// artwork is labeled "Illustrative device rendering" in the catalog, so those five
+// images carry an imageNote shown on the card. NGRD-3000 has no image on purpose:
+// the catalog reuses a "Gas Detector Alarm" render for this radiation device.
 
 export const threatDetectionCategory: SecurityCategory = {
   slug: "threat-detection",
@@ -22,6 +25,8 @@ export const threatDetectionCategory: SecurityCategory = {
       products: [
         {
           slug: "nged-6",
+          image: img("nged-6"),
+          imageNote: "Illustrative rendering",
           model: "NGED-6",
           name: "Portable Trace Explosive Detector",
           specs: [
@@ -34,6 +39,8 @@ export const threatDetectionCategory: SecurityCategory = {
         },
         {
           slug: "nged-4800",
+          image: img("nged-4800"),
+          imageNote: "Illustrative rendering",
           model: "NGED-4800",
           name: "Explosive & Narcotics Detector",
           specs: [
@@ -46,6 +53,8 @@ export const threatDetectionCategory: SecurityCategory = {
         },
         {
           slug: "nged-3",
+          image: img("nged-3"),
+          imageNote: "Illustrative rendering",
           model: "NGED-3",
           name: "Multi-Functional Prohibited Item Detector",
           specs: [
@@ -58,6 +67,8 @@ export const threatDetectionCategory: SecurityCategory = {
         },
         {
           slug: "nged-4",
+          image: img("nged-4"),
+          imageNote: "Illustrative rendering",
           model: "NGED-4",
           name: "Quantum Trace Explosive & Drug Detector",
           specs: [
@@ -70,6 +81,8 @@ export const threatDetectionCategory: SecurityCategory = {
         },
         {
           slug: "nged-410",
+          image: img("nged-410"),
+          imageNote: "Illustrative rendering",
           model: "NGED-410",
           name: "Handheld Raman Substance Identifier",
           specs: [
@@ -89,6 +102,7 @@ export const threatDetectionCategory: SecurityCategory = {
       products: [
         {
           slug: "nglq-1800",
+          image: img("nglq-1800"),
           model: "NGLQ-1800",
           name: "Desktop Dangerous Liquid Detector",
           specs: [
@@ -102,6 +116,7 @@ export const threatDetectionCategory: SecurityCategory = {
         },
         {
           slug: "nglq-2800",
+          image: img("nglq-2800"),
           model: "NGLQ-2800",
           name: "Desktop Dangerous Liquid Inspector",
           specs: [
@@ -135,6 +150,7 @@ export const threatDetectionCategory: SecurityCategory = {
         },
         {
           slug: "ngrd-alm",
+          image: img("ngrd-alm"),
           model: "NGRD-ALM",
           name: "Wearable Radiation Alarm",
           specs: [
@@ -155,6 +171,7 @@ export const threatDetectionCategory: SecurityCategory = {
       products: [
         {
           slug: "ngcg-300",
+          image: img("ngcg-300"),
           model: "NGCG-300",
           name: "Chemical Warfare Agent Alarm",
           specs: [
@@ -168,6 +185,7 @@ export const threatDetectionCategory: SecurityCategory = {
         },
         {
           slug: "ngcg-multi",
+          image: img("ngcg-multi"),
           model: "NGCG-MULTI",
           name: "Multi-Gas Composite Detector",
           specs: [

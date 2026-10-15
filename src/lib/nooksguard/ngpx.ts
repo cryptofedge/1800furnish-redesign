@@ -1,12 +1,13 @@
 import type { SecurityCategory } from "./types";
 
+const img = (slug: string) => `/nooksguard/products/${slug}.webp`;
+
 // Source: catalog pages 33–44. The catalog marks most figures with "*" (source
 // ratings pending final configuration) or "TBC"; both are kept as-is so the
 // site never states a provisional number as final.
 //
-// No product images yet: the source PDF wasn't available when this category was
-// built. Re-extract pages 34–42 (see nooksguard-source/README.md), check each
-// render for OEM branding, then add `image` to each product.
+// Product images: catalog pages 34–42 (2026-10-15). The NGPX-125 render had a
+// broken black background in the PDF; it was cleaned to white.
 
 export const ngpxCategory: SecurityCategory = {
   slug: "ngpx",
@@ -24,6 +25,7 @@ export const ngpxCategory: SecurityCategory = {
       products: [
         {
           slug: "ngpx-60",
+          image: img("ngpx-60"),
           model: "NGPX-60",
           name: "Compact Portable Imaging System",
           specs: [
@@ -36,6 +38,7 @@ export const ngpxCategory: SecurityCategory = {
         },
         {
           slug: "ngpx-80",
+          image: img("ngpx-80"),
           model: "NGPX-80",
           name: "Lightweight Constant-Potential System",
           specs: [
@@ -48,6 +51,7 @@ export const ngpxCategory: SecurityCategory = {
         },
         {
           slug: "ngpx-60a",
+          image: img("ngpx-60a"),
           model: "NGPX-60A",
           name: "Articulated-Arm Special Configuration",
           specs: [
@@ -67,6 +71,7 @@ export const ngpxCategory: SecurityCategory = {
       products: [
         {
           slug: "ngpx-125",
+          image: img("ngpx-125"),
           model: "NGPX-125",
           name: "Balanced Digital Imaging System",
           specs: [
@@ -79,6 +84,7 @@ export const ngpxCategory: SecurityCategory = {
         },
         {
           slug: "ngpx-120l",
+          image: img("ngpx-120l"),
           model: "NGPX-120L",
           name: "Large-Format Imaging System",
           specs: [
@@ -91,6 +97,7 @@ export const ngpxCategory: SecurityCategory = {
         },
         {
           slug: "ngpx-150c",
+          image: img("ngpx-150c"),
           model: "NGPX-150C",
           name: "Versatile Field System",
           specs: [
@@ -110,6 +117,7 @@ export const ngpxCategory: SecurityCategory = {
       products: [
         {
           slug: "ngpx-150hd",
+          image: img("ngpx-150hd"),
           model: "NGPX-150HD",
           name: "Professional High-Definition System",
           specs: [
@@ -122,6 +130,7 @@ export const ngpxCategory: SecurityCategory = {
         },
         {
           slug: "ngpx-270",
+          image: img("ngpx-270"),
           model: "NGPX-270",
           name: "High-Penetration Pulsed System",
           specs: [
@@ -134,6 +143,7 @@ export const ngpxCategory: SecurityCategory = {
         },
         {
           slug: "ngpx-200",
+          image: img("ngpx-200"),
           model: "NGPX-200",
           name: "Tactical Pulsed System",
           specs: [

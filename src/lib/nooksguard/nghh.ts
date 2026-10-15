@@ -1,5 +1,7 @@
 import type { SecurityCategory } from "./types";
 
+const img = (slug: string) => `/nooksguard/products/${slug}.webp`;
+
 // Source: catalog pages 59–65.
 //
 // The catalog counts 16 "models / configurations": 13 distinct models, with the
@@ -11,8 +13,10 @@ import type { SecurityCategory } from "./types";
 // Specs were cross-checked value by value against the catalog by independent
 // reviewers on 2026-10-14 (no numeric errors; wording/completeness fixes applied).
 //
-// No product images yet: the source PDF wasn't available when this category was
-// built. Re-extract pages 60–64 and review each render before use.
+// Product images: catalog pages 60–64 (2026-10-15). Five models have no image on
+// purpose because the catalog photo shows another company's branding or model
+// print: NGHH-160 ("V160"), NGHH-140 ("PD140" banner), NGHH-2022 (Viking),
+// NGHH-1002 and NGHH-3003 (Goldcentry). Ask Nooksguard for clean renders.
 
 export const nghhCategory: SecurityCategory = {
   slug: "nghh",
@@ -31,6 +35,7 @@ export const nghhCategory: SecurityCategory = {
       products: [
         {
           slug: "nghh-2025",
+          image: img("nghh-2025"),
           model: "NGHH-2025",
           name: "Ultra-High Sensitivity Flagship",
           specs: [
@@ -70,6 +75,7 @@ export const nghhCategory: SecurityCategory = {
         },
         {
           slug: "nghh-160e",
+          image: img("nghh-160e"),
           model: "NGHH-160E",
           name: "Pro Pinpoint with Type-C Lithium",
           specs: [
@@ -116,6 +122,7 @@ export const nghhCategory: SecurityCategory = {
       products: [
         {
           slug: "nghh-300c",
+          image: img("nghh-300c"),
           model: "NGHH-300C",
           name: "Wide-Frequency Triple-Mode Detector",
           specs: [
@@ -129,6 +136,7 @@ export const nghhCategory: SecurityCategory = {
         },
         {
           slug: "nghh-360",
+          image: img("nghh-360"),
           model: "NGHH-360",
           name: "Extended-Range 41 cm Probe",
           specs: [
@@ -142,6 +150,7 @@ export const nghhCategory: SecurityCategory = {
         },
         {
           slug: "nghh-008",
+          image: img("nghh-008"),
           model: "NGHH-008",
           name: "High-Frequency 35 kHz Super Wand",
           specs: [
@@ -155,6 +164,7 @@ export const nghhCategory: SecurityCategory = {
         },
         {
           slug: "nghh-300",
+          image: img("nghh-300"),
           model: "NGHH-300",
           name: "ATD Identification Wand",
           specs: [
@@ -200,6 +210,7 @@ export const nghhCategory: SecurityCategory = {
         },
         {
           slug: "nghh-101h",
+          image: img("nghh-101h"),
           model: "NGHH-101H",
           name: "Preset-Sensitivity Detector",
           specs: [
@@ -213,6 +224,7 @@ export const nghhCategory: SecurityCategory = {
         },
         {
           slug: "nghh-3003b1",
+          image: img("nghh-3003b1"),
           model: "NGHH-3003B1",
           name: "Long-Wand Triple-Alarm Detector",
           specs: [

@@ -1,11 +1,14 @@
 import type { SecurityCategory } from "./types";
 
+const img = (slug: string) => `/nooksguard/products/${slug}.webp`;
+
 // Source: catalog pages 45–58. The catalog's "Competitive Edge" page (52), which
 // names CEIA and Garrett and makes unsubstantiated claims against them, is
 // intentionally not reproduced on the site.
 //
-// No product images yet: the source PDF wasn't available when this category was
-// built. Re-extract pages 46–50 and 55–58 and review each render before use.
+// Product images: catalog pages 46–50 and 55–58 (2026-10-15). Pages 55, 57 and
+// 58 show two gates each; photos are paired with models in page order, which
+// matches the specs (large touchscreen = 2286D / 2286S).
 
 export const nghwtCategory: SecurityCategory = {
   slug: "nghwt",
@@ -23,6 +26,7 @@ export const nghwtCategory: SecurityCategory = {
       products: [
         {
           slug: "nghwt-600",
+          image: img("nghwt-600"),
           model: "NGHWT-600",
           name: "Volume-Deployment Walk-Through Metal Detector",
           specs: [
@@ -36,6 +40,7 @@ export const nghwtCategory: SecurityCategory = {
         },
         {
           slug: "nghwt-1618",
+          image: img("nghwt-1618"),
           model: "NGHWT-1618",
           name: "X-Ray-Companion Walk-Through Detector",
           specs: [
@@ -49,6 +54,7 @@ export const nghwtCategory: SecurityCategory = {
         },
         {
           slug: "nghwt-2400",
+          image: img("nghwt-2400"),
           model: "NGHWT-2400",
           name: "Full-Touch Intelligence Security Gate",
           specs: [
@@ -61,6 +67,7 @@ export const nghwtCategory: SecurityCategory = {
         },
         {
           slug: "nghwt-4500",
+          image: img("nghwt-4500"),
           model: "NGHWT-4500",
           name: "Airport-Class Walk-Through Detector",
           specs: [
@@ -74,6 +81,7 @@ export const nghwtCategory: SecurityCategory = {
         },
         {
           slug: "nghwt-9000",
+          image: img("nghwt-9000"),
           model: "NGHWT-9000",
           name: "Rapid-Deployment Portable Security Tower",
           specs: [
@@ -93,6 +101,7 @@ export const nghwtCategory: SecurityCategory = {
       products: [
         {
           slug: "nghwt-2025t",
+          image: img("nghwt-2025t"),
           model: "NGHWT-2025T",
           name: "Intelligent Multi-AI Security Gate",
           specs: [
@@ -106,6 +115,7 @@ export const nghwtCategory: SecurityCategory = {
         },
         {
           slug: "nghwt-2286d",
+          image: img("nghwt-2286d"),
           model: "NGHWT-2286D",
           name: "Smart Android Touchscreen Security Gate",
           specs: [
@@ -126,6 +136,7 @@ export const nghwtCategory: SecurityCategory = {
       products: [
         {
           slug: "nghwt-2286s",
+          image: img("nghwt-2286s"),
           model: "NGHWT-2286S",
           name: "Android Smart Large-Screen Security Gate",
           specs: [
@@ -139,6 +150,7 @@ export const nghwtCategory: SecurityCategory = {
         },
         {
           slug: "nghwt-m8-plus",
+          image: img("nghwt-m8-plus"),
           model: "NGHWT-M8-PLUS",
           name: "Smart IoT Network Security Gate",
           specs: [
@@ -159,6 +171,7 @@ export const nghwtCategory: SecurityCategory = {
       products: [
         {
           slug: "nghwt-2286",
+          image: img("nghwt-2286"),
           model: "NGHWT-2286",
           name: "Digital Pulse Metal Detector Gate",
           specs: [
@@ -172,6 +185,7 @@ export const nghwtCategory: SecurityCategory = {
         },
         {
           slug: "nghwt-m8",
+          image: img("nghwt-m8"),
           model: "NGHWT-M8",
           name: "Ultra-High Sensitivity Metal Detector Gate",
           specs: [
@@ -185,6 +199,7 @@ export const nghwtCategory: SecurityCategory = {
         },
         {
           slug: "nghwt-2900d",
+          image: img("nghwt-2900d"),
           model: "NGHWT-2900D",
           name: "Single-Pole Digital Pulse Metal Detector",
           specs: [
