@@ -14,23 +14,25 @@ export const metadata: Metadata = {
 export default function SecurityIndexPage() {
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-8 sm:py-16">
-      <header className="section-rule grid gap-6 pt-6 md:grid-cols-[1fr_minmax(0,26rem)] md:items-end">
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
+      <header className="section-rule grid gap-8 pt-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-12">
+        {/* The full logo is the page title; its alt text gives the h1 its name. */}
+        <h1 className="m-0">
+          <span className="frame-marks block">
             <Image
-              src="/nooksguard/emblem.webp"
-              alt=""
-              width={40}
-              height={40}
-              className="h-10 w-10"
+              src="/nooksguard/logo-lockup.webp"
+              alt="Nooksguard Security Solutions"
+              width={1600}
+              height={764}
+              priority
+              sizes="(min-width: 1280px) 681px, (min-width: 1024px) 56vw, 100vw"
+              className="block h-auto w-full"
             />
-            <span className="type-label">Nooksguard Security Solutions</span>
-          </div>
-          <h1 className="type-display text-5xl text-ink sm:text-6xl lg:text-7xl">
+          </span>
+        </h1>
+        <div className="flex min-w-0 flex-col gap-5">
+          <p className="type-display text-3xl text-ink sm:text-4xl xl:text-5xl">
             Verified Protection. Confirmed, Not Assumed.
-          </h1>
-        </div>
-        <div className="flex flex-col gap-3">
+          </p>
           <p className="max-w-[62ch] text-ink-2">
             Integrated security inspection and counter-surveillance equipment for people,
             baggage, field response and information protection.
