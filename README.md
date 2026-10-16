@@ -51,7 +51,8 @@ src/
   proxy.ts                  # Next.js proxy (middleware): refreshes auth session,
                              # gates /admin/* routes — see src/lib/supabase/middleware.ts
   components/
-    HeroCinematic.tsx       # video background, parallax, split-text headline
+    HeroCinematic.tsx       # hero: split-text headline, live catalog figures, room photo + parts list
+    room/                    # RoomPhoto (interactive room photo) + room-photo.ts (photo and marker positions)
     ProductConfigurator.tsx  # home-page inspector: one real product per category, zoomable photo, quote CTA
     SectorShowcase.tsx       # dual-sector tabbed showcase
     ScrollExperience.tsx     # pinned "blueprint to furnished" scroll sequence
@@ -72,7 +73,6 @@ supabase/
   schema.sql          # run once in the Supabase SQL editor: tables, RLS, storage bucket
   seed.sql             # run once after schema.sql: populates the current catalog
 public/
-  videos/README.md       # hero video spec + ffmpeg compression commands
   models/README.md       # GLTF/GLB model spec + wiring instructions (home-page viewer)
   products/README.md     # category + per-product photo sourcing
 ```
@@ -82,42 +82,35 @@ public/
 Nothing here ships with real media — every visual degrades gracefully to a
 procedural/placeholder state so the site is fully functional without assets:
 
-- **Hero video** — drop `hero-loop.webm` / `hero-loop.mp4` / `hero-poster.jpg`
-  into `public/videos/`. Spec and ffmpeg compression commands are in
-  [`public/videos/README.md`](public/videos/README.md). Until then, the hero
-  falls back to the dark gradient background.
 - **3D product models** — drop a `.glb` into `public/models/` and pass its
   path as `modelUrl` to `<Scene3D />` (via `<ProductConfigurator />`). Spec,
   Draco compression, and finish-switcher material naming are in
   [`public/models/README.md`](public/models/README.md). Until then, the
   viewer renders a procedural stand-in chair.
 
-## Home-page 3D room
+## Home-page room photo
 
-The hero is a live 3D room ([`src/components/room/RoomScene.tsx`](src/components/room/RoomScene.tsx)):
-a cutaway single-occupancy unit furnished with real catalog products, drawn
-with outline edges on a drafting-grid floor.
+The hero is a real room photo with the interactive features of the old 3D
+room ([`src/components/room/RoomPhoto.tsx`](src/components/room/RoomPhoto.tsx)):
 
-- **Which products, and where:** [`src/components/room/room-layout.ts`](src/components/room/room-layout.ts)
-  lists each product slug with its floor position, rotation, scale and callout
-  nudge. Order = callout numbers (01–06). The home page pulls those products
-  from the live catalog, so prices and names stay current; a product that no
-  longer exists is simply left out.
-- **Interaction:** drag (or swipe sideways) to turn the room within a limited
-  range; it sways gently when idle. There is deliberately no scroll/pinch zoom,
-  so the page never traps scrolling. Hover or focus a numbered callout to see
-  the product photo, name and price; click a callout, a piece, or a row in
-  the parts list below (each row shows the real product photo) to open it in
-  the product viewer.
-- **Models:** pieces use the same procedural shapes as the viewer until a
-  product gets a `.glb` (`modelUrl` / `model_url`), which the room then loads
-  automatically.
-- **Performance:** loaded on demand; the room photo shows until it is ready and
-  remains the fallback for reduced-motion / data-saver devices (with a "View
-  the 3D room" opt-in). Rendering pauses while the hero is off-screen and while
+- **Which products, and where:** [`src/components/room/room-photo.ts`](src/components/room/room-photo.ts)
+  names the photo and, for each marked piece, the catalog slug, the marker
+  position and the piece's outline, all as % of the photo (so they stay on
+  the piece at every screen size). Order = marker numbers. The home page pulls
+  those products from the live catalog, so prices and names stay current; a
+  product that no longer exists simply loses its marker. Only mark pieces
+  whose catalog product has a real photo — the hover card shows it.
+- **Interaction:** hover or focus a numbered marker (or the piece itself) to
+  light the piece up and see the catalog photo, name and price; click a
+  marker, a piece, or a row in the parts list below to open the product
+  viewer. Drag (or swipe sideways) to look around; the photo drifts gently
+  side to side when idle (not under reduced motion / data saver). Vertical
+  page scrolling is never trapped.
+- **Honesty:** the photo is a styled interior, so the markers point at
+  *similar* catalog items; the caption and hover card say so.
+- **Performance:** no WebGL on the home page; the photo is the page's first
+  image (`priority`). The sway pauses while the hero is off-screen and while
   the product viewer is open.
-- In development, React's double-mount check logs a few "synchronously unmount
-  a root" warnings from the floating callouts; production builds don't.
 
 ## Product viewer
 

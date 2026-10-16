@@ -1,28 +1,22 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
-import dynamic from "next/dynamic";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Box, Pause, Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { SITE_NAME } from "@/lib/site";
 import { formatCurrency } from "@/lib/quote-data";
 import type { Product } from "@/lib/categories";
-import type { RoomItem } from "./room/RoomScene";
+import type { RoomItem } from "./room/room-photo";
+import { RoomPhoto } from "./room/RoomPhoto";
 import { ProductViewer } from "./ProductViewer";
 import { Ticker } from "./Ticker";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(SplitText);
 }
-
-// WebGL room is client-only and loaded on demand; the photo shows until it's ready.
-const RoomScene = dynamic(() => import("./room/RoomScene").then((m) => m.RoomScene), {
-  ssr: false,
-  loading: () => null,
-});
 
 const BADGES = [
   "M/WBE Certified",
@@ -33,45 +27,21 @@ const BADGES = [
 ];
 
 interface HeroCinematicProps {
-  /** Opt-in fallback video (see public/videos/README.md); the photo is used otherwise. */
-  videoSrcWebm?: string;
-  videoSrcMp4?: string;
-  posterSrc?: string;
   /** Live catalog figures for the read-out strip (computed by the page, never hardcoded). */
   stats?: { products: number; categories: number; securityModels: number };
-  /** Catalog products placed in the live 3D room, in callout order. */
+  /** Catalog products marked on the room photo, in marker order. */
   roomItems?: RoomItem[];
 }
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-export function HeroCinematic({
-  videoSrcWebm,
-  videoSrcMp4,
-  posterSrc = "/products/living-room.jpg",
-  stats,
-  roomItems = [],
-}: HeroCinematicProps) {
+export function HeroCinematic({ stats, roomItems = [] }: HeroCinematicProps) {
   const headlineRef = useRef<HTMLHeadingElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const [videoFailed, setVideoFailed] = useState(false);
-  const [videoPaused, setVideoPaused] = useState(false);
-  const hasVideo = Boolean(videoSrcWebm || videoSrcMp4);
 
-  // 3D room state
+  // Room photo state
   const [lowPower, setLowPower] = useState(false);
-  const [force3D, setForce3D] = useState(false);
-  const [ready, setReady] = useState(false);
-  const [onScreen, setOnScreen] = useState(true);
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [viewer, setViewer] = useState<{ product: Product; origin: { x: number; y: number } } | null>(null);
-
-  const viewerOpen = viewer !== null;
-  const show3D = roomItems.length > 0 && (!lowPower || force3D);
-  // While the 360° viewer is open the room stays mounted but stops drawing, so
-  // only one canvas renders and closing the viewer is instant (no reload).
-  const roomActive = onScreen && !viewerOpen;
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -80,10 +50,6 @@ export function HeroCinematic({
     // One-time read of browser capabilities unavailable during SSR.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLowPower(prefersReducedMotion || saveData);
-
-    if (prefersReducedMotion) {
-      videoRef.current?.pause();
-    }
 
     if (!headlineRef.current || prefersReducedMotion) return;
 
@@ -107,15 +73,6 @@ export function HeroCinematic({
     };
   }, []);
 
-  // Pause the room's render loop while the hero is scrolled out of view.
-  useEffect(() => {
-    const el = stageRef.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting), { threshold: 0.05 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   const openViewer = useCallback((product: Product, origin: { x: number; y: number }) => {
     setHoveredSlug(null);
     setViewer({ product, origin });
@@ -125,20 +82,6 @@ export function HeroCinematic({
     const r = e.currentTarget.getBoundingClientRect();
     openViewer(product, { x: r.left + r.width / 2, y: r.top + r.height / 2 });
   };
-
-  const handleReady = useCallback(() => setReady(true), []);
-
-  const toggleVideo = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) {
-      void video.play().catch(() => {});
-    } else {
-      video.pause();
-    }
-  };
-
-  const fallbackVisible = !show3D || !ready;
 
   return (
     // Transparent: sits directly on the plain white page.
@@ -202,93 +145,30 @@ export function HeroCinematic({
           )}
         </div>
 
-        {/* Live 3D room */}
+        {/* Real room photo with numbered catalog pieces (hover, select, drag to look around). */}
         <figure className="m-0 mt-10 flex flex-col gap-2">
           <div className="frame-marks">
-            <div
-              ref={stageRef}
-              className="relative aspect-[4/3] w-full overflow-hidden border border-rule bg-studio sm:aspect-[16/9] lg:aspect-[21/9]"
-            >
-              {/* Fallback media: shown before the room is ready, on low-power devices, and behind the viewer. */}
-              <div
-                className="absolute inset-0 transition-opacity duration-500"
-                style={{ opacity: fallbackVisible ? 1 : 0 }}
-                aria-hidden={!fallbackVisible}
-              >
-                {hasVideo && !videoFailed ? (
-                  <>
-                    <video
-                      ref={videoRef}
-                      className="absolute inset-0 h-full w-full object-cover"
-                      aria-hidden="true"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      poster={posterSrc}
-                      onPlay={() => setVideoPaused(false)}
-                      onPause={() => setVideoPaused(true)}
-                      onError={() => setVideoFailed(true)}
-                    >
-                      {videoSrcWebm && <source src={videoSrcWebm} type="video/webm" />}
-                      {videoSrcMp4 && <source src={videoSrcMp4} type="video/mp4" />}
-                    </video>
-                    {fallbackVisible && (
-                      <button
-                        type="button"
-                        onClick={toggleVideo}
-                        aria-label="Pause background video"
-                        aria-pressed={videoPaused}
-                        className="btn-tool absolute bottom-3 right-3 z-10 h-11 w-11 p-0"
-                      >
-                        {videoPaused ? (
-                          <Play className="h-4 w-4" aria-hidden="true" />
-                        ) : (
-                          <Pause className="h-4 w-4" aria-hidden="true" />
-                        )}
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <Image src={posterSrc} alt="" fill priority sizes="100vw" className="object-cover" />
-                )}
-              </div>
-
-              {show3D && (
-                <div className="absolute inset-0">
-                  <RoomScene
-                    items={roomItems}
-                    hoveredSlug={hoveredSlug}
-                    onHover={setHoveredSlug}
-                    onSelect={openViewer}
-                    active={roomActive}
-                    sway={!lowPower}
-                    onReady={handleReady}
-                  />
-                </div>
-              )}
-
-              {show3D && ready && (
+            <div className="relative aspect-[3/2] w-full border border-rule bg-studio sm:aspect-[16/9] lg:aspect-[21/9]">
+              <RoomPhoto
+                items={roomItems}
+                hoveredSlug={hoveredSlug}
+                onHover={setHoveredSlug}
+                onSelect={openViewer}
+                paused={viewer !== null}
+                sway={!lowPower}
+              />
+              {roomItems.length > 0 && (
                 <p className="tag pointer-events-none absolute bottom-3 left-3 border-ink">
-                  <span className="hidden sm:inline">Drag to turn · Select a number to see the product</span>
-                  <span className="sm:hidden">Swipe sideways to turn</span>
+                  <span className="hidden sm:inline">Select a number to see the catalog item · Drag to look around</span>
+                  <span className="sm:hidden">Tap a number · Swipe sideways to look around</span>
                 </p>
-              )}
-
-              {lowPower && !force3D && roomItems.length > 0 && (
-                <div className="absolute inset-x-3 bottom-3 flex flex-wrap items-center gap-3">
-                  <button type="button" onClick={() => setForce3D(true)} className="btn btn-secondary bg-well">
-                    <Box className="h-4 w-4" aria-hidden="true" />
-                    View the 3D room
-                  </button>
-                </div>
               )}
             </div>
           </div>
           <figcaption className="fig-caption flex flex-wrap justify-between gap-x-4 gap-y-1 pt-1">
             <span>
-              FIG. 01 — Single-occupancy unit
-              {roomItems.length > 0 && ` · ${roomItems.length} catalog items`}
+              FIG. 01 — Living area
+              {roomItems.length > 0 && ` · ${roomItems.length} similar catalog items`}
             </span>
             <span aria-hidden="true">{SITE_NAME.toUpperCase()}</span>
           </figcaption>
@@ -296,7 +176,7 @@ export function HeroCinematic({
 
         {/* Parts list: the room's legend, and a full-size way in for touch and keyboard users. */}
         {roomItems.length > 0 && (
-          <ol aria-label="Items in this room" className="catalog-grid mt-6 grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <ol aria-label="Items in this room" className="catalog-grid mt-6 grid-cols-1 sm:grid-cols-3">
             {roomItems.map(({ product }, i) => {
               const highlighted = hoveredSlug === product.slug;
               return (
@@ -309,16 +189,16 @@ export function HeroCinematic({
                     onFocus={() => setHoveredSlug(product.slug)}
                     onBlur={() => setHoveredSlug(null)}
                     aria-label={`${pad(i + 1)}: view ${product.name} up close`}
-                    className="group flex h-full w-full flex-col text-left"
+                    className="group flex h-full w-full flex-row text-left sm:flex-col"
                     style={highlighted ? { boxShadow: "inset 0 -3px 0 var(--color-accent)" } : undefined}
                   >
-                    {/* The real product, so the room's simple shapes always have a photo beside them. */}
-                    <span className="relative block aspect-[4/3] w-full overflow-hidden border-b border-rule bg-studio">
+                    {/* The catalog product itself, so buyers see exactly what they would order. */}
+                    <span className="relative block aspect-[4/3] w-32 shrink-0 overflow-hidden border-r border-rule bg-studio sm:w-full sm:border-b sm:border-r-0">
                       <Image
                         src={product.image}
                         alt=""
                         fill
-                        sizes="(min-width: 1280px) 16vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        sizes="(min-width: 1280px) 400px, (min-width: 640px) 33vw, 128px"
                         className={
                           product.imageFit === "cover"
                             ? "object-cover transition-transform duration-500 group-hover:scale-[1.05]"
@@ -326,7 +206,7 @@ export function HeroCinematic({
                         }
                       />
                     </span>
-                    <span className="flex items-start gap-3 px-3 py-3">
+                    <span className="flex items-start gap-3 self-center px-3 py-3 sm:self-auto">
                       <span className="type-data mt-px text-xs text-ink-3">{pad(i + 1)}</span>
                       <span className="flex min-w-0 flex-col">
                         <span className="text-sm font-semibold leading-snug text-ink">{product.name}</span>

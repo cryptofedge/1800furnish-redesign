@@ -119,10 +119,10 @@ because the lettering is unreadable at button size.
   to multiply with. Room/lifestyle photos (category banners, sector cards) are
   `object-cover`, square corners.
 - Every "Who we serve" sector card carries a real photo.
-- The hero 3D room is styled, not schematic: light oak plank floor, warm white
-  walls with a sage back wall, baseboards, window, rug, plant and a framed
-  print; each piece is colored to match its real product photo
-  (`room-layout.ts` `color`); edge lines are soft and only turn orange on hover.
+- The hero is a real room photo, not a model: numbered square markers (ink
+  border, white well, orange ripple) sit on the pieces; the hovered piece stays
+  bright while the rest fades behind a white veil (never a dark one) with
+  orange corner marks around it.
 - Mobile first: everything stacks to one column at ~400px; no horizontal page
   scroll; tap targets ≥ 44px.
 

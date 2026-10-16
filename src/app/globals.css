@@ -356,6 +356,31 @@ body {
       linear-gradient(var(--m), var(--m)) bottom right / 1px 14px no-repeat;
   }
 
+  /* Hero room photo: the hovered piece stays bright while the rest of the
+     photo fades back behind a white veil, with orange corner marks around it. */
+  .room-focus {
+    box-shadow: 0 0 0 200vmax rgb(255 255 255 / 0.5);
+    --m: var(--color-accent);
+    background:
+      linear-gradient(var(--m), var(--m)) top left / 18px 2px no-repeat,
+      linear-gradient(var(--m), var(--m)) top left / 2px 18px no-repeat,
+      linear-gradient(var(--m), var(--m)) top right / 18px 2px no-repeat,
+      linear-gradient(var(--m), var(--m)) top right / 2px 18px no-repeat,
+      linear-gradient(var(--m), var(--m)) bottom left / 18px 2px no-repeat,
+      linear-gradient(var(--m), var(--m)) bottom left / 2px 18px no-repeat,
+      linear-gradient(var(--m), var(--m)) bottom right / 18px 2px no-repeat,
+      linear-gradient(var(--m), var(--m)) bottom right / 2px 18px no-repeat;
+  }
+
+  /* Hero room photo: a square orange ring that ripples out from each marker. */
+  .room-ping {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--color-accent);
+    pointer-events: none;
+    animation: room-ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
   /* One orange scan line sweeps down a product photo on hover. */
   .scanline {
     position: relative;
@@ -454,6 +479,18 @@ body {
   }
 }
 
+@keyframes room-ping {
+  0% {
+    scale: 1;
+    opacity: 0.9;
+  }
+  70%,
+  100% {
+    scale: 1.9;
+    opacity: 0;
+  }
+}
+
 @keyframes marquee {
   to {
     transform: translateX(-50%);
@@ -466,6 +503,9 @@ body {
   }
   .marquee-track {
     animation: none;
+  }
+  .room-ping {
+    display: none;
   }
   .lift:hover,
   .btn-badge:hover:not(:disabled),

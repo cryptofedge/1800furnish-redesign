@@ -6,8 +6,7 @@ import { ScrollExperience } from "@/components/ScrollExperience";
 import { SectorShowcase } from "@/components/SectorShowcase";
 import { getCategories } from "@/lib/catalog";
 import { SECURITY_CATEGORIES } from "@/lib/nooksguard/categories";
-import { ROOM_LAYOUT } from "@/components/room/room-layout";
-import type { RoomItem } from "@/components/room/RoomScene";
+import { ROOM_HOTSPOTS, type RoomItem } from "@/components/room/room-photo";
 
 export default async function Home() {
   // Flat product list so the quote calculator can attach a requested item
@@ -27,12 +26,12 @@ export default async function Home() {
     ),
   };
 
-  // Real catalog products for the hero's live 3D room. A product missing from
-  // the catalog (e.g. deleted in the admin) is simply left out of the room.
+  // Catalog products marked on the hero's room photo. A product missing from
+  // the catalog (e.g. deleted in the admin) simply loses its marker.
   const productsBySlug = new Map(categories.flatMap((c) => c.products).map((p) => [p.slug, p]));
-  const roomItems: RoomItem[] = ROOM_LAYOUT.flatMap((placement) => {
-    const product = productsBySlug.get(placement.slug);
-    return product ? [{ product, placement }] : [];
+  const roomItems: RoomItem[] = ROOM_HOTSPOTS.flatMap((hotspot) => {
+    const product = productsBySlug.get(hotspot.slug);
+    return product ? [{ product, hotspot }] : [];
   });
 
   // Home-page inspector: the first product of every category, shown as its real photo.
