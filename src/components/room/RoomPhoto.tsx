@@ -4,14 +4,22 @@ import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from 
 import Image from "next/image";
 import { formatCurrency } from "@/lib/quote-data";
 import type { Product } from "@/lib/categories";
-import { ROOM_PHOTO, type RoomItem } from "./room-photo";
+import type { RoomItem, RoomPhotoSpec } from "./room-photo";
 
 interface RoomPhotoProps {
+  photo: RoomPhotoSpec;
+  /** Room name, for screen readers. */
+  label: string;
+  /** This room's pieces, in marker order. */
   items: RoomItem[];
+  /** Marker number of the first piece (numbering runs on across rooms). */
+  firstNumber: number;
+  /** Fetch the photo straight away: true for the room shown first. */
+  eager: boolean;
   hoveredSlug: string | null;
   onHover: (slug: string | null) => void;
   onSelect: (product: Product, origin: { x: number; y: number }) => void;
-  /** True while the product viewer is open: the idle sway stops. */
+  /** True while the product viewer is open or another room is shown: the idle sway stops. */
   paused: boolean;
   /** Slow idle sway; off under prefers-reduced-motion / data saver. */
   sway: boolean;
@@ -28,15 +36,17 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 // The photo layer keeps the photo's own aspect ratio and covers the frame
 // (container query units), so % coordinates on it stay glued to the pieces.
-const aspect = ROOM_PHOTO.width / ROOM_PHOTO.height;
-const layerW = `max(100cqw, ${(aspect * 100).toFixed(3)}cqh)`;
-const layerH = `max(100cqh, ${(100 / aspect).toFixed(3)}cqw)`;
-const LAYER_STYLE = {
-  width: layerW,
-  height: layerH,
-  left: `calc((100cqw - ${layerW}) * ${ROOM_PHOTO.focus[0]})`,
-  top: `calc((100cqh - ${layerH}) * ${ROOM_PHOTO.focus[1]})`,
-};
+function layerStyle(photo: RoomPhotoSpec) {
+  const aspect = photo.width / photo.height;
+  const w = `max(100cqw, ${(aspect * 100).toFixed(3)}cqh)`;
+  const h = `max(100cqh, ${(100 / aspect).toFixed(3)}cqw)`;
+  return {
+    width: w,
+    height: h,
+    left: `calc((100cqw - ${w}) * ${photo.focus[0]})`,
+    top: `calc((100cqh - ${h}) * ${photo.focus[1]})`,
+  };
+}
 
 /** Where a % point of the photo lands once the photo is scaled about its center. */
 const scaled = (p: number) => `${50 + (p - 50) * SCALE}%`;
@@ -46,7 +56,18 @@ const scaled = (p: number) => `${50 + (p - 50) * SCALE}%`;
  * markers, a hover card with the catalog photo and price, the piece lighting
  * up, click to open the product viewer, drag to look around and an idle sway.
  */
-export function RoomPhoto({ items, hoveredSlug, onHover, onSelect, paused, sway }: RoomPhotoProps) {
+export function RoomPhoto({
+  photo,
+  label,
+  items,
+  firstNumber,
+  eager,
+  hoveredSlug,
+  onHover,
+  onSelect,
+  paused,
+  sway,
+}: RoomPhotoProps) {
   const stageRef = useRef<HTMLDivElement>(null);
   const layerRef = useRef<HTMLDivElement>(null);
   const [onScreen, setOnScreen] = useState(true);
@@ -187,7 +208,7 @@ export function RoomPhoto({ items, hoveredSlug, onHover, onSelect, paused, sway 
     <div
       ref={stageRef}
       role="group"
-      aria-label="Room photo: numbered pieces are similar items from our catalog"
+      aria-label={`${label} photo: numbered pieces are similar items from our catalog`}
       className="relative h-full w-full cursor-grab touch-pan-y select-none overflow-hidden [container-type:size] active:cursor-grabbing"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -195,16 +216,16 @@ export function RoomPhoto({ items, hoveredSlug, onHover, onSelect, paused, sway 
       onPointerCancel={endDrag}
       onPointerLeave={() => onHover(null)}
     >
-      <div ref={layerRef} className="absolute will-change-transform" style={LAYER_STYLE}>
+      <div ref={layerRef} className="absolute will-change-transform" style={layerStyle(photo)}>
         {/* Photo and outlines are scaled together; markers below are not, so their text stays crisp. */}
         <div className="absolute inset-0" style={{ transform: `scale(${SCALE})` }}>
           <Image
-            src={ROOM_PHOTO.src}
-            alt={ROOM_PHOTO.alt}
+            src={photo.src}
+            alt={photo.alt}
             fill
-            // The hero photo is the page's largest paint: fetch it first (`priority` is deprecated in Next 16).
-            loading="eager"
-            fetchPriority="high"
+            // The first room is the page's largest paint: fetch it first (`priority` is deprecated in Next 16).
+            loading={eager ? "eager" : "lazy"}
+            fetchPriority={eager ? "high" : "auto"}
             draggable={false}
             sizes="(min-width: 1280px) 1320px, 110vw"
             className="object-cover"
@@ -249,11 +270,11 @@ export function RoomPhoto({ items, hoveredSlug, onHover, onSelect, paused, sway 
                 onPointerLeave={() => onHover(null)}
                 onFocus={() => onHover(product.slug)}
                 onBlur={() => onHover(null)}
-                aria-label={`${pad(i + 1)}: view ${product.name} up close`}
+                aria-label={`${pad(firstNumber + i)}: view ${product.name} up close`}
                 className="type-data relative flex h-8 min-w-8 items-center justify-center border border-ink bg-well px-1 text-[11px] text-ink transition-colors hover:bg-accent sm:h-10 sm:min-w-10 sm:px-1.5 sm:text-xs"
                 style={highlighted ? { background: "var(--color-accent)" } : undefined}
               >
-                {pad(i + 1)}
+                {pad(firstNumber + i)}
               </button>
             </div>
           );
@@ -278,7 +299,7 @@ export function RoomPhoto({ items, hoveredSlug, onHover, onSelect, paused, sway 
             />
           </div>
           <div className="px-2.5 py-1.5">
-            <p className="type-label">{pad(hovered.index + 1)} · Catalog item</p>
+            <p className="type-label">{pad(firstNumber + hovered.index)} · Catalog item</p>
             <p className="mt-0.5 text-xs font-semibold leading-tight text-ink">{hovered.item.product.name}</p>
             <p className="type-data mt-0.5 text-[11px] text-ink-2">{formatCurrency(hovered.item.product.price)} / unit</p>
           </div>

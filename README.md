@@ -52,7 +52,7 @@ src/
                              # gates /admin/* routes — see src/lib/supabase/middleware.ts
   components/
     HeroCinematic.tsx       # hero: split-text headline, live catalog figures, room photo + parts list
-    room/                    # RoomPhoto (interactive room photo) + room-photo.ts (photo and marker positions)
+    room/                    # RoomPhoto (interactive room photo) + room-photo.ts (rooms, photos and marker positions)
     ProductConfigurator.tsx  # home-page inspector: one real product per category, zoomable photo, quote CTA
     SectorShowcase.tsx       # dual-sector tabbed showcase
     ScrollExperience.tsx     # pinned "blueprint to furnished" scroll sequence
@@ -88,18 +88,25 @@ procedural/placeholder state so the site is fully functional without assets:
   [`public/models/README.md`](public/models/README.md). Until then, the
   viewer renders a procedural stand-in chair.
 
-## Home-page room photo
+## Home-page room photos
 
-The hero is a real room photo with the interactive features of the old 3D
-room ([`src/components/room/RoomPhoto.tsx`](src/components/room/RoomPhoto.tsx)):
+The hero shows real room photos (living area and bedroom, switched with tabs
+above the photo) with the interactive features of the old 3D room
+([`src/components/room/RoomPhoto.tsx`](src/components/room/RoomPhoto.tsx)):
 
-- **Which products, and where:** [`src/components/room/room-photo.ts`](src/components/room/room-photo.ts)
-  names the photo and, for each marked piece, the catalog slug, the marker
-  position and the piece's outline, all as % of the photo (so they stay on
-  the piece at every screen size). Order = marker numbers. The home page pulls
-  those products from the live catalog, so prices and names stay current; a
-  product that no longer exists simply loses its marker. Only mark pieces
-  whose catalog product has a real photo — the hover card shows it.
+- **Which rooms, products, and where:** [`src/components/room/room-photo.ts`](src/components/room/room-photo.ts)
+  lists the rooms (`ROOMS`): each has a photo and, for each marked piece, the
+  catalog slug, the marker position and the piece's outline, all as % of the
+  photo (so they stay on the piece at every screen size). Marker numbers run
+  on across rooms in list order (living area 01–03, bedroom 04–06). Add a
+  room by adding an entry; a room whose products are all missing is left out.
+  The home page pulls those products from the live catalog, so prices and
+  names stay current; a product that no longer exists simply loses its
+  marker. Only mark pieces whose catalog product has a real photo — the hover
+  card shows it.
+- **Rooms:** tabs (left/right arrow keys work) crossfade between photos; the
+  parts list below shows every room's pieces, and pointing at one switches to
+  its room so the highlight is visible.
 - **Interaction:** hover or focus a numbered marker (or the piece itself) to
   light the piece up and see the catalog photo, name and price; click a
   marker, a piece, or a row in the parts list below to open the product

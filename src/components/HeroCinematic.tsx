@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type MouseEvent } from "react";
 import { gsap } from "gsap";
 import { SplitText } from "gsap/SplitText";
 import Image from "next/image";
@@ -9,7 +9,7 @@ import { ArrowRight } from "lucide-react";
 import { SITE_NAME } from "@/lib/site";
 import { formatCurrency } from "@/lib/quote-data";
 import type { Product } from "@/lib/categories";
-import type { RoomItem } from "./room/room-photo";
+import { ROOMS, type RoomItem } from "./room/room-photo";
 import { RoomPhoto } from "./room/RoomPhoto";
 import { ProductViewer } from "./ProductViewer";
 import { Ticker } from "./Ticker";
@@ -29,7 +29,7 @@ const BADGES = [
 interface HeroCinematicProps {
   /** Live catalog figures for the read-out strip (computed by the page, never hardcoded). */
   stats?: { products: number; categories: number; securityModels: number };
-  /** Catalog products marked on the room photo, in marker order. */
+  /** Catalog products marked on the room photos, room by room in marker order. */
   roomItems?: RoomItem[];
 }
 
@@ -41,7 +41,18 @@ export function HeroCinematic({ stats, roomItems = [] }: HeroCinematicProps) {
   // Room photo state
   const [lowPower, setLowPower] = useState(false);
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+  const [roomId, setRoomId] = useState(ROOMS[0].id);
   const [viewer, setViewer] = useState<{ product: Product; origin: { x: number; y: number } } | null>(null);
+
+  // Rooms that have marked pieces, each with the number of its first marker
+  // (numbering runs on across rooms, matching the parts list).
+  const roomsWithItems = ROOMS.flatMap((room) => {
+    const items = roomItems.filter((item) => item.room === room.id);
+    return items.length > 0 ? [{ room, items, start: roomItems.indexOf(items[0]) + 1 }] : [];
+  });
+  const rooms = roomsWithItems.length > 0 ? roomsWithItems : [{ room: ROOMS[0], items: [], start: 1 }];
+  const activeIndex = Math.max(0, rooms.findIndex((r) => r.room.id === roomId));
+  const activeRoom = rooms[activeIndex];
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -77,6 +88,26 @@ export function HeroCinematic({ stats, roomItems = [] }: HeroCinematicProps) {
     setHoveredSlug(null);
     setViewer({ product, origin });
   }, []);
+
+  const showRoom = (id: string) => {
+    setRoomId(id);
+    setHoveredSlug(null);
+  };
+
+  // Tabs pattern: left/right arrows move between rooms.
+  const onTabKey = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    e.preventDefault();
+    const next = rooms[(activeIndex + (e.key === "ArrowRight" ? 1 : rooms.length - 1)) % rooms.length].room.id;
+    showRoom(next);
+    document.getElementById(`room-tab-${next}`)?.focus();
+  };
+
+  // Pointing at a piece in the parts list shows its room, so the highlight is visible.
+  const highlightFromList = (slug: string, room: string) => {
+    setRoomId(room);
+    setHoveredSlug(slug);
+  };
 
   const openFromButton = (product: Product) => (e: MouseEvent<HTMLButtonElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
@@ -145,18 +176,67 @@ export function HeroCinematic({ stats, roomItems = [] }: HeroCinematicProps) {
           )}
         </div>
 
-        {/* Real room photo with numbered catalog pieces (hover, select, drag to look around). */}
+        {/* Real room photos with numbered catalog pieces (hover, select, drag to look
+            around); tabs switch rooms. */}
         <figure className="m-0 mt-10 flex flex-col gap-2">
+          {rooms.length > 1 && (
+            <div role="tablist" aria-label="Rooms" className="mb-3 flex flex-wrap gap-2" onKeyDown={onTabKey}>
+              {rooms.map(({ room, items, start }, i) => {
+                const selected = i === activeIndex;
+                return (
+                  <button
+                    key={room.id}
+                    type="button"
+                    role="tab"
+                    id={`room-tab-${room.id}`}
+                    aria-selected={selected}
+                    aria-controls={`room-panel-${room.id}`}
+                    tabIndex={selected ? 0 : -1}
+                    onClick={() => showRoom(room.id)}
+                    className={`inline-flex min-h-11 items-center gap-2 border bg-well px-3 text-sm font-semibold transition-colors ${
+                      selected ? "border-ink text-ink" : "border-rule text-ink-2 hover:border-ink hover:text-ink"
+                    }`}
+                    style={selected ? { boxShadow: "inset 0 -3px 0 var(--color-accent)" } : undefined}
+                  >
+                    <span className="type-data text-xs font-normal text-ink-3">
+                      {pad(start)}–{pad(start + items.length - 1)}
+                    </span>
+                    {room.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
           <div className="frame-marks">
             <div className="relative aspect-[3/2] w-full border border-rule bg-studio sm:aspect-[16/9] lg:aspect-[21/9]">
-              <RoomPhoto
-                items={roomItems}
-                hoveredSlug={hoveredSlug}
-                onHover={setHoveredSlug}
-                onSelect={openViewer}
-                paused={viewer !== null}
-                sway={!lowPower}
-              />
+              {/* Every room stays mounted and crossfades; the hidden one is inert and stops swaying. */}
+              {rooms.map(({ room, items, start }, i) => {
+                const selected = i === activeIndex;
+                return (
+                  <div
+                    key={room.id}
+                    id={`room-panel-${room.id}`}
+                    role={rooms.length > 1 ? "tabpanel" : undefined}
+                    aria-labelledby={rooms.length > 1 ? `room-tab-${room.id}` : undefined}
+                    inert={!selected}
+                    className="absolute inset-0 transition-[opacity,visibility] duration-500"
+                    style={{ opacity: selected ? 1 : 0, visibility: selected ? "visible" : "hidden" }}
+                  >
+                    <RoomPhoto
+                      photo={room.photo}
+                      label={room.label}
+                      items={items}
+                      firstNumber={start}
+                      eager={i === 0}
+                      hoveredSlug={hoveredSlug}
+                      onHover={setHoveredSlug}
+                      onSelect={openViewer}
+                      paused={viewer !== null || !selected}
+                      sway={!lowPower}
+                    />
+                  </div>
+                );
+              })}
               {roomItems.length > 0 && (
                 <p className="tag pointer-events-none absolute bottom-3 left-3 border-ink">
                   <span className="hidden sm:inline">Select a number to see the catalog item · Drag to look around</span>
@@ -167,8 +247,8 @@ export function HeroCinematic({ stats, roomItems = [] }: HeroCinematicProps) {
           </div>
           <figcaption className="fig-caption flex flex-wrap justify-between gap-x-4 gap-y-1 pt-1">
             <span>
-              FIG. 01 — Living area
-              {roomItems.length > 0 && ` · ${roomItems.length} similar catalog items`}
+              FIG. {pad(activeIndex + 1)} — {activeRoom.room.label}
+              {activeRoom.items.length > 0 && ` · ${activeRoom.items.length} similar catalog items`}
             </span>
             <span aria-hidden="true">{SITE_NAME.toUpperCase()}</span>
           </figcaption>
@@ -176,17 +256,17 @@ export function HeroCinematic({ stats, roomItems = [] }: HeroCinematicProps) {
 
         {/* Parts list: the room's legend, and a full-size way in for touch and keyboard users. */}
         {roomItems.length > 0 && (
-          <ol aria-label="Items in this room" className="catalog-grid mt-6 grid-cols-1 sm:grid-cols-3">
-            {roomItems.map(({ product }, i) => {
+          <ol aria-label="Items in these rooms" className="catalog-grid mt-6 grid-cols-1 sm:grid-cols-3 xl:grid-cols-6">
+            {roomItems.map(({ product, room }, i) => {
               const highlighted = hoveredSlug === product.slug;
               return (
                 <li key={product.slug} className="cell lift reveal">
                   <button
                     type="button"
                     onClick={openFromButton(product)}
-                    onPointerEnter={() => setHoveredSlug(product.slug)}
+                    onPointerEnter={() => highlightFromList(product.slug, room)}
                     onPointerLeave={() => setHoveredSlug(null)}
-                    onFocus={() => setHoveredSlug(product.slug)}
+                    onFocus={() => highlightFromList(product.slug, room)}
                     onBlur={() => setHoveredSlug(null)}
                     aria-label={`${pad(i + 1)}: view ${product.name} up close`}
                     className="group flex h-full w-full flex-row text-left sm:flex-col"
@@ -198,7 +278,7 @@ export function HeroCinematic({ stats, roomItems = [] }: HeroCinematicProps) {
                         src={product.image}
                         alt=""
                         fill
-                        sizes="(min-width: 1280px) 400px, (min-width: 640px) 33vw, 128px"
+                        sizes="(min-width: 1280px) 200px, (min-width: 640px) 33vw, 128px"
                         className={
                           product.imageFit === "cover"
                             ? "object-cover transition-transform duration-500 group-hover:scale-[1.05]"
