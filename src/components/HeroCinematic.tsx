@@ -180,7 +180,14 @@ export function HeroCinematic({ stats, roomItems = [] }: HeroCinematicProps) {
             around); tabs switch rooms. */}
         <figure className="m-0 mt-10 flex flex-col gap-2">
           {rooms.length > 1 && (
-            <div role="tablist" aria-label="Rooms" className="mb-3 flex flex-wrap gap-2" onKeyDown={onTabKey}>
+            <div
+              role="tablist"
+              aria-label="Rooms"
+              // Phones: one even row of tabs. Larger screens: tabs sized to their labels.
+              className="mb-3 grid gap-2 sm:flex sm:flex-wrap"
+              style={{ gridTemplateColumns: `repeat(${rooms.length}, minmax(0, 1fr))` }}
+              onKeyDown={onTabKey}
+            >
               {rooms.map(({ room, items, start }, i) => {
                 const selected = i === activeIndex;
                 return (
@@ -193,12 +200,12 @@ export function HeroCinematic({ stats, roomItems = [] }: HeroCinematicProps) {
                     aria-controls={`room-panel-${room.id}`}
                     tabIndex={selected ? 0 : -1}
                     onClick={() => showRoom(room.id)}
-                    className={`inline-flex min-h-11 items-center gap-2 border bg-well px-3 text-sm font-semibold transition-colors ${
+                    className={`inline-flex min-h-11 items-center justify-center gap-2 border bg-well px-2 text-sm font-semibold transition-colors sm:justify-start sm:px-3 ${
                       selected ? "border-ink text-ink" : "border-rule text-ink-2 hover:border-ink hover:text-ink"
                     }`}
                     style={selected ? { boxShadow: "inset 0 -3px 0 var(--color-accent)" } : undefined}
                   >
-                    <span className="type-data text-xs font-normal text-ink-3">
+                    <span className="type-data hidden text-xs font-normal text-ink-3 sm:inline">
                       {pad(start)}–{pad(start + items.length - 1)}
                     </span>
                     {room.label}
@@ -256,7 +263,7 @@ export function HeroCinematic({ stats, roomItems = [] }: HeroCinematicProps) {
 
         {/* Parts list: the room's legend, and a full-size way in for touch and keyboard users. */}
         {roomItems.length > 0 && (
-          <ol aria-label="Items in these rooms" className="catalog-grid mt-6 grid-cols-1 sm:grid-cols-3 xl:grid-cols-6">
+          <ol aria-label="Items in these rooms" className="catalog-grid mt-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
             {roomItems.map(({ product, room }, i) => {
               const highlighted = hoveredSlug === product.slug;
               return (
@@ -278,7 +285,7 @@ export function HeroCinematic({ stats, roomItems = [] }: HeroCinematicProps) {
                         src={product.image}
                         alt=""
                         fill
-                        sizes="(min-width: 1280px) 200px, (min-width: 640px) 33vw, 128px"
+                        sizes="(min-width: 1280px) 300px, (min-width: 768px) 25vw, (min-width: 640px) 50vw, 128px"
                         className={
                           product.imageFit === "cover"
                             ? "object-cover transition-transform duration-500 group-hover:scale-[1.05]"

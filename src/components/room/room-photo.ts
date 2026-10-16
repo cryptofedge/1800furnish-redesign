@@ -1,6 +1,6 @@
 // The home-page hero: real room photos with numbered markers on the pieces
 // that have a close match in the catalog. Rooms are tabs; numbering runs on
-// across rooms in this order (living area 01–03, bedroom 04–06, ...).
+// across rooms in this order (living area 01–03, bedroom 04–06, dining room 07–08).
 //
 // Coordinates are percentages of the whole photo (not of the on-screen crop),
 // so markers stay on their pieces at every screen size. To move a marker,
@@ -72,6 +72,23 @@ export const ROOMS: Room[] = [
       { slug: "queen-linen-set", at: [50, 70], box: [20, 43.6, 56.8, 50.3] },
       // Light wood dresser, right.
       { slug: "clearance-dresser", at: [87.5, 65], box: [70.4, 48.2, 29.6, 32.8] },
+    ],
+  },
+  {
+    id: "dining",
+    label: "Dining room",
+    photo: {
+      src: "/products/dining.jpg",
+      width: 1735,
+      height: 899,
+      alt: "Dining room with a long wood-top table and six white shell chairs on wood legs",
+      focus: [0.55, 0.5],
+    },
+    hotspots: [
+      // Wood-top table on white metal legs: the marker sits on the right end of the top.
+      { slug: "commercial-round-dining-table", at: [80.7, 45], box: [14.3, 42.5, 72.9, 53.4] },
+      // Front-left chair (molded shell seat). Its box sits over the table's, so it wins there.
+      { slug: "stackable-banquet-chair", at: [36.9, 52], box: [28.6, 40, 16.8, 58.2] },
     ],
   },
 ];

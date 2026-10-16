@@ -90,15 +90,16 @@ procedural/placeholder state so the site is fully functional without assets:
 
 ## Home-page room photos
 
-The hero shows real room photos (living area and bedroom, switched with tabs
-above the photo) with the interactive features of the old 3D room
+The hero shows real room photos (living area, bedroom and dining room,
+switched with tabs above the photo) with the interactive features of the old 3D room
 ([`src/components/room/RoomPhoto.tsx`](src/components/room/RoomPhoto.tsx)):
 
 - **Which rooms, products, and where:** [`src/components/room/room-photo.ts`](src/components/room/room-photo.ts)
   lists the rooms (`ROOMS`): each has a photo and, for each marked piece, the
   catalog slug, the marker position and the piece's outline, all as % of the
   photo (so they stay on the piece at every screen size). Marker numbers run
-  on across rooms in list order (living area 01–03, bedroom 04–06). Add a
+  on across rooms in list order (living area 01–03, bedroom 04–06, dining room
+  07–08). Add a
   room by adding an entry; a room whose products are all missing is left out.
   The home page pulls those products from the live catalog, so prices and
   names stay current; a product that no longer exists simply loses its

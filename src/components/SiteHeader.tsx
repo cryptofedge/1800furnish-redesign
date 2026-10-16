@@ -51,7 +51,8 @@ export function SiteHeader({ categories }: SiteHeaderProps) {
           Merkabanooks
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-7 md:flex">
+        {/* Inline links from lg: at tablet width they don't fit beside the buttons, so the menu stays. */}
+        <nav aria-label="Main" className="hidden items-center gap-7 lg:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -68,7 +69,7 @@ export function SiteHeader({ categories }: SiteHeaderProps) {
           <NooksguardButton label="Nooksguard" className="hidden lg:inline-flex" />
           <NooksguardButton iconOnly className="lg:hidden" />
           <QuoteListDrawer />
-          <Link href="/#quote" className="btn btn-primary hidden sm:inline-flex">
+          <Link href="/#quote" className="btn btn-primary hidden whitespace-nowrap sm:inline-flex">
             Request a quote
           </Link>
 
@@ -76,7 +77,7 @@ export function SiteHeader({ categories }: SiteHeaderProps) {
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            className="btn-tool h-11 w-11 md:hidden"
+            className="btn-tool h-11 w-11 lg:hidden"
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -90,7 +91,7 @@ export function SiteHeader({ categories }: SiteHeaderProps) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="overflow-hidden border-t border-rule bg-paper md:hidden"
+            className="overflow-hidden border-t border-rule bg-paper lg:hidden"
           >
             <div className="max-h-[75vh] overflow-y-auto px-4 pb-8 pt-4 sm:px-8">
               <nav aria-label="Main" className="flex flex-col border-b border-rule">
